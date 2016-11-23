@@ -1,0 +1,5 @@
+rootProject.name = 'Fusion-Project'
+include 'code'
+include 'code:fusion'
+include 'code:visualization'
+include 'docs'

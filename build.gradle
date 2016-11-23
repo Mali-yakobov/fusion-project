@@ -1,0 +1,7 @@
+allprojects {
+  group 'il.ac.bgu.fusion'
+  repositories {
+    mavenCentral()
+  }
+  apply plugin: 'idea'
+}
