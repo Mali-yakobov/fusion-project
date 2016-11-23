@@ -10,6 +10,6 @@ public class Main {
   }
 
   private static String printHello(){
-    return "Hello World";
+    return "Hey There";
   }
 }
