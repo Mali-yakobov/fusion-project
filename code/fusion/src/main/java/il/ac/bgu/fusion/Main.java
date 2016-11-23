@@ -6,6 +6,10 @@ package il.ac.bgu.fusion;
 public class Main {
 
   public static void main(String ... args){
-    System.out.println("Hello World");
+    System.out.println(printHello());
+  }
+
+  private static String printHello(){
+    return "Hello World";
   }
 }
