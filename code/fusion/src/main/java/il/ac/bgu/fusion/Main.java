@@ -5,11 +5,12 @@ package il.ac.bgu.fusion;
  */
 public class Main {
 
+public final static String HELLO ="Hello World";
   public static void main(String ... args){
     System.out.println(printHello());
   }
 
   private static String printHello(){
-    return "Hey There";
+    return "HELLO";
   }
 }
