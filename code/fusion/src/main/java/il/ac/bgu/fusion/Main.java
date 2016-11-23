@@ -11,6 +11,6 @@ public final static String HELLO ="Hello World";
   }
 
   private static String printHello(){
-    return "HELLO";
+    return HELLO;
   }
 }
