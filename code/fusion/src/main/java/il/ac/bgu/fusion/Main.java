@@ -23,7 +23,7 @@ public class Main {
     String fileaddress= "C:\\Users\\Stas\\project\\fusion-project\\";
     String filepath= fileaddress + filename + ".json";
 
-    //JsonReaderWriter.elipseToFile(testEl, filepath);
+    //JsonReaderWriter.elipseToFile(testEl, filename);
     Elipse fromFileEllipse= JsonReaderWriter.elipseFromFile(filepath);
     System.out.println(fromFileEllipse);
     }
