@@ -84,5 +84,19 @@ public class Elipse {
     public void setSxy(double sxy) {
         this.sxy = sxy;
     }
+
+
+    @Override
+    public String toString() {
+        return "Elipse{" +
+                "timeStamp=" + timeStamp +
+                ", id=" + id +
+                ", centreX=" + centreX +
+                ", centreY=" + centreY +
+                ", sx2=" + sx2 +
+                ", sy2=" + sy2 +
+                ", sxy=" + sxy +
+                '}';
+    }
 }
 

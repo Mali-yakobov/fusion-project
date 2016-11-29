@@ -2,7 +2,9 @@ package il.ac.bgu.fusion;
 
 import com.google.gson.Gson;
 import il.ac.bgu.fusion.classes.Elipse;
+import il.ac.bgu.fusion.util.JsonReaderWriter;
 
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 /**
@@ -12,24 +14,18 @@ public class Main {
 
 
 
-    public static void main(String ... args)throws IOException{
+  public static void main(String ... args)throws IOException{
+
+    //test for reading\writing ellipses to\from file:
     Gson gson = new Gson();
-    Elipse el= new Elipse(124, 4, 45, 4, 1, 2, 3);
-        String json = gson.toJson(el);
-        try (FileWriter writer = new FileWriter("fuse.json")) {
+    Elipse testEl= new Elipse(124, 4, 45, 4, 1, 2, 3);
+    String filename= "testEllipse";
+    String fileaddress= "C:\\Users\\Stas\\project\\fusion-project\\";
+    String filepath= fileaddress + filename + ".json";
 
-            gson.toJson(el, writer);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-
-      //JsonObject obj = new JsonObject();
-        //gson.toJson(el, new FileWriter("~/Documents/jsonfile"));
-
-
-
+    //JsonReaderWriter.elipseToFile(testEl, filepath);
+    Elipse fromFileEllipse= JsonReaderWriter.elipseFromFile(filepath);
+    System.out.println(fromFileEllipse);
     }
 
   }
