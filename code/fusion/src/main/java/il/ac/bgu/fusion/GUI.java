@@ -23,7 +23,9 @@ public class GUI extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception{
         window = primaryStage;
-        primaryStage.setTitle("Fusion Project");
+        window.setTitle("Fusion Project");
+        window.setHeight(700);
+        window.setWidth(1000);
 
         Ellipse e2 = new Ellipse(500,300 , 150,75 );
         e2.setRotate(45);
