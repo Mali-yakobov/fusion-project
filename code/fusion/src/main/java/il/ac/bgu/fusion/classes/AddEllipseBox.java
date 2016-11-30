@@ -45,13 +45,13 @@ public class AddEllipseBox {
         grid.getChildren().add(y);
         //Defining the Last Name text field
         final TextField lastName = new TextField();
-        lastName.setPromptText("Enter ");
+        lastName.setPromptText("Enter");
         GridPane.setConstraints(lastName, 0, 2);
         grid.getChildren().add(lastName);
 //Defining the Comment text field
         final TextField comment = new TextField();
         comment.setPrefColumnCount(15);
-        comment.setPromptText("Enter ");
+        comment.setPromptText("Enter");
         GridPane.setConstraints(comment, 0, 3);
         grid.getChildren().add(comment);
 //Defining the Submit button

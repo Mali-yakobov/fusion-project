@@ -68,6 +68,7 @@ public class GUI extends Application {
             public void handle(ActionEvent event) {
                 Elipse e1 = JsonReaderWriter.elipseFromFile("D:\\sigmabit\\fusion-project\\testEllipse.json");
                 Ellipse e3 =EllipseRepresentationTranslation.fromCovarianceToVizual(e1);
+
                 layout.getChildren().addAll(e3);
             }}
 
