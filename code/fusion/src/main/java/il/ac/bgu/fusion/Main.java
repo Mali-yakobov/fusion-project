@@ -34,15 +34,17 @@ public class Main {
     System.out.println(fromFileEllipse);*/
 
     /* test for translating between ellipse representations: */
-    /*Ellipse vis= new Ellipse();
+    Ellipse vis= new Ellipse();
     vis.setRadiusX(50);
     vis.setRadiusY(20);
     vis.setRotate(3.1415);
     Elipse covFromVis= EllipseRepresentationTranslation.fromVizualToCovariance(vis);
     Ellipse visFromCovFromVis= EllipseRepresentationTranslation.fromCovarianceToVizual(covFromVis);
-    System.out.println(vis);
-    System.out.println(visFromCovFromVis);
-    System.out.println(visFromCovFromVis.getRotate());*/
+    //System.out.println(vis);
+    //System.out.println(visFromCovFromVis);
+    //System.out.println(visFromCovFromVis.getRotate());
+
+    System.out.println(covFromVis);
     }
 
 

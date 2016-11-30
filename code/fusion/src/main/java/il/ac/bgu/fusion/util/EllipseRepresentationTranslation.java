@@ -41,7 +41,7 @@ public class EllipseRepresentationTranslation {
     }
 
     public static Elipse fromVizualToCovariance(Ellipse vizElipse) {
-        Elipse ans =  new Elipse();;
+        Elipse ans =  new Elipse();
 
         double[][] tempMatData = { {Math.pow(vizElipse.getRadiusX(), 2), 0},
                                    {0                                  , Math.pow(vizElipse.getRadiusY(), 2)} };
