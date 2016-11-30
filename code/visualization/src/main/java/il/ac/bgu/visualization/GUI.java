@@ -1,9 +1,9 @@
-package il.ac.bgu.fusion;
+package il.ac.bgu.visualization;
 /**
  * Created by Maayan on 29/11/2016.
  */
 
-import il.ac.bgu.fusion.objects.AddEllipseBox;
+//import il.ac.bgu.fusion.objects.AddEllipseBox;
 import il.ac.bgu.fusion.objects.CovarianceEllipse;
 import il.ac.bgu.fusion.util.EllipseRepresentationTranslation;
 import javafx.application.Application;
