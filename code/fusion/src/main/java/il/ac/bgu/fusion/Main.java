@@ -18,7 +18,7 @@ public class Main {
     /* test for reading\writing ellipses to\from file: */
     Gson gson = new Gson();
     String filename= "testEllipse";
-    /*CovarianceEllipse testEl= new CovarianceEllipse(0, 0, 170, 400, 1450, 1449, 1050);
+    /*CovarianceEllipse testEl= new CovarianceEllipse(0, 0, 180, 650, 1450, 1449, 1050);
     JsonReaderWriter.elipseToFile(testEl, filename);*/
 
     String fileaddress= "C:\\Users\\Stas\\project\\fusion-project\\";

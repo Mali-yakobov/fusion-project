@@ -59,7 +59,7 @@ public class GUI extends Application {
         buttonShow.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                CovarianceEllipse e1 = JsonReaderWriter.elipseFromFile("D:\\sigmabit\\fusion-project\\testEllipse.json");
+                CovarianceEllipse e1 = JsonReaderWriter.elipseFromFile("C:\\Users\\Stas\\project\\fusion-project\\testEllipse.json");
                 Ellipse e3 =EllipseRepresentationTranslation.fromCovarianceToVizual(e1);
 
                 layout.getChildren().addAll(e3);
