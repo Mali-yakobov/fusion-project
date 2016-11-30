@@ -1,5 +1,6 @@
 package il.ac.bgu.fusion.util;
 
+
 import com.google.gson.Gson;
 import il.ac.bgu.fusion.classes.Elipse;
 
