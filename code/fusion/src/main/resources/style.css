@@ -1,10 +1,19 @@
 .root{
-    -fx-background-color: #69aaab;
+    -fx-background-image: url("map.gif");
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: right;
 }
-.e2 {
+.button{
+    -fx-font-size: 20px;
+    -fx-text-alignment: center;
     -fx-background-color: #AB4642;
+    -fx-text-fill: #FFFFFF;
+    -fx-background-radius: 4;
+    -fx-margin-top: 100px;
+    -fx-margin-left: 80px;
+    -fx-padding: 20px 20px 20px 20px;
 }
-.add{
+show.button{
     -fx-background-color: #AB4642;
     -fx-text-fill: #FFFFFF;
     -fx-background-radius: 4;
@@ -12,12 +21,6 @@
     -fx-margin-left: 80px;
     -fx-padding: 50px 30px 50px 80px;
 }
-
-.show{
+.e2{
     -fx-background-color: #AB4642;
-    -fx-text-fill: #FFFFFF;
-    -fx-background-radius: 4;
-    -fx-margin-top: 100px;
-    -fx-margin-left: 80px;
-    -fx-padding: 50px 30px 50px 80px;
 }

@@ -5,7 +5,6 @@ import il.ac.bgu.fusion.classes.Elipse;
 import il.ac.bgu.fusion.util.EllipseRepresentationTranslation;
 import il.ac.bgu.fusion.util.JsonReaderWriter;
 import javafx.scene.shape.Ellipse;
-
 import java.io.IOException;
 /**
  * Created by Guy Yafe.
@@ -14,12 +13,14 @@ public class Main {
 
 
 
-  public static void main(String ... args)throws IOException{
+    public static void main(String ... args)throws IOException{
 
     /* test for reading\writing ellipses to\from file: */
     Gson gson = new Gson();
-    Elipse testEl= new Elipse(124, 4, 45, 4, 1, 2, 3);
+    Elipse testEl= new Elipse(0, 0, 500, 300, 2493, 406, 114);
     String filename= "testEllipse";
+
+
     String fileaddress= "C:\\Users\\Stas\\project\\fusion-project\\";
     String filepath= fileaddress + filename + ".json";
 
@@ -29,18 +30,22 @@ public class Main {
 
     /* test for translating between ellipse representations: */
     Ellipse vis= new Ellipse();
+
     vis.setRadiusX(50);
     vis.setRadiusY(20);
     vis.setRotate(3.1415);
-    Elipse covFromVis= EllipseRepresentationTranslation.fromVizualToCovariance(vis);
-    Ellipse visFromCovFromVis= EllipseRepresentationTranslation.fromCovarianceToVizual(covFromVis);
-    System.out.println(vis);
-    System.out.println(visFromCovFromVis);
-    System.out.println(visFromCovFromVis.getRotate());
+    //Elipse covFromVis= EllipseRepresentationTranslation.fromVizualToCovariance(vis);
+   // Ellipse visFromCovFromVis= EllipseRepresentationTranslation.fromCovarianceToVizual(covFromVis);
+    //System.out.println(vis);
+    //System.out.println(visFromCovFromVis);
+
+    //System.out.println(visFromCovFromVis.getRotate());
     }
 
 
 
   }
+
+
 
 
