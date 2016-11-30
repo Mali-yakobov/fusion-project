@@ -1,6 +1,6 @@
 package il.ac.bgu.fusion.util;
 
-import il.ac.bgu.fusion.classes.Elipse;
+import il.ac.bgu.fusion.objects.CovarianceEllipse;
 import javafx.scene.shape.Ellipse;
 import org.apache.commons.math3.linear.EigenDecomposition;
 import org.apache.commons.math3.linear.MatrixUtils;
@@ -10,14 +10,12 @@ import org.apache.commons.math3.linear.RealVector;
 
 import java.util.Arrays;
 
-import static org.apache.commons.math3.util.MathArrays.Position.HEAD;
-
 /**
  * Created by Stas on 29/11/2016.
  */
 public class EllipseRepresentationTranslation {
 
-    public static Ellipse fromCovarianceToVizual(Elipse covElipse){
+    public static Ellipse fromCovarianceToVizual(CovarianceEllipse covElipse){
         Ellipse ans= new Ellipse();
 
         double[][] matrixData = { {covElipse.getSx2(), covElipse.getSxy()},
@@ -42,8 +40,8 @@ public class EllipseRepresentationTranslation {
         return ans;
     }
 
-    public static Elipse fromVizualToCovariance(Ellipse vizElipse) {
-        Elipse ans =  new Elipse();
+    public static CovarianceEllipse fromVizualToCovariance(Ellipse vizElipse) {
+        CovarianceEllipse ans =  new CovarianceEllipse();
 
         double[][] tempMatData = { {Math.pow(vizElipse.getRadiusX(), 2), 0},
                                    {0                                  , Math.pow(vizElipse.getRadiusY(), 2)} };

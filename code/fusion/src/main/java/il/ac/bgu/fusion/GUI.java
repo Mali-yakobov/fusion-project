@@ -3,8 +3,8 @@ package il.ac.bgu.fusion;
  * Created by Maayan on 29/11/2016.
  */
 
-import il.ac.bgu.fusion.classes.AddEllipseBox;
-import il.ac.bgu.fusion.classes.Elipse;
+import il.ac.bgu.fusion.objects.AddEllipseBox;
+import il.ac.bgu.fusion.objects.CovarianceEllipse;
 import il.ac.bgu.fusion.util.EllipseRepresentationTranslation;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
@@ -14,17 +14,9 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
 import javafx.scene.shape.Ellipse;
 import javafx.stage.Stage;
 import il.ac.bgu.fusion.util.JsonReaderWriter;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import com.google.gson.Gson;
-
-import javax.security.auth.callback.ConfirmationCallback;
 
 public class GUI extends Application {
 
@@ -66,7 +58,7 @@ public class GUI extends Application {
         buttonShow.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                Elipse e1 = JsonReaderWriter.elipseFromFile("D:\\sigmabit\\fusion-project\\testEllipse.json");
+                CovarianceEllipse e1 = JsonReaderWriter.elipseFromFile("D:\\sigmabit\\fusion-project\\testEllipse.json");
                 Ellipse e3 =EllipseRepresentationTranslation.fromCovarianceToVizual(e1);
 
                 layout.getChildren().addAll(e3);

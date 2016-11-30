@@ -1,9 +1,9 @@
-package il.ac.bgu.fusion.classes;
+package il.ac.bgu.fusion.objects;
 
 /**
  * Created by Stas on 29/11/2016.
  */
-public class Elipse {
+public class CovarianceEllipse {
 
     private long timeStamp;
     private long id;
@@ -16,10 +16,10 @@ public class Elipse {
     private double sxy;
 
 
-    public Elipse(){
+    public CovarianceEllipse(){
     }
 
-    public Elipse(long timeStamp, long id, double centreX, double centreY, double sx2, double sy2, double sxy) {
+    public CovarianceEllipse(long timeStamp, long id, double centreX, double centreY, double sx2, double sy2, double sxy) {
         this.timeStamp = timeStamp;
         this.id = id;
         this.centreX = centreX;
@@ -88,7 +88,7 @@ public class Elipse {
 
     @Override
     public String toString() {
-        return "Elipse{" +
+        return "CovarianceEllipse{" +
                 "timeStamp=" + timeStamp +
                 ", id=" + id +
                 ", centreX=" + centreX +

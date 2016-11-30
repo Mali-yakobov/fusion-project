@@ -2,7 +2,7 @@ package il.ac.bgu.fusion.util;
 
 
 import com.google.gson.Gson;
-import il.ac.bgu.fusion.classes.Elipse;
+import il.ac.bgu.fusion.objects.CovarianceEllipse;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -14,7 +14,7 @@ import java.io.IOException;
  */
 public class JsonReaderWriter {
 
- public static void elipseToFile(Elipse elipseObj, String filename){
+ public static void elipseToFile(CovarianceEllipse elipseObj, String filename){
      Gson gson = new Gson();
      try (FileWriter writer = new FileWriter(filename + ".json")) {
          gson.toJson(elipseObj, writer);
@@ -23,11 +23,11 @@ public class JsonReaderWriter {
      }
  }
 
- public static Elipse elipseFromFile(String filepath){
+ public static CovarianceEllipse elipseFromFile(String filepath){
      Gson gson = new Gson();
-     Elipse ans= null;
+     CovarianceEllipse ans= null;
      try {
-         ans = gson.fromJson(new FileReader(filepath), Elipse.class);
+         ans = gson.fromJson(new FileReader(filepath), CovarianceEllipse.class);
      } catch (FileNotFoundException e) {
          e.printStackTrace();
      }
