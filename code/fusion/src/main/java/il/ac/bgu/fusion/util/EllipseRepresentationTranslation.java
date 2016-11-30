@@ -1,13 +1,12 @@
 package il.ac.bgu.fusion.util;
 
-import com.google.gson.Gson;
 import il.ac.bgu.fusion.classes.Elipse;
 import javafx.scene.shape.*;
-import org.apache.commons.math.linear.*;
+import org.apache.commons.math3.linear.EigenDecomposition;
+import org.apache.commons.math3.linear.MatrixUtils;
+import org.apache.commons.math3.linear.RealMatrix;
+import org.apache.commons.math3.linear.RealVector;
 
-import java.io.FileWriter;
-import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.Arrays;
 
 /**
@@ -21,7 +20,7 @@ public class EllipseRepresentationTranslation {
         double[][] matrixData = { {covElipse.getSx2(), covElipse.getSxy()},
                                   {covElipse.getSxy(), covElipse.getSy2()} };
         RealMatrix CovMatrix = MatrixUtils.createRealMatrix(matrixData);
-        EigenDecompositionImpl eigenStuff= new EigenDecompositionImpl(CovMatrix, 0);
+        EigenDecomposition eigenStuff= new EigenDecomposition(CovMatrix);
 
         double[] eigValues=  eigenStuff.getRealEigenvalues();
         Arrays.sort(eigValues);
