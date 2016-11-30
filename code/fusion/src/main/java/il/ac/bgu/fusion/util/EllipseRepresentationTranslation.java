@@ -20,8 +20,8 @@ public class EllipseRepresentationTranslation {
 
         double[][] matrixData = { {covElipse.getSx2(), covElipse.getSxy()},
                                   {covElipse.getSxy(), covElipse.getSy2()} };
-        RealMatrix CovMatrix = MatrixUtils.createRealMatrix(matrixData);
-        EigenDecomposition eigenStuff= new EigenDecomposition(CovMatrix);
+        RealMatrix covMatrix = MatrixUtils.createRealMatrix(matrixData);
+        EigenDecomposition eigenStuff= new EigenDecomposition(covMatrix);
 
         double[] eigValues=  eigenStuff.getRealEigenvalues();
         Arrays.sort(eigValues);
@@ -35,6 +35,8 @@ public class EllipseRepresentationTranslation {
 
         ans.setRadiusX(rx);
         ans.setRadiusY(ry);
+        ans.setCenterX(covElipse.getCentreX());
+        ans.setCenterY(covElipse.getCentreY());
         ans.setRotate(Math.toDegrees(theta));
 
         return ans;
@@ -55,6 +57,8 @@ public class EllipseRepresentationTranslation {
         RealMatrix Rt = R.transpose();
         RealMatrix covMatrix= R.multiply(tempMatrix).multiply(Rt);
 
+        ans.setCentreX(vizElipse.getCenterX());
+        ans.setCentreY(vizElipse.getCenterY());
         ans.setSx2(covMatrix.getEntry(0, 0));
         ans.setSy2(covMatrix.getEntry(1, 1));
         ans.setSxy(covMatrix.getEntry(0, 1));

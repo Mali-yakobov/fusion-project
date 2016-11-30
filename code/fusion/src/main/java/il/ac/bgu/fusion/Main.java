@@ -2,6 +2,7 @@ package il.ac.bgu.fusion;
 
 import com.google.gson.Gson;
 import il.ac.bgu.fusion.objects.CovarianceEllipse;
+import il.ac.bgu.fusion.util.EllipseRepresentationTranslation;
 import il.ac.bgu.fusion.util.JsonReaderWriter;
 import javafx.scene.shape.Ellipse;
 import java.io.IOException;
@@ -16,29 +17,31 @@ public class Main {
 
     /* test for reading\writing ellipses to\from file: */
     Gson gson = new Gson();
-    CovarianceEllipse testEl= new CovarianceEllipse(0, 0, 500, 300, 2493, 406, 114);
     String filename= "testEllipse";
-
+    /*CovarianceEllipse testEl= new CovarianceEllipse(0, 0, 170, 400, 1450, 1449, 1050);
+    JsonReaderWriter.elipseToFile(testEl, filename);*/
 
     String fileaddress= "C:\\Users\\Stas\\project\\fusion-project\\";
     String filepath= fileaddress + filename + ".json";
-
-    JsonReaderWriter.elipseToFile(testEl, filename);
     CovarianceEllipse fromFileEllipse= JsonReaderWriter.elipseFromFile(filepath);
-    System.out.println(fromFileEllipse);
 
     /* test for translating between ellipse representations: */
-    Ellipse vis= new Ellipse();
-
+    /*Ellipse vis= new Ellipse();
+    vis.setCenterX(170);
+    vis.setCenterY(400);
     vis.setRadiusX(50);
     vis.setRadiusY(20);
-    vis.setRotate(3.1415);
-    //CovarianceEllipse covFromVis= EllipseRepresentationTranslation.fromVizualToCovariance(vis);
-   // Ellipse visFromCovFromVis= EllipseRepresentationTranslation.fromCovarianceToVizual(covFromVis);
-    //System.out.println(vis);
-    //System.out.println(visFromCovFromVis);
+    vis.setRotate(45);
+    CovarianceEllipse covFromVis= EllipseRepresentationTranslation.fromVizualToCovariance(vis);
+    Ellipse visFromCovFromVis= EllipseRepresentationTranslation.fromCovarianceToVizual(covFromVis);
+    System.out.println(vis + " " + vis.getRotate());
+    System.out.println(covFromVis);
+    System.out.println(visFromCovFromVis  + " " + visFromCovFromVis.getRotate());*/
 
-    //System.out.println(visFromCovFromVis.getRotate());
+        /*Ellipse visFromCovFromFile= EllipseRepresentationTranslation.fromCovarianceToVizual(fromFileEllipse);
+        System.out.println(visFromCovFromFile  + " " + visFromCovFromFile.getRotate());*/
+
+
     }
 
 
