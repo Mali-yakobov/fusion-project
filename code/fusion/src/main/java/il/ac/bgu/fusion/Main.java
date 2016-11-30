@@ -5,14 +5,6 @@ import il.ac.bgu.fusion.classes.Elipse;
 import il.ac.bgu.fusion.util.EllipseRepresentationTranslation;
 import il.ac.bgu.fusion.util.JsonReaderWriter;
 import javafx.scene.shape.Ellipse;
-<<<<<<< HEAD
-import org.apache.commons.math.linear.EigenDecomposition;
-import org.apache.commons.math.linear.EigenDecompositionImpl;
-import org.apache.commons.math.linear.MatrixUtils;
-import org.apache.commons.math.linear.RealMatrix;
-=======
->>>>>>> e44ef3db3a8baa1aeca41085537091bcf65bab27
-
 import java.io.IOException;
 /**
  * Created by Guy Yafe.
@@ -27,16 +19,8 @@ public class Main {
     Gson gson = new Gson();
     Elipse testEl= new Elipse(0, 0, 500, 300, 2493, 406, 114);
     String filename= "testEllipse";
-<<<<<<< HEAD
-    //String fileaddress= "C:\\Users\\Stas\\project\\fusion-project\\";
-    //String filepath= fileaddress + filename + ".json";
-    JsonReaderWriter.elipseToFile(testEl, filename);
-    //Elipse fromFileEllipse= JsonReaderWriter.elipseFromFile(filepath);
-    //System.out.println(fromFileEllipse);
 
-    /* test for translating between ellipse representations: */
-    /*Ellipse vis= new Ellipse();
-=======
+
     String fileaddress= "C:\\Users\\Stas\\project\\fusion-project\\";
     String filepath= fileaddress + filename + ".json";
 
@@ -46,26 +30,22 @@ public class Main {
 
     /* test for translating between ellipse representations: */
     Ellipse vis= new Ellipse();
->>>>>>> e44ef3db3a8baa1aeca41085537091bcf65bab27
+
     vis.setRadiusX(50);
     vis.setRadiusY(20);
     vis.setRotate(3.1415);
-    Elipse covFromVis= EllipseRepresentationTranslation.fromVizualToCovariance(vis);
-    Ellipse visFromCovFromVis= EllipseRepresentationTranslation.fromCovarianceToVizual(covFromVis);
-    System.out.println(vis);
-    System.out.println(visFromCovFromVis);
-<<<<<<< HEAD
-    System.out.println(visFromCovFromVis.getRotate());*/
-    }
+    //Elipse covFromVis= EllipseRepresentationTranslation.fromVizualToCovariance(vis);
+   // Ellipse visFromCovFromVis= EllipseRepresentationTranslation.fromCovarianceToVizual(covFromVis);
+    //System.out.println(vis);
+    //System.out.println(visFromCovFromVis);
 
-=======
-    System.out.println(visFromCovFromVis.getRotate());
+    //System.out.println(visFromCovFromVis.getRotate());
     }
 
 
 
   }
->>>>>>> e44ef3db3a8baa1aeca41085537091bcf65bab27
 
 
-}
+
+
