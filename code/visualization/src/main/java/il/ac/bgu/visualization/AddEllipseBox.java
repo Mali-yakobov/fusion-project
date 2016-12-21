@@ -1,5 +1,5 @@
 package il.ac.bgu.visualization;
-//import "fusion-project\\code\\fusion";
+import "fusion-project\\code\\fusion";
 
 /**
  * Created by Maayan on 30/11/2016.
