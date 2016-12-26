@@ -4,19 +4,24 @@ package il.ac.bgu.visualization;
  * Created by Maayan on 29/11/2016.
  */
 
-//import il.ac.bgu.fusion.objects.AddEllipseBox;
 import il.ac.bgu.fusion.objects.CovarianceEllipse;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Ellipse;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import il.ac.bgu.fusion.util.JsonReaderWriter;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 public class GUI extends Application {
 
@@ -45,23 +50,48 @@ public class GUI extends Application {
         VBox sideMenu = new VBox();
         Button buttonAdd = new Button("Add Ellipse");
         Button buttonShow = new Button("Show Ellipse");
-        sideMenu.getChildren().addAll(buttonAdd,buttonShow);
-
-        AddEllipseBox addBox = new AddEllipseBox();
-        buttonAdd.setOnAction(e -> addBox.display());
-
-
+        Button buttonLoad = new Button("Load File");
+        Button buttonClear= new Button("Clear");
         BorderPane layout = new BorderPane();
-
-
         layout.setLeft(sideMenu);
+        TextField txtField= new TextField();
+
+
+        sideMenu.getChildren().addAll(buttonLoad,buttonShow,buttonAdd,buttonClear);
+        buttonLoad.setOnAction(e -> {
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Select Json File");
+            File file= fileChooser.showOpenDialog(window);
+            if (file!=null)
+                txtField.setText(file.getAbsolutePath());
+        });
+        AddEllipseBox addBox = new AddEllipseBox();
+        buttonAdd.setOnAction(e -> {
+            Ellipse newEllipse=new Ellipse();
+            newEllipse=addBox.display();
+            layout.getChildren().addAll(newEllipse);
+
+
+        });
+        buttonClear.setOnAction(event -> {
+            layout.getChildren().clear();
+            layout.setLeft(sideMenu);
+            sideMenu.getChildren().addAll(buttonLoad,buttonShow,buttonAdd,buttonClear);
+        });
+
         buttonShow.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                CovarianceEllipse e1 = JsonReaderWriter.elipseFromFile("D:\\sigmabit\\fusion-project\\testEllipse.json");
-                Ellipse e3 =EllipseRepresentationTranslation.fromCovarianceToVizual(e1);
+                ArrayList<CovarianceEllipse> CovarianceEllipseArray = JsonReaderWriter.elipseFromFile(txtField.getText());
+                Iterator<CovarianceEllipse> itr = CovarianceEllipseArray.iterator();
+                while (itr.hasNext()) {
+                    Ellipse tempEllipse =EllipseRepresentationTranslation.fromCovarianceToVizual(itr.next());
+                    tempEllipse.setFill(Color.BLACK);
+                    tempEllipse.setStroke(Color.BLUE);
 
-                layout.getChildren().addAll(e3);
+                    layout.getChildren().addAll(tempEllipse);
+                }
+
             }}
 
         );

@@ -9,11 +9,16 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
+import javafx.scene.shape.Ellipse;
 import javafx.stage.Stage;
 
 public class AddEllipseBox {
+    public static Ellipse display() {
+        final double[] x = {0};
+        final double[] y = { 0 };
+        final double[] rX = { 0 };
+        final double[] rY = { 0 };
 
-    public static void display() {
         Stage window = new Stage();
         window.setTitle("Add Ellipse");
         window.setMinWidth(300);
@@ -26,35 +31,51 @@ public class AddEllipseBox {
         grid.setPadding(new Insets(10, 10, 10, 10));
         grid.setVgap(5);
         grid.setHgap(5);
-//Defining the Name text field
-        final TextField x = new TextField();
-        x.setPromptText("Enter centerX");
-        x.setPrefColumnCount(10);
-        x.getText();
-        GridPane.setConstraints(x, 0, 0);
-        grid.getChildren().add(x);
-//Defining the Last Name text field
-        final TextField y = new TextField();
-        y.setPromptText("Enter centerY");
-        GridPane.setConstraints(y, 0, 1);
-        grid.getChildren().add(y);
-        //Defining the Last Name text field
-        final TextField lastName = new TextField();
-        lastName.setPromptText("Enter");
-        GridPane.setConstraints(lastName, 0, 2);
-        grid.getChildren().add(lastName);
-//Defining the Comment text field
-        final TextField comment = new TextField();
-        comment.setPrefColumnCount(15);
-        comment.setPromptText("Enter");
-        GridPane.setConstraints(comment, 0, 3);
-        grid.getChildren().add(comment);
+//centerX
+        final TextField centerX = new TextField();
+        centerX.setPromptText("Enter centerX");
+        centerX.setPrefColumnCount(10);
+        centerX.getText();
+        GridPane.setConstraints(centerX, 0, 0);
+        grid.getChildren().add(centerX);
+//centerY
+        final TextField centerY = new TextField();
+        centerY.setPromptText("Enter centerY");
+        centerY.getText();
+        GridPane.setConstraints(centerY, 0, 1);
+        grid.getChildren().add(centerY);
+ //radiusX
+        final TextField radiusX = new TextField();
+        radiusX.setPromptText("Enter RadiusX");
+        radiusX.getText();
+        GridPane.setConstraints(radiusX, 0, 2);
+        grid.getChildren().add(radiusX);
+//radiusY
+        final TextField radiusY = new TextField();
+        radiusY.setPrefColumnCount(15);
+        radiusY.setPromptText("Enter RadiusY");
+        radiusY.getText();
+        GridPane.setConstraints(radiusY, 0, 3);
+        grid.getChildren().add(radiusY);
 //Defining the Submit button
         Button submit = new Button("Add new Ellipse");
         GridPane.setConstraints(submit, 1, 0);
-        submit.setOnAction(e ->
-                // add the ellipse to the scene
-                window.close());
+
+        Ellipse ellipse= new Ellipse();
+        submit.setOnAction(e ->{
+            x[0] =Double.valueOf(centerX.getText());
+            y[0] =Double.parseDouble(centerY.getText());
+            rX[0] =Double.parseDouble(radiusX.getText());
+            rY[0] =Double.parseDouble(radiusY.getText());
+            ellipse.setCenterX(x[0] );
+            ellipse.setCenterY(y[0] );
+            ellipse.setRadiusX(rX[0] );
+            ellipse.setRadiusY(rY[0] );
+            ellipse.setRotate(30);
+
+            window.close();
+
+        });
 
         grid.getChildren().add(submit);
 //Defining the Clear button
@@ -65,6 +86,7 @@ public class AddEllipseBox {
         Scene scene = new Scene(grid);
         window.setScene(scene);
         window.showAndWait();
+       return ellipse;
     }
 
 }
