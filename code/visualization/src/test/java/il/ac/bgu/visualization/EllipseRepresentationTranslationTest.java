@@ -8,6 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static junit.framework.TestCase.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 
 /**
@@ -15,6 +16,7 @@ import static junit.framework.TestCase.assertEquals;
  * Created by Mali on 12/22/2016.
  */
 public class EllipseRepresentationTranslationTest {
+    double epsilon =Math.pow(10,-10);
     @Before
     public void setUp() throws Exception {
 
@@ -43,8 +45,8 @@ public class EllipseRepresentationTranslationTest {
         assertEquals("equal",covarianceEllipse.getCentreX(),covarianceEllipseFromEllipse.getCentreX());
         assertEquals("equal",covarianceEllipse.getCentreY(),covarianceEllipseFromEllipse.getCentreY());
         assertEquals("equal",covarianceEllipse.getSx2(),covarianceEllipseFromEllipse.getSx2());
-        assertEquals("equal",covarianceEllipse.getSy2(),covarianceEllipseFromEllipse.getSy2());
-        assertEquals("equal",covarianceEllipse.getSxy(),covarianceEllipseFromEllipse.getSxy());
+        assertTrue("equal",Math.abs(covarianceEllipse.getSy2()-covarianceEllipseFromEllipse.getSy2())<epsilon);
+        assertTrue("equal",Math.abs(covarianceEllipse.getSxy()-covarianceEllipseFromEllipse.getSxy())<epsilon);
         assertEquals("equal",covarianceEllipse.getId(),covarianceEllipseFromEllipse.getId());
         assertEquals("equal",covarianceEllipse.getTimeStamp(),covarianceEllipseFromEllipse.getTimeStamp());
 
