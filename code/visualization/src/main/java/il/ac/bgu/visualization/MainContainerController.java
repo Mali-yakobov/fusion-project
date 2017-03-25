@@ -13,7 +13,11 @@ import il.ac.bgu.fusion.util.JsonReaderWriter;
 import il.ac.bgu.visualization.objects.AddEllipseBox;
 import il.ac.bgu.visualization.objects.AlertWindow;
 import il.ac.bgu.visualization.util.EllipseRepresentationTranslation;
+import javafx.event.EventHandler;
 import javafx.fxml.*;
+import javafx.scene.control.*;
+import javafx.scene.input.ContextMenuEvent;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Ellipse;
@@ -26,8 +30,13 @@ import javafx.stage.FileChooser;
 public class MainContainerController implements Initializable {
 
     private String filePath= null;
-    private Color ellipseFillColor= Color.rgb(212, 39, 36, 0.25);
-    private Color ellipseStrokeColor= Color.RED;
+    private ArrayList<Ellipse> clickedEllipses= new ArrayList<Ellipse>();
+
+
+    private Color ellipseFillColor= Color.rgb(212, 4, 6, 0.50);
+    private Color ellipseFillColorClicked= Color.rgb(11, 12, 255, 0.50);
+    private Color ellipseStrokeColor= Color.rgb(212, 4, 6, 1.0);
+    private Color ellipseStrokeColorClicked= Color.rgb(11, 12, 255, 1.0);
 
     @FXML
     private AnchorPane viewArea;
@@ -36,7 +45,16 @@ public class MainContainerController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         viewArea.getStyleClass().add("viewarea-class");
-    }
+
+        //make context menu for viewArea (empty space):
+        MenuItem addEllipseMenuItem = new MenuItem("Add Ellipse");
+        ContextMenu viewAreaMenu = new ContextMenu(addEllipseMenuItem);
+        viewArea.setOnMouseClicked(event -> viewAreaMenu.hide());
+        viewArea.setOnContextMenuRequested(event -> {
+            addEllipseMenuItem.setOnAction(e -> addEllipseOnClickAction(event.getX(), event.getY()));
+            viewAreaMenu.show(viewArea, event.getScreenX(), event.getScreenY());
+        });
+    }//initialize
 
 
     /*
@@ -61,6 +79,7 @@ public class MainContainerController implements Initializable {
                     Ellipse tempEllipse = EllipseRepresentationTranslation.fromCovarianceToVizual(itr.next());
                     tempEllipse.setFill(ellipseFillColor);
                     tempEllipse.setStroke(ellipseStrokeColor);
+                    ellipseSetOnClick(tempEllipse);
                     viewArea.getChildren().addAll(tempEllipse);
                 }
             }
@@ -68,7 +87,6 @@ public class MainContainerController implements Initializable {
                 AlertWindow.display("Json Error", e.getMessage());
                 filePath= null;
             }
-
         }
     }
 
@@ -76,15 +94,47 @@ public class MainContainerController implements Initializable {
         Ellipse newEllipse= AddEllipseBox.display();
         newEllipse.setFill(ellipseFillColor);
         newEllipse.setStroke(ellipseStrokeColor);
+        ellipseSetOnClick(newEllipse);
+        viewArea.getChildren().addAll(newEllipse);
+    }
+
+    public void addEllipseOnClickAction(double x, double y) {
+        Ellipse newEllipse= AddEllipseBox.display(x, y);
+        newEllipse.setFill(ellipseFillColor);
+        newEllipse.setStroke(ellipseStrokeColor);
+        ellipseSetOnClick(newEllipse);
         viewArea.getChildren().addAll(newEllipse);
     }
 
     public void clearAction() {
         viewArea.getChildren().clear(); //viewArea.getChildren().remove(newEllipse);
+        clickedEllipses.clear();
     }
 
     public void closeAction() {
         GUI.window.close();
+    }
+
+
+    /*
+     Misc functions:
+     */
+
+    public void ellipseSetOnClick(Ellipse ellipse) {
+        ellipse.setOnMouseClicked(event -> {
+            if (event.getButton().equals(MouseButton.PRIMARY)){
+                if (ellipse.getFill().equals(ellipseFillColor)){   //was not clicked/chosen
+                    ellipse.setFill(ellipseFillColorClicked);
+                    ellipse.setStroke(ellipseStrokeColorClicked);
+                    clickedEllipses.add(ellipse);
+                }
+                else{                                              //was clicked/chosen
+                    ellipse.setFill(ellipseFillColor);
+                    ellipse.setStroke(ellipseStrokeColor);
+                    clickedEllipses.remove(ellipse);
+                }
+            }
+        });
     }
 
 

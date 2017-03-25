@@ -3,7 +3,6 @@
     -fx-background-repeat: no-repeat;
 }
 
-
 /* for all buttons: */
 .button {
     -fx-background-color: transparent, transparent, transparent, transparent;

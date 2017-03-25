@@ -14,7 +14,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 public class AddEllipseBox {
-    public static Ellipse display() {
+    public static Ellipse display(double...axis) {
         final double[] x = {0};
         final double[] y = { 0 };
         final double[] rX = { 0 };
@@ -34,6 +34,8 @@ public class AddEllipseBox {
 //centerX
         final TextField centerX = new TextField();
         centerX.setPromptText("Enter centerX");
+        if (axis.length > 1)
+            centerX.setText(Double.toString(axis[0]));
         centerX.setPrefColumnCount(10);
         centerX.getText();
         GridPane.setConstraints(centerX, 0, 0);
@@ -41,6 +43,8 @@ public class AddEllipseBox {
 //centerY
         final TextField centerY = new TextField();
         centerY.setPromptText("Enter centerY");
+        if (axis.length > 1)
+            centerY.setText(Double.toString(axis[1]));
         centerY.getText();
         GridPane.setConstraints(centerY, 0, 1);
         grid.getChildren().add(centerY);

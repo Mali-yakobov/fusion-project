@@ -14,6 +14,7 @@ import javafx.stage.Stage;
 
 public class GUI extends Application {
     public static Stage window;
+    public static Scene scene1;
 
     public static void main(String[] args) {
         launch(args);
@@ -31,11 +32,12 @@ public class GUI extends Application {
         });
 
         Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("main_container.fxml"));
-        Scene scene1 = new Scene(root);
+        scene1 = new Scene(root);
         scene1.getStylesheets().add("main_style.css");
         window.setScene(scene1);
         window.show();
     }
+
 
     private void closeProgram(){
         window.close();
