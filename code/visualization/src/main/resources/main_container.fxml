@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.text.*?>
+
+<VBox prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.ac.bgu.visualization.MainContainerController">
+  <children>
+    <MenuBar VBox.vgrow="NEVER">
+      <menus>
+        <Menu mnemonicParsing="false" text="File">
+          <items>
+            <MenuItem disable="true" mnemonicParsing="false" text="New" />
+            <MenuItem disable="true" mnemonicParsing="false" text="Open…" />
+            <Menu disable="true" mnemonicParsing="false" text="Open Recent" />
+            <SeparatorMenuItem mnemonicParsing="false" />
+            <MenuItem disable="true" mnemonicParsing="false" text="Close" />
+            <MenuItem disable="true" mnemonicParsing="false" text="Save" />
+            <MenuItem disable="true" mnemonicParsing="false" text="Save As…" />
+            <MenuItem disable="true" mnemonicParsing="false" text="Revert" />
+            <SeparatorMenuItem mnemonicParsing="false" />
+            <MenuItem disable="true" mnemonicParsing="false" text="Preferences…" />
+            <SeparatorMenuItem mnemonicParsing="false" />
+            <MenuItem mnemonicParsing="false" onAction="#closeAction" text="Quit" />
+          </items>
+        </Menu>
+        <Menu mnemonicParsing="false" text="Edit">
+          <items>
+            <MenuItem disable="true" mnemonicParsing="false" text="Undo" />
+            <MenuItem disable="true" mnemonicParsing="false" text="Redo" />
+            <SeparatorMenuItem mnemonicParsing="false" />
+            <MenuItem disable="true" mnemonicParsing="false" text="Cut" />
+            <MenuItem disable="true" mnemonicParsing="false" text="Copy" />
+            <MenuItem disable="true" mnemonicParsing="false" text="Paste" />
+            <MenuItem disable="true" mnemonicParsing="false" text="Delete" />
+            <SeparatorMenuItem mnemonicParsing="false" />
+            <MenuItem disable="true" mnemonicParsing="false" text="Select All" />
+            <MenuItem disable="true" mnemonicParsing="false" text="Unselect All" />
+          </items>
+        </Menu>
+        <Menu mnemonicParsing="false" text="Help">
+          <items>
+            <MenuItem disable="true" mnemonicParsing="false" text="About Fusion Project" />
+          </items>
+        </Menu>
+      </menus>
+    </MenuBar>
+      <ToolBar prefHeight="20.0" prefWidth="900.0">
+        <items>
+          <Button fx:id="loadFileButton" mnemonicParsing="false" onAction="#loadFileAction" text="Load" />
+            <Button fx:id="showButton" mnemonicParsing="false" onAction="#showAction" text="Show" />
+            <Button fx:id="addEllipseButton" layoutX="66.0" layoutY="10.0" mnemonicParsing="false" onAction="#addEllipseAction" text="Add Ellipse" />
+            <Button fx:id="clearButton" layoutX="122.0" layoutY="10.0" mnemonicParsing="false" onAction="#clearAction" text="Clear" />
+        </items>
+      </ToolBar>
+    <SplitPane dividerPositions="0.17260579064587972" focusTraversable="true" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
+      <items>
+        <AnchorPane fx:id="masterArea" />
+        <ScrollPane prefHeight="-1.0" prefWidth="-1.0">
+          <content>
+            <AnchorPane id="Content" fx:id="viewArea" prefHeight="620.0" prefWidth="800.0" />
+          </content>
+        </ScrollPane>
+      </items>
+    </SplitPane>
+    <HBox id="HBox" alignment="CENTER_LEFT" spacing="5.0" VBox.vgrow="NEVER">
+      <children>
+        <Label maxHeight="1.7976931348623157E308" maxWidth="-1.0" text="Left status" HBox.hgrow="ALWAYS">
+          <font>
+            <Font size="11.0" fx:id="x3" />
+          </font>
+          <textFill>
+            <Color blue="0.625" green="0.625" red="0.625" fx:id="x4" />
+          </textFill>
+        </Label>
+        <Pane prefHeight="-1.0" prefWidth="-1.0" HBox.hgrow="ALWAYS" />
+        <Label font="$x3" maxWidth="-1.0" text="Right status" textFill="$x4" HBox.hgrow="NEVER" />
+      </children>
+      <padding>
+        <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
+      </padding>
+    </HBox>
+  </children>
+</VBox>

@@ -1,4 +1,4 @@
-package il.ac.bgu.visualization;
+package il.ac.bgu.visualization.util;
 
 import il.ac.bgu.fusion.objects.CovarianceEllipse;
 import javafx.scene.shape.Ellipse;

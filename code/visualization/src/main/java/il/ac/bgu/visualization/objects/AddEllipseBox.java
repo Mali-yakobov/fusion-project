@@ -1,4 +1,4 @@
-package il.ac.bgu.visualization;
+package il.ac.bgu.visualization.objects;
 
 /**
  * Created by Maayan on 30/11/2016.
@@ -10,6 +10,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.shape.Ellipse;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 public class AddEllipseBox {
@@ -20,11 +21,10 @@ public class AddEllipseBox {
         final double[] rY = { 0 };
 
         Stage window = new Stage();
+        window.initModality(Modality.APPLICATION_MODAL);  //Block events to other windows
         window.setTitle("Add Ellipse");
         window.setMinWidth(300);
 
-        //Label label = new Label();
-        //label.setText("Insert the Ellipse fields");
 
 //Creating a GridPane container
         GridPane grid = new GridPane();
@@ -57,6 +57,7 @@ public class AddEllipseBox {
         radiusY.getText();
         GridPane.setConstraints(radiusY, 0, 3);
         grid.getChildren().add(radiusY);
+
 //Defining the Submit button
         Button submit = new Button("Add new Ellipse");
         GridPane.setConstraints(submit, 1, 0);
@@ -72,21 +73,21 @@ public class AddEllipseBox {
             ellipse.setRadiusX(rX[0] );
             ellipse.setRadiusY(rY[0] );
             ellipse.setRotate(30);
-
             window.close();
-
         });
-
         grid.getChildren().add(submit);
-//Defining the Clear button
+
+        //Defining the Clear button
         Button clear = new Button("Clear");
         GridPane.setConstraints(clear, 1, 1);
         grid.getChildren().add(clear);
+
         //Display window and wait for it to be closed before returning
         Scene scene = new Scene(grid);
         window.setScene(scene);
+        window.resizableProperty().set(false);
         window.showAndWait();
-       return ellipse;
+        return ellipse;
     }
 
 }
