@@ -14,7 +14,7 @@ public class CovarianceEllipse {
     private double sx2;
     private double sy2;
     private double sxy;
-
+    private double velocity; //type?
 
     public CovarianceEllipse(){
     }
