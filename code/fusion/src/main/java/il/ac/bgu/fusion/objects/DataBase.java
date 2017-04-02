@@ -7,7 +7,7 @@ import java.util.Hashtable;
  * Created by Mali on 4/2/2017.
  */
 public class DataBase {
-    private Hashtable<id,Sensor> sensors;
-    private ArrayList<Point> points;
+    private Hashtable<Long,Sensor> sensors;
+
 
 }

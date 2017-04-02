@@ -7,19 +7,19 @@ public class CovarianceEllipse {
 
     private long timeStamp;
     private long id;
-
+    private Sensor sensor;
     private double centreX;
     private double centreY;
 
     private double sx2;
     private double sy2;
     private double sxy;
-    private double velocity; //type?
+    private double velocity;
 
     public CovarianceEllipse(){
     }
 
-    public CovarianceEllipse(long timeStamp, long id, double centreX, double centreY, double sx2, double sy2, double sxy) {
+    public CovarianceEllipse(long timeStamp, long id, double centreX, double centreY, double sx2, double sy2, double sxy, Sensor sensor, double velocity) {
         this.timeStamp = timeStamp;
         this.id = id;
         this.centreX = centreX;
@@ -27,6 +27,9 @@ public class CovarianceEllipse {
         this.sx2 = sx2;
         this.sy2 = sy2;
         this.sxy = sxy;
+        this.sensor=sensor;
+        this.velocity=velocity;
+
     }
 
     public long getTimeStamp() {
@@ -96,6 +99,8 @@ public class CovarianceEllipse {
                 ", sx2=" + sx2 +
                 ", sy2=" + sy2 +
                 ", sxy=" + sxy +
+                ", Sensor=" + sensor +
+                ", velocity=" + velocity +
                 '}';
     }
 }
