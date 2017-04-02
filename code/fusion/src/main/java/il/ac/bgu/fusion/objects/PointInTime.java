@@ -35,9 +35,9 @@ public class PointInTime {
 
     @Override
     public String toString() {
-        return "PointInTime{" +
-                "timeStamp=" + timeStamp +
-                ", trackList=" + trackList +
+        return "PointInTime{" +"/n"+
+                "timeStamp=" + timeStamp +"/n"+
+                ", trackList=" + trackList +"/n"+
                 '}';
     }
 }

@@ -25,8 +25,8 @@ public class DataBase {
 
     @Override
     public String toString() {
-        return "DataBase{" +
-                "sensors=" + sensors +
+        return "DataBase{" +"/n"+
+                "sensors=" + sensors +"/n"+
                 '}';
     }
 }
