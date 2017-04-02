@@ -91,16 +91,16 @@ public class CovarianceEllipse {
 
     @Override
     public String toString() {
-        return "CovarianceEllipse{" +"/n"+
-                "timeStamp=" + timeStamp +"/n"+
-                ", id=" + id +"/n"+
-                ", centreX=" + centreX +"/n"+
-                ", centreY=" + centreY +"/n"+
-                ", sx2=" + sx2 +"/n"+
-                ", sy2=" + sy2 +"/n"+
-                ", sxy=" + sxy +"/n"+
-                ", Sensor=" + sensor +"/n"+
-                ", velocity=" + velocity +"/n"+
+        return "CovarianceEllipse{" +"\n"+
+                "timeStamp=" + timeStamp +"\n"+
+                ", id=" + id +"\n"+
+                ", centreX=" + centreX +"\n"+
+                ", centreY=" + centreY +"\n"+
+                ", sx2=" + sx2 +"\n"+
+                ", sy2=" + sy2 +"\n"+
+                ", sxy=" + sxy +"\n"+
+                ", Sensor=" + sensor +"\n"+
+                ", velocity=" + velocity +"\n"+
                 '}';
     }
 }

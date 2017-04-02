@@ -56,11 +56,11 @@ public class Track {
 
     @Override
     public String toString() {
-        return "Track{" +"/n"+
-                "id=" + id +"/n"+
-                ", startTime=" + startTime +"/n"+
-                ", endTime=" + endTime +"/n"+
-                ", stateList=" + stateList +"/n"+
+        return "Track{" +"\n"+
+                "id=" + id +"\n"+
+                ", startTime=" + startTime +"\n"+
+                ", endTime=" + endTime +"\n"+
+                ", stateList=" + stateList +"\n"+
                 '}';
     }
 }

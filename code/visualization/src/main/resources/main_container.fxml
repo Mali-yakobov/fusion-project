@@ -7,7 +7,7 @@
 <?import javafx.scene.paint.*?>
 <?import javafx.scene.text.*?>
 
-<VBox prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.ac.bgu.visualization.MainContainerController">
+<VBox prefHeight="600.0" prefWidth="900.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="il.ac.bgu.visualization.MainContainerController">
   <children>
     <MenuBar fx:id="menuBar" VBox.vgrow="NEVER">
       <menus>
@@ -48,25 +48,28 @@
         </Menu>
       </menus>
     </MenuBar>
-      <ToolBar fx:id="toolBar" prefHeight="20.0" prefWidth="900.0">
-        <items>
-          <Button fx:id="loadFileButton" mnemonicParsing="false" onAction="#loadFileAction" text="Load" />
-            <Button fx:id="showButton" mnemonicParsing="false" onAction="#showAction" text="Show" />
-            <Button fx:id="addEllipseButton" layoutX="66.0" layoutY="10.0" mnemonicParsing="false" onAction="#addEllipseAction" text="Add Ellipse" />
-            <Button fx:id="clearButton" layoutX="122.0" layoutY="10.0" mnemonicParsing="false" onAction="#clearAction" text="Clear" />
-        </items>
-      </ToolBar>
+    <ToolBar fx:id="toolBar" prefHeight="20.0" prefWidth="900.0">
+      <items>
+        <Button fx:id="loadFileButton" mnemonicParsing="false" onAction="#loadFileAction" text="Load" />
+        <Button fx:id="showButton" mnemonicParsing="false" onAction="#showPointInTimeAction" text="Show Next" />
+        <Button fx:id="addEllipseButton" mnemonicParsing="false" onAction="#addEllipseAction" text="Add Ellipse" />
+        <Button fx:id="clearButton" mnemonicParsing="false" onAction="#clearAction" text="Clear" />
+      </items>
+    </ToolBar>
     <SplitPane dividerPositions="0.17037861915367483" focusTraversable="true" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
       <items>
-            <SplitPane dividerPositions="0.6550387596899225" orientation="VERTICAL">
-              <items>
-                <AnchorPane fx:id="masterArea" minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0" />
-                <AnchorPane fx:id="infoArea" minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0" />
-              </items>
-            </SplitPane>
+        <SplitPane dividerPositions="" orientation="VERTICAL">
+          <items>
+            <AnchorPane fx:id="masterArea" minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0" />
+          </items>
+        </SplitPane>
         <ScrollPane fx:id="viewAreaScroll" prefHeight="-1.0" prefWidth="-1.0">
           <content>
-            <AnchorPane id="Content" fx:id="viewArea" prefHeight="620.0" prefWidth="800.0" />
+            <AnchorPane id="Content" fx:id="viewArea" prefHeight="620.0" prefWidth="800.0">
+              <children>
+                <AnchorPane fx:id="infoArea" layoutX="-155.0" layoutY="346.0" minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0" />
+              </children>
+            </AnchorPane>
           </content>
         </ScrollPane>
       </items>

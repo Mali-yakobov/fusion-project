@@ -53,11 +53,11 @@ public class Sensor {
 
     @Override
     public String toString() {
-        return "Sensor{" +"/n"+
-                "id=" + id +"/n"+
-                ", xCoordinate=" + xCoordinate +"/n"+
-                ", yCoordinate=" + yCoordinate +"/n"+
-                ", metadata='" + metadata + '\'' +"/n"+
+        return "Sensor{" +"\n"+
+                "id=" + id +"\n"+
+                ", xCoordinate=" + xCoordinate +"\n"+
+                ", yCoordinate=" + yCoordinate +"\n"+
+                ", metadata='" + metadata + '\'' +"\n"+
                 '}';
     }
 }

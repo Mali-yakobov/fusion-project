@@ -9,6 +9,9 @@ import java.util.ResourceBundle;
 
 import com.google.gson.JsonSyntaxException;
 import il.ac.bgu.fusion.objects.CovarianceEllipse;
+import il.ac.bgu.fusion.objects.PointInTime;
+import il.ac.bgu.fusion.objects.State;
+import il.ac.bgu.fusion.objects.Track;
 import il.ac.bgu.fusion.util.JsonReaderWriter;
 import il.ac.bgu.visualization.objects.AddEllipseBox;
 import il.ac.bgu.visualization.objects.AlertWindow;
@@ -30,6 +33,8 @@ import javafx.stage.FileChooser;
 public class MainContainerController implements Initializable {
 
     private String filePath= null;
+    ArrayList<PointInTime> pointInTimeArray = null;
+    Iterator<PointInTime> pointInTimeItertor = null;
     private ArrayList<Ellipse> clickedEllipses= new ArrayList<Ellipse>();
 
 
@@ -68,26 +73,23 @@ public class MainContainerController implements Initializable {
         File file= fileChooser.showOpenDialog(viewArea.getScene().getWindow());
         if (file != null)
             filePath = file.getAbsolutePath();
-    }
 
-    public void showAction() {
         if (filePath != null){
             try{
-                ArrayList<CovarianceEllipse> CovarianceEllipseArray = JsonReaderWriter.elipseFromFile(filePath);
-                Iterator<CovarianceEllipse> itr = CovarianceEllipseArray.iterator();
-                while (itr.hasNext()) {
-                    Ellipse tempEllipse = EllipseRepresentationTranslation.fromCovarianceToVizual(itr.next());
-                    tempEllipse.setFill(ellipseFillColor);
-                    tempEllipse.setStroke(ellipseStrokeColor);
-                    ellipseSetOnClick(tempEllipse);
-                    viewArea.getChildren().addAll(tempEllipse);
-                }
+                pointInTimeArray = JsonReaderWriter.jsonToObject(filePath);
+                pointInTimeItertor = pointInTimeArray.iterator();
             }
             catch (JsonSyntaxException e){
                 AlertWindow.display("Json Error", e.getMessage());
                 filePath= null;
             }
         }
+
+    }
+
+    public void showPointInTimeAction(){
+        PointInTime pointInTime = pointInTimeItertor.next();
+        showPointInTime(pointInTime);
     }
 
     public void addEllipseAction() {
@@ -137,5 +139,49 @@ public class MainContainerController implements Initializable {
         });
     }
 
+    public void showPointInTime(PointInTime p){
+        Iterator<Track> trackIterator = p.getTrackList().iterator();
+        while(trackIterator.hasNext()){
+            Iterator<State> stateIterator = trackIterator.next().getStateList().iterator();
+            while(stateIterator.hasNext())
+                showState(stateIterator.next());
+        }
+    }
+
+    public void showState(State state) {
+        ArrayList<CovarianceEllipse> CovarianceEllipseArray = state.getEllipseList();
+        Iterator<CovarianceEllipse> itr = CovarianceEllipseArray.iterator();
+        while (itr.hasNext()) {
+            Ellipse tempEllipse = EllipseRepresentationTranslation.fromCovarianceToVizual(itr.next());
+            tempEllipse.setFill(ellipseFillColor);
+            tempEllipse.setStroke(ellipseStrokeColor);
+            ellipseSetOnClick(tempEllipse);
+            viewArea.getChildren().addAll(tempEllipse);
+        }
+    }
 
 }//MainContainerController
+
+
+
+
+/*
+    public void showAction() {
+        if (filePath != null){
+            try{
+                ArrayList<CovarianceEllipse> CovarianceEllipseArray = JsonReaderWriter.elipseFromFile(filePath);
+                Iterator<CovarianceEllipse> itr = CovarianceEllipseArray.iterator();
+                while (itr.hasNext()) {
+                    Ellipse tempEllipse = EllipseRepresentationTranslation.fromCovarianceToVizual(itr.next());
+                    tempEllipse.setFill(ellipseFillColor);
+                    tempEllipse.setStroke(ellipseStrokeColor);
+                    ellipseSetOnClick(tempEllipse);
+                    viewArea.getChildren().addAll(tempEllipse);
+                }
+            }
+            catch (JsonSyntaxException e){
+                AlertWindow.display("Json Error", e.getMessage());
+                filePath= null;
+            }
+        }
+    }*/

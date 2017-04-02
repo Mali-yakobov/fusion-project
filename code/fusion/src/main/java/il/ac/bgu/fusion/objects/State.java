@@ -27,8 +27,8 @@ public class State {
 
     @Override
     public String toString() {
-        return "State{" +"/n"+
-                "ellipseList=" + ellipseList +"/n"+
+        return "State{" +"\n"+
+                "ellipseList=" + ellipseList +"\n"+
                 '}';
     }
 }
