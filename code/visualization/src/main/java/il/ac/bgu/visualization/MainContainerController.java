@@ -34,7 +34,7 @@ public class MainContainerController implements Initializable {
 
     private String filePath= null;
     ArrayList<PointInTime> pointInTimeArray = null;
-    Iterator<PointInTime> pointInTimeItertor = null;
+    int pointInTimeArrayIndex= -1;
     private ArrayList<Ellipse> clickedEllipses= new ArrayList<Ellipse>();
 
 
@@ -45,11 +45,19 @@ public class MainContainerController implements Initializable {
 
     @FXML
     private AnchorPane viewArea;
-
+    @FXML
+    private Button forwardButton;
+    @FXML
+    private Button backwardButton;
+    @FXML
+    private Button resetButton;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         viewArea.getStyleClass().add("viewarea-class");
+        forwardButton.getStyleClass().add("forward-button-class");
+        backwardButton.getStyleClass().add("backward-button-class");
+        resetButton.getStyleClass().add("reset-button-class");
 
         //make context menu for viewArea (empty space):
         MenuItem addEllipseMenuItem = new MenuItem("Add Ellipse");
@@ -77,20 +85,44 @@ public class MainContainerController implements Initializable {
         if (filePath != null){
             try{
                 pointInTimeArray = JsonReaderWriter.jsonToObject(filePath);
-                pointInTimeItertor = pointInTimeArray.iterator();
+                forwardButton.setDisable(false);
+                //System.out.println(pointInTimeArray);
             }
             catch (JsonSyntaxException e){
                 AlertWindow.display("Json Error", e.getMessage());
                 filePath= null;
             }
         }
-
     }
 
-    public void showPointInTimeAction(){
-        PointInTime pointInTime = pointInTimeItertor.next();
+    public void forwardAction(){
+        pointInTimeArrayIndex++;
+        PointInTime pointInTime = pointInTimeArray.get(pointInTimeArrayIndex);
+        clearScreen();
         showPointInTime(pointInTime);
+        if (pointInTimeArrayIndex == 0) {
+            backwardButton.setDisable(false);
+            resetButton.setDisable(false);
+        }
+        else
+            if (pointInTimeArrayIndex == pointInTimeArray.size()-1)
+                forwardButton.setDisable(true);
     }
+
+    public void backwardAction(){
+        pointInTimeArrayIndex--;
+        clearScreen();
+        if (pointInTimeArrayIndex == -1) {
+            backwardButton.setDisable(true);
+            resetButton.setDisable(true);
+        }
+        else{
+            PointInTime pointInTime = pointInTimeArray.get(pointInTimeArrayIndex);
+            showPointInTime(pointInTime);
+            if (pointInTimeArrayIndex == pointInTimeArray.size()-2)
+                forwardButton.setDisable(false);
+        }
+     }
 
     public void addEllipseAction() {
         Ellipse newEllipse= AddEllipseBox.display();
@@ -109,8 +141,22 @@ public class MainContainerController implements Initializable {
     }
 
     public void clearAction() {
-        viewArea.getChildren().clear(); //viewArea.getChildren().remove(newEllipse);
-        clickedEllipses.clear();
+        clearScreen();
+        pointInTimeArrayIndex= -1;
+        pointInTimeArray = null;
+        forwardButton.setDisable(true);
+        backwardButton.setDisable(true);
+        resetButton.setDisable(true);
+    }
+
+    public void resetAction() {
+        clearScreen();
+        if (pointInTimeArrayIndex != -1){
+            pointInTimeArrayIndex= -1;
+            forwardButton.setDisable(false);
+            backwardButton.setDisable(true);
+            resetButton.setDisable(true);
+        }
     }
 
     public void closeAction() {
@@ -139,6 +185,12 @@ public class MainContainerController implements Initializable {
         });
     }
 
+
+    public void clearScreen() {
+        viewArea.getChildren().clear(); //viewArea.getChildren().remove(newEllipse);
+        clickedEllipses.clear();
+    }
+
     public void showPointInTime(PointInTime p){
         Iterator<Track> trackIterator = p.getTrackList().iterator();
         while(trackIterator.hasNext()){
@@ -161,27 +213,3 @@ public class MainContainerController implements Initializable {
     }
 
 }//MainContainerController
-
-
-
-
-/*
-    public void showAction() {
-        if (filePath != null){
-            try{
-                ArrayList<CovarianceEllipse> CovarianceEllipseArray = JsonReaderWriter.elipseFromFile(filePath);
-                Iterator<CovarianceEllipse> itr = CovarianceEllipseArray.iterator();
-                while (itr.hasNext()) {
-                    Ellipse tempEllipse = EllipseRepresentationTranslation.fromCovarianceToVizual(itr.next());
-                    tempEllipse.setFill(ellipseFillColor);
-                    tempEllipse.setStroke(ellipseStrokeColor);
-                    ellipseSetOnClick(tempEllipse);
-                    viewArea.getChildren().addAll(tempEllipse);
-                }
-            }
-            catch (JsonSyntaxException e){
-                AlertWindow.display("Json Error", e.getMessage());
-                filePath= null;
-            }
-        }
-    }*/

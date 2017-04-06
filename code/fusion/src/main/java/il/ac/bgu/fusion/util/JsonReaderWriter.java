@@ -38,7 +38,9 @@ public class JsonReaderWriter {
      }
      return ans;
  }
-    public static void objectToJsonFile(ArrayList<PointInTime> PointInTimeObjects, String filename){
+
+
+    public static void objectToJson(ArrayList<PointInTime> PointInTimeObjects, String filename){
         Gson gson = new Gson();
         try (FileWriter writer = new FileWriter(filename + ".json")) {
             gson.toJson(PointInTimeObjects, writer);

@@ -2,11 +2,9 @@ package il.ac.bgu.fusion;
 
 
 
-import com.google.gson.Gson;
 import il.ac.bgu.fusion.objects.*;
 import il.ac.bgu.fusion.util.JsonReaderWriter;
 
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -87,7 +85,7 @@ public class Main {
         listPointInTime.add(p1);
         listPointInTime.add(p2);
         String filename= "testJson";
-        JsonReaderWriter.objectToJsonFile(listPointInTime,filename);
+        JsonReaderWriter.objectToJson(listPointInTime,filename);
 
         String fileaddress= "D:\\sigmabit\\fusion-project\\";
         String filepath= fileaddress + filename + ".json";

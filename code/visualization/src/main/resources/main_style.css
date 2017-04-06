@@ -14,3 +14,13 @@
     -fx-background-color: transparent, rgba(0,0,0,.2), rgba(0,0,0,.2), transparent;
 }
 
+/* for specific buttons: */
+.forward-button-class {
+    -fx-graphic: url("forward.png");
+}
+.backward-button-class {
+    -fx-graphic: url("backward.png");
+}
+.reset-button-class {
+    -fx-graphic: url("reset.png");
+}
