@@ -3,9 +3,7 @@ package il.ac.bgu.visualization;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.ResourceBundle;
+import java.util.*;
 
 import com.google.gson.JsonSyntaxException;
 import il.ac.bgu.fusion.objects.CovarianceEllipse;
@@ -37,11 +35,6 @@ public class MainContainerController implements Initializable {
     int pointInTimeArrayIndex= -1;
     private ArrayList<Ellipse> clickedEllipses= new ArrayList<Ellipse>();
 
-
-    private Color ellipseFillColor= Color.rgb(212, 4, 6, 0.50);
-    private Color ellipseFillColorClicked= Color.rgb(11, 12, 255, 0.50);
-    private Color ellipseStrokeColor= Color.rgb(212, 4, 6, 1.0);
-    private Color ellipseStrokeColorClicked= Color.rgb(11, 12, 255, 1.0);
 
     @FXML
     private AnchorPane viewArea;
@@ -126,16 +119,18 @@ public class MainContainerController implements Initializable {
 
     public void addEllipseAction() {
         Ellipse newEllipse= AddEllipseBox.display();
-        newEllipse.setFill(ellipseFillColor);
-        newEllipse.setStroke(ellipseStrokeColor);
+        Color cl= colorGenerator();
+        newEllipse.setFill(cl);
+        newEllipse.setStroke(new Color(cl.getRed(), cl.getGreen(), cl.getBlue(), 1));
         ellipseSetOnClick(newEllipse);
         viewArea.getChildren().addAll(newEllipse);
     }
 
     public void addEllipseOnClickAction(double x, double y) {
         Ellipse newEllipse= AddEllipseBox.display(x, y);
-        newEllipse.setFill(ellipseFillColor);
-        newEllipse.setStroke(ellipseStrokeColor);
+        Color cl= colorGenerator();
+        newEllipse.setFill(cl);
+        newEllipse.setStroke(new Color(cl.getRed(), cl.getGreen(), cl.getBlue(), 1));
         ellipseSetOnClick(newEllipse);
         viewArea.getChildren().addAll(newEllipse);
     }
@@ -171,15 +166,17 @@ public class MainContainerController implements Initializable {
     public void ellipseSetOnClick(Ellipse ellipse) {
         ellipse.setOnMouseClicked(event -> {
             if (event.getButton().equals(MouseButton.PRIMARY)){
-                if (ellipse.getFill().equals(ellipseFillColor)){   //was not clicked/chosen
-                    ellipse.setFill(ellipseFillColorClicked);
-                    ellipse.setStroke(ellipseStrokeColorClicked);
+                Color clF= (Color) ellipse.getFill();
+                Color clS= (Color) ellipse.getStroke();
+                if (clF.getOpacity()==0.5){                   //was not clicked/chosen
                     clickedEllipses.add(ellipse);
+                    ellipse.setFill(new Color(clF.getRed(), clF.getGreen(), clF.getBlue(), 0.85));
+                    ellipse.setStroke(clS.invert());
                 }
-                else{                                              //was clicked/chosen
-                    ellipse.setFill(ellipseFillColor);
-                    ellipse.setStroke(ellipseStrokeColor);
+                else{                                          //was clicked/chosen
                     clickedEllipses.remove(ellipse);
+                    ellipse.setFill(new Color(clF.getRed(), clF.getGreen(), clF.getBlue(), 0.5));
+                    ellipse.setStroke(clS.invert());
                 }
             }
         });
@@ -194,22 +191,34 @@ public class MainContainerController implements Initializable {
     public void showPointInTime(PointInTime p){
         Iterator<Track> trackIterator = p.getTrackList().iterator();
         while(trackIterator.hasNext()){
-            Iterator<State> stateIterator = trackIterator.next().getStateList().iterator();
+            Track currTrack= trackIterator.next();
+            Iterator<State> stateIterator = currTrack.getStateList().iterator();
+            if (currTrack.getColor()==null)
+                currTrack.setColor(colorGenerator());
             while(stateIterator.hasNext())
-                showState(stateIterator.next());
+                showState(stateIterator.next(), currTrack.getColor());
         }
     }
 
-    public void showState(State state) {
+    public void showState(State state, Color color) {
         ArrayList<CovarianceEllipse> CovarianceEllipseArray = state.getEllipseList();
         Iterator<CovarianceEllipse> itr = CovarianceEllipseArray.iterator();
         while (itr.hasNext()) {
             Ellipse tempEllipse = EllipseRepresentationTranslation.fromCovarianceToVizual(itr.next());
-            tempEllipse.setFill(ellipseFillColor);
-            tempEllipse.setStroke(ellipseStrokeColor);
+            tempEllipse.setFill(color);
+            tempEllipse.setStroke(new Color(color.getRed(), color.getGreen(), color.getBlue(), 1));
             ellipseSetOnClick(tempEllipse);
             viewArea.getChildren().addAll(tempEllipse);
         }
     }
+
+    public Color colorGenerator() {
+        Random rand = new Random();
+        float r = rand.nextFloat();
+        float g = rand.nextFloat();
+        float b = rand.nextFloat();
+        return  new Color(r, g, b, 0.50);
+    }
+
 
 }//MainContainerController
