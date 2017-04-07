@@ -31,9 +31,10 @@ import javafx.stage.FileChooser;
 public class MainContainerController implements Initializable {
 
     private String filePath= null;
-    ArrayList<PointInTime> pointInTimeArray = null;
-    int pointInTimeArrayIndex= -1;
+    private ArrayList<PointInTime> pointInTimeArray = null;
+    private int pointInTimeArrayIndex= -1;
     private ArrayList<Ellipse> clickedEllipses= new ArrayList<Ellipse>();
+    private HashMap<Long, Color> colorByTrackIdTable= new HashMap<Long, Color>();
 
 
     @FXML
@@ -78,7 +79,8 @@ public class MainContainerController implements Initializable {
         if (filePath != null){
             try{
                 pointInTimeArray = JsonReaderWriter.jsonToObject(filePath);
-                forwardButton.setDisable(false);
+                resetAction();
+                colorByTrackIdTable.clear();
                 //System.out.println(pointInTimeArray);
             }
             catch (JsonSyntaxException e){
@@ -142,16 +144,15 @@ public class MainContainerController implements Initializable {
         forwardButton.setDisable(true);
         backwardButton.setDisable(true);
         resetButton.setDisable(true);
+        colorByTrackIdTable.clear();
     }
 
     public void resetAction() {
         clearScreen();
-        if (pointInTimeArrayIndex != -1){
-            pointInTimeArrayIndex= -1;
-            forwardButton.setDisable(false);
-            backwardButton.setDisable(true);
-            resetButton.setDisable(true);
-        }
+        pointInTimeArrayIndex= -1;
+        forwardButton.setDisable(false);
+        backwardButton.setDisable(true);
+        resetButton.setDisable(true);
     }
 
     public void closeAction() {
@@ -191,12 +192,12 @@ public class MainContainerController implements Initializable {
     public void showPointInTime(PointInTime p){
         Iterator<Track> trackIterator = p.getTrackList().iterator();
         while(trackIterator.hasNext()){
-            Track currTrack= trackIterator.next();
+            Track currTrack= trackIterator.next(); //colorByTrackIdTable
             Iterator<State> stateIterator = currTrack.getStateList().iterator();
-            if (currTrack.getColor()==null)
-                currTrack.setColor(colorGenerator());
+            if (!colorByTrackIdTable.containsKey(currTrack.getId()))
+                colorByTrackIdTable.put(currTrack.getId(), colorGenerator());
             while(stateIterator.hasNext())
-                showState(stateIterator.next(), currTrack.getColor());
+                showState(stateIterator.next(), colorByTrackIdTable.get(currTrack.getId()));
         }
     }
 
