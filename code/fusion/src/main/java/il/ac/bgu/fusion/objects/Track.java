@@ -16,12 +16,16 @@ public class Track {
         this.startTime = startTime;
         this.endTime = endTime;
         this.stateList = stateList;
+
+        this.color= null;
     }
 
     private long id;
     private long startTime;
     private long endTime;
     private ArrayList<State> stateList;
+
+    private Color color;
 
 
     public long getId() {
@@ -54,6 +58,14 @@ public class Track {
 
     public void setStateList(ArrayList<State> stateList) {
         this.stateList = stateList;
+    }
+
+
+    public Color getColor() {
+        return this.color;
+    }
+    public void setColor(Color newColor) {
+        this.color = newColor;
     }
 
 
