@@ -53,7 +53,7 @@ public class MainContainerController implements Initializable {
     private Button resetButton;
 
 
-    /* tree start  */
+    /* tree related code start  */
     @FXML
     private AnchorPane treeArea;                      //get place for tree from fxml
     private TreeItem<HierarchyData> root;             //root for tree
@@ -61,7 +61,7 @@ public class MainContainerController implements Initializable {
     private ObservableList<HierarchyData> treeItems;  //data source for tree
     private ContextMenu treeMenu;                     //context menu for tree (empty space)
     private TreeItem<HierarchyData> selectedNode;     //currently selected tree item
-    /* tree end  */
+    /* tree related code end  */
 
 
     @Override
@@ -80,9 +80,9 @@ public class MainContainerController implements Initializable {
             viewAreaMenu.show(viewArea, event.getScreenX(), event.getScreenY());
         });
 
-        /* tree start  */
+        /* tree related code start  */
         treeInit();
-        /* tree end  */
+        /* tree related code end  */
     }//initialize
 
 
@@ -249,7 +249,7 @@ public class MainContainerController implements Initializable {
 
 
 
-    /* tree start  */
+    /* tree related code start  */
     private void treeInit() {
         //init root (for tree):
         root= new TreeItem<>(new TreeItemContainer());
@@ -356,7 +356,7 @@ public class MainContainerController implements Initializable {
         }//updateItem
 
     }//NameIconAddCell
-   /* tree end  */
+   /* tree related code end  */
 
 
 
