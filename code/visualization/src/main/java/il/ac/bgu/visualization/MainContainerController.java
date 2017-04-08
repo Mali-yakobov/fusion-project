@@ -40,7 +40,10 @@ public class MainContainerController implements Initializable {
 
     private ArrayList<PointInTime> pointInTimeArray = null;
     private int pointInTimeArrayIndex= -1;
-    private ArrayList<Ellipse> clickedEllipses= new ArrayList<Ellipse>();
+
+    private ArrayList<Ellipse> clickedEllipses= new ArrayList<Ellipse>();   // PROBABLY NOT NEEDED ANYMORE
+    private ArrayList<CovarianceEllipse> clickedCovEllipses= new ArrayList<CovarianceEllipse>();
+
     private HashMap<Long, Color> colorByTrackIdTable= new HashMap<Long, Color>();
 
     @FXML
@@ -60,7 +63,7 @@ public class MainContainerController implements Initializable {
     private TreeViewWithItems tree;                   //tree
     private ObservableList<HierarchyData> treeItems;  //data source for tree
     private ContextMenu treeMenu;                     //context menu for tree (empty space)
-    private TreeItem<HierarchyData> selectedNode;     //currently selected tree item
+    private TreeItemContainer selectedItemContainer;  //currently selected tree item container
     /* tree related code end  */
 
 
@@ -101,10 +104,10 @@ public class MainContainerController implements Initializable {
         if (filePath != null){
             try{
                 pointInTimeArray = JsonReaderWriter.jsonToObject(filePath);
+                colorByTrackIdTable.clear();
                 treeItems.clear();
                 fillTreeItemsFromJson(pointInTimeArray, treeItems);
                 resetAction();
-                colorByTrackIdTable.clear();
                // System.out.println(pointInTimeArray.get(0).getClass().getSimpleName());
             }
             catch (JsonSyntaxException e){
@@ -144,20 +147,16 @@ public class MainContainerController implements Initializable {
 
     public void addEllipseAction() {
         Ellipse newEllipse= AddEllipseBox.display();
-        Color cl= colorGenerator();
-        newEllipse.setFill(cl);
-        newEllipse.setStroke(new Color(cl.getRed(), cl.getGreen(), cl.getBlue(), 1));
-        ellipseSetOnClick(newEllipse);
-        viewArea.getChildren().addAll(newEllipse);
+        Color newColor= colorGenerator();
+        ellipseSetOnClick(newEllipse, null);
+        showEllipse(newEllipse, newColor);
     }
 
     public void addEllipseOnClickAction(double x, double y) {
         Ellipse newEllipse= AddEllipseBox.display(x, y);
-        Color cl= colorGenerator();
-        newEllipse.setFill(cl);
-        newEllipse.setStroke(new Color(cl.getRed(), cl.getGreen(), cl.getBlue(), 1));
-        ellipseSetOnClick(newEllipse);
-        viewArea.getChildren().addAll(newEllipse);
+        Color newColor= colorGenerator();
+        ellipseSetOnClick(newEllipse, null);
+        showEllipse(newEllipse, newColor);
     }
 
     public void clearAction() {
@@ -188,29 +187,48 @@ public class MainContainerController implements Initializable {
      Misc functions:
      */
 
-    public void ellipseSetOnClick(Ellipse ellipse) {
+    public void ellipseSetOnClick(Ellipse ellipse, CovarianceEllipse covEllipse) {
         ellipse.setOnMouseClicked(event -> {
             if (event.getButton().equals(MouseButton.PRIMARY)){
                 Color clF= (Color) ellipse.getFill();
-                Color clS= (Color) ellipse.getStroke();
-                if (clF.getOpacity()==0.5){                   //was not clicked/chosen
-                    clickedEllipses.add(ellipse);
-                    ellipse.setFill(new Color(clF.getRed(), clF.getGreen(), clF.getBlue(), 0.85));
-                    ellipse.setStroke(clS.invert());
-                }
-                else{                                          //was clicked/chosen
-                    clickedEllipses.remove(ellipse);
-                    ellipse.setFill(new Color(clF.getRed(), clF.getGreen(), clF.getBlue(), 0.5));
-                    ellipse.setStroke(clS.invert());
-                }
+                if (clF.getOpacity() < 0.7)                   //was not clicked/chosen
+                    ellipseSetClicked(ellipse, covEllipse);
+                else                                         //was clicked/chosen
+                    ellipseSetUnclicked(ellipse, covEllipse);
             }
         });
+    }
+
+    public void ellipseSetClicked(Ellipse ellipse, CovarianceEllipse covEllipse) {
+        Color clF= (Color) ellipse.getFill();
+        if (clF.getOpacity() < 0.7){
+            clickedEllipses.add(ellipse);
+            if (covEllipse != null)
+                clickedCovEllipses.add(covEllipse);
+            Color clS= (Color) ellipse.getStroke();
+            ellipse.setFill(new Color(clF.getRed(), clF.getGreen(), clF.getBlue(), 0.9));
+            ellipse.setStroke(clS.invert());
+        }
+    }
+
+    public void ellipseSetUnclicked(Ellipse ellipse, CovarianceEllipse covEllipse) {
+        Color clF= (Color) ellipse.getFill();
+        if (clF.getOpacity() >= 0.7){
+            clickedEllipses.remove(ellipse);
+            if (covEllipse != null)
+                clickedCovEllipses.remove(covEllipse);
+            Color clS= (Color) ellipse.getStroke();
+            ellipse.setFill(new Color(clF.getRed(), clF.getGreen(), clF.getBlue(), 0.6));
+            ellipse.setStroke(clS.invert());
+        }
     }
 
 
     public void clearScreen() {
         viewArea.getChildren().clear(); //viewArea.getChildren().remove(newEllipse);
         clickedEllipses.clear();
+        clickedCovEllipses.clear();
+        //TODO: recursive function that sets all graphicItems of tree nodes to null (enable show again)
     }
 
     public void showPointInTime(PointInTime p){
@@ -218,8 +236,8 @@ public class MainContainerController implements Initializable {
         while(trackIterator.hasNext()){
             Track currTrack= trackIterator.next(); //colorByTrackIdTable
             Iterator<State> stateIterator = currTrack.getStateList().iterator();
-            if (!colorByTrackIdTable.containsKey(currTrack.getId()))
-                colorByTrackIdTable.put(currTrack.getId(), colorGenerator());
+           /* if (!colorByTrackIdTable.containsKey(currTrack.getId()))
+                colorByTrackIdTable.put(currTrack.getId(), colorGenerator());*/
             while(stateIterator.hasNext())
                 showState(stateIterator.next(), colorByTrackIdTable.get(currTrack.getId()));
         }
@@ -229,12 +247,17 @@ public class MainContainerController implements Initializable {
         ArrayList<CovarianceEllipse> CovarianceEllipseArray = state.getEllipseList();
         Iterator<CovarianceEllipse> itr = CovarianceEllipseArray.iterator();
         while (itr.hasNext()) {
-            Ellipse tempEllipse = EllipseRepresentationTranslation.fromCovarianceToVizual(itr.next());
-            tempEllipse.setFill(color);
-            tempEllipse.setStroke(new Color(color.getRed(), color.getGreen(), color.getBlue(), 1));
-            ellipseSetOnClick(tempEllipse);
-            viewArea.getChildren().addAll(tempEllipse);
+            CovarianceEllipse tempCovEllipse= itr.next();
+            Ellipse tempEllipse = EllipseRepresentationTranslation.fromCovarianceToVizual(tempCovEllipse);
+            ellipseSetOnClick(tempEllipse, tempCovEllipse);
+            showEllipse(tempEllipse, color);
         }
+    }
+
+    public void showEllipse(Ellipse elipse, Color color){
+        elipse.setFill(color);
+        elipse.setStroke(new Color(color.getRed(), color.getGreen(), color.getBlue(), 1));
+        viewArea.getChildren().addAll(elipse);
     }
 
     public Color colorGenerator() {
@@ -242,14 +265,20 @@ public class MainContainerController implements Initializable {
         float r = rand.nextFloat();
         float g = rand.nextFloat();
         float b = rand.nextFloat();
-        return  new Color(r, g, b, 0.50);
+        return  new Color(r, g, b, 0.6);
     }
 
 
 
 
 
+
+
     /* tree related code start  */
+
+    /**
+     * On-click settings of the tree cells are here
+     * */
     private void treeInit() {
         //init root (for tree):
         root= new TreeItem<>(new TreeItemContainer());
@@ -278,18 +307,45 @@ public class MainContainerController implements Initializable {
                 new ChangeListener() {
                     @Override
                     public void changed(ObservableValue observable, Object oldValue, Object newValue) {  if(newValue != null){
-                        TreeItem<HierarchyData> selectedTreeItem = (TreeItem<HierarchyData>) newValue;
-                        TreeItem<HierarchyData> oldTreeItem = (TreeItem<HierarchyData>) oldValue;
-                        HierarchyData newItem= selectedTreeItem.getValue();
-                        HierarchyData oldItem= null;
-                        if (oldTreeItem != null)
-                            oldItem= oldTreeItem.getValue();
 
-                        selectedNode= selectedTreeItem;
+                        TreeItem<HierarchyData> selectedTreeNode = (TreeItem<HierarchyData>) newValue;
+                        TreeItem<HierarchyData> oldTreeNode = (TreeItem<HierarchyData>) oldValue;
 
-                        /*
-                        if instanceof ....
-                         */
+                        TreeItemContainer newItemContainer= (TreeItemContainer)selectedTreeNode.getValue();
+                        selectedItemContainer= newItemContainer;
+                        TreeItemContainer oldItemContainer= null;
+                        if (oldTreeNode != null)
+                            oldItemContainer= (TreeItemContainer)oldTreeNode.getValue();
+
+                        unclickAll();
+                        recursiveTreeClick(newItemContainer);
+
+                        /* if old item exist: */
+                        /*if (oldItemContainer != null) {
+                            Object oldItem = oldItemContainer.getContainedItem();
+                            Object oldGraphicItem = oldItemContainer.getContainedGraphicItem();
+
+                            if (oldItem instanceof CovarianceEllipse) {
+                                CovarianceEllipse covEllipse = (CovarianceEllipse) oldItem;
+                                if (oldGraphicItem != null) {
+                                    Ellipse ellipse = (Ellipse) oldGraphicItem;
+                                    ellipseSetUnclicked(ellipse, covEllipse);
+                                }
+                            }
+                        }*/ /* if old item exist: */
+
+
+                        /* dealing with the new item: */
+                        /*Object newItem= newItemContainer.getContainedItem();
+                        Object newGraphicItem= newItemContainer.getContainedGraphicItem();
+
+                        if (newItem instanceof CovarianceEllipse){
+                            CovarianceEllipse covEllipse= (CovarianceEllipse)newItem;
+                            if (newGraphicItem != null){
+                                Ellipse ellipse= (Ellipse)newGraphicItem;
+                                ellipseSetClicked(ellipse, covEllipse);
+                            }
+                        }*/
 
                     }}//changed(...)
                 }//new ChangeListener(){
@@ -300,41 +356,31 @@ public class MainContainerController implements Initializable {
 
     }//treeInit
 
-    private void fillTreeItemsFromJson(ArrayList<PointInTime> listOfPoints, ObservableList<HierarchyData> treeData){
-        Iterator<PointInTime> pointIterator = listOfPoints.iterator();
-        while(pointIterator.hasNext()){
-            PointInTime currPoint= pointIterator.next();
-            TreeItemContainer currPointItem= new TreeItemContainer(currPoint);  /*1*/
-            Iterator<Track> trackIterator = currPoint.getTrackList().iterator();
-            while(trackIterator.hasNext()){
-                Track currTrack= trackIterator.next();
-                TreeItemContainer currTrackItem= new TreeItemContainer(currTrack);  /*2*/
-                Iterator<State> stateIterator = currTrack.getStateList().iterator();
-                while(stateIterator.hasNext()){
-                    State currState= stateIterator.next();
-                    TreeItemContainer currStateItem= new TreeItemContainer(currState);  /*3*/
-                    Iterator<CovarianceEllipse> ellipseIterator = currState.getEllipseList().iterator();
-                    while (ellipseIterator.hasNext()) {
-                        CovarianceEllipse currEllipse= ellipseIterator.next();
-                        TreeItemContainer currEllipseItem= new TreeItemContainer(currEllipse); /*4*/
-                        currStateItem.getChildren().add(currEllipseItem);                      /*4*/
-                    }//no more ellipses in current state
-                    currTrackItem.getChildren().add(currStateItem); /*3*/
-                }//no more states in current track
-                currPointItem.getChildren().add(currTrackItem);/*2*/
-            }//no more tracks in current point
-            treeData.add(currPointItem); /*1*/
-        }//no more points in list
-    }//fillTreeItemsFromJson
-
-    /**
+    /**cc
      * Modify TreeCell class for cell-factory of the tree
+     *
+     * On-create settings of the tree cells are here
      */
     private final class NameIconAddCell extends TreeCell<HierarchyData> {
-        private ContextMenu blankMenu= new ContextMenu();
+        private ContextMenu defaultTreeContextMenu= new ContextMenu();
 
         public NameIconAddCell() {
-            //make context menus for items:............
+            //make default context menu for tree nodes:
+            MenuItem defaultTreeContextMenuShowItem = new MenuItem("Show");
+            MenuItem defaultTreeContextMenuHideItem = new MenuItem("Hide");
+            defaultTreeContextMenuHideItem.setDisable(true);
+            defaultTreeContextMenu.getItems().addAll(defaultTreeContextMenuShowItem, defaultTreeContextMenuHideItem);
+            //set actions for default context menu:
+            defaultTreeContextMenuShowItem.setOnAction( e -> {
+                defaultTreeContextMenuShowItem.setDisable(true);
+                defaultTreeContextMenuHideItem.setDisable(false);
+                recursiveShowItemContainer(selectedItemContainer);
+            });
+            defaultTreeContextMenuHideItem.setOnAction( e -> {
+                defaultTreeContextMenuShowItem.setDisable(false);
+                defaultTreeContextMenuHideItem.setDisable(true);
+                recursiveHideItemContainer(selectedItemContainer);
+            });
         }//NameIconAddCell
 
         @Override
@@ -349,6 +395,7 @@ public class MainContainerController implements Initializable {
             else { //cell is filled, specific settings depends on the class of the item represented by the cell:
                 //setGraphic(getItem().getNode());   //if we use CSS, not needed
                 setText(getItem().toString());
+                setContextMenu(defaultTreeContextMenu);
 
                /* if instanceof... */
 
@@ -356,7 +403,135 @@ public class MainContainerController implements Initializable {
         }//updateItem
 
     }//NameIconAddCell
-   /* tree related code end  */
+
+    private void fillTreeItemsFromJson(ArrayList<PointInTime> listOfPoints, ObservableList<HierarchyData> treeData){
+        Iterator<PointInTime> pointIterator = listOfPoints.iterator();
+        while(pointIterator.hasNext()){
+            PointInTime currPoint= pointIterator.next();
+            TreeItemContainer currPointItem= new TreeItemContainer(currPoint);  /*1*/
+            Iterator<Track> trackIterator = currPoint.getTrackList().iterator();
+            while(trackIterator.hasNext()){
+                Track currTrack= trackIterator.next();
+                if (!colorByTrackIdTable.containsKey(currTrack.getId()))
+                    colorByTrackIdTable.put(currTrack.getId(), colorGenerator());
+                TreeItemContainer currTrackItem= new TreeItemContainer(currTrack);  /*2*/
+                currTrackItem.setColorId(currTrack.getId());
+                Iterator<State> stateIterator = currTrack.getStateList().iterator();
+                while(stateIterator.hasNext()){
+                    State currState= stateIterator.next();
+                    TreeItemContainer currStateItem= new TreeItemContainer(currState);  /*3*/
+                    currStateItem.setColorId(currTrack.getId());
+                    Iterator<CovarianceEllipse> ellipseIterator = currState.getEllipseList().iterator();
+                    while (ellipseIterator.hasNext()) {
+                        CovarianceEllipse currEllipse= ellipseIterator.next();
+                        TreeItemContainer currEllipseItem= new TreeItemContainer(currEllipse); /*4*/
+                        currEllipseItem.setColorId(currTrack.getId());
+                        currStateItem.getChildren().add(currEllipseItem);                      /*4*/
+                    }//no more ellipses in current state
+                    currTrackItem.getChildren().add(currStateItem); /*3*/
+                }//no more states in current track
+                currPointItem.getChildren().add(currTrackItem);/*2*/
+            }//no more tracks in current point
+            treeData.add(currPointItem); /*1*/
+        }//no more points in list
+    }//fillTreeItemsFromJson
+
+
+    private void recursiveShowItemContainer(TreeItemContainer itemContainer){
+        Object item= itemContainer.getContainedItem();
+
+        if (item instanceof CovarianceEllipse)
+            showEllipseContainer(itemContainer);
+        else{
+            ObservableList<HierarchyData> childrenList= itemContainer.getChildren();
+            if (childrenList.size()==0)
+                return;
+            Iterator<HierarchyData> childrenListIterator = childrenList.iterator();
+            while (childrenListIterator.hasNext())
+                recursiveShowItemContainer((TreeItemContainer)childrenListIterator.next());
+        }
+    }
+
+    private void showEllipseContainer(TreeItemContainer ellipseContainer){
+        CovarianceEllipse covEllipse= (CovarianceEllipse)ellipseContainer.getContainedItem();
+        if (ellipseContainer.getContainedGraphicItem() == null){
+            Ellipse ellipse = EllipseRepresentationTranslation.fromCovarianceToVizual(covEllipse);
+            ellipseSetOnClick(ellipse, covEllipse);
+            showEllipse(ellipse, colorByTrackIdTable.get(ellipseContainer.getColorId()));
+            ellipseSetClicked(ellipse, covEllipse);
+            ellipseContainer.setContainedGraphicItem(ellipse);
+        }
+    }
+
+
+    private void recursiveHideItemContainer(TreeItemContainer itemContainer){
+        Object item= itemContainer.getContainedItem();
+
+        if (item instanceof CovarianceEllipse)
+            hideEllipseContainer(itemContainer);
+        else{
+            ObservableList<HierarchyData> childrenList= itemContainer.getChildren();
+            if (childrenList.size()==0)
+                return;
+            Iterator<HierarchyData> childrenListIterator = childrenList.iterator();
+            while (childrenListIterator.hasNext())
+                recursiveHideItemContainer((TreeItemContainer)childrenListIterator.next());
+        }
+    }
+
+    private void hideEllipseContainer(TreeItemContainer ellipseContainer){
+        CovarianceEllipse covEllipse= (CovarianceEllipse)ellipseContainer.getContainedItem();
+        Ellipse ellipse= (Ellipse)ellipseContainer.getContainedGraphicItem();
+        if (ellipse != null){
+            viewArea.getChildren().remove(ellipse);
+            clickedEllipses.remove(ellipse);
+            clickedCovEllipses.remove(covEllipse);
+            ellipseContainer.setContainedGraphicItem(null);
+        }
+    }
+
+
+    private void recursiveTreeClick(TreeItemContainer itemContainer){
+        Object item= itemContainer.getContainedItem();
+        Object graphicItem= itemContainer.getContainedGraphicItem();
+
+        if (item instanceof CovarianceEllipse) {
+            if (graphicItem != null) {
+                CovarianceEllipse covEllipse = (CovarianceEllipse) item;
+                Ellipse ellipse = (Ellipse) graphicItem;
+                ellipseSetClicked(ellipse, covEllipse);
+            }
+        }
+        else{
+            ObservableList<HierarchyData> childrenList= itemContainer.getChildren();
+            if (childrenList.size()==0)
+                return;
+            Iterator<HierarchyData> childrenListIterator = childrenList.iterator();
+            while (childrenListIterator.hasNext())
+                recursiveTreeClick((TreeItemContainer)childrenListIterator.next());
+        }
+    }
+
+    private void unclickAll(){
+        ArrayList<Ellipse> toUnclickList= new ArrayList<Ellipse>();
+
+        Iterator<Ellipse> clickedEllipseIterator = clickedEllipses.iterator();
+        while (clickedEllipseIterator.hasNext()) {
+            Ellipse toUnclick= clickedEllipseIterator.next();
+            if (clickedEllipses.contains(toUnclick))
+                toUnclickList.add(toUnclick);
+        }
+
+        Iterator<Ellipse> toUnclickIterator = toUnclickList.iterator();
+        while (toUnclickIterator.hasNext())
+            ellipseSetUnclicked(toUnclickIterator.next(), null);
+
+        clickedEllipses.clear();
+        clickedCovEllipses.clear();
+    }
+
+    /* tree related code end  */
+
 
 
 

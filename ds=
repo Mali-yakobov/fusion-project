@@ -1,0 +1,469 @@
+[33mcommit f12c3f797e632fc04f56cb1f944fd2318f2a6d82[m
+Author: Stas Rodov <stasr88@gmail.com>
+Date:   Fri Apr 7 22:25:00 2017 +0300
+
+    small add
+
+[33mcommit 2f3ccd1e1675d8fa0992335c332f91871d62cac5[m
+Author: Stas Rodov <stasr88@gmail.com>
+Date:   Fri Apr 7 22:03:34 2017 +0300
+
+    Started implementing a tree-view of a loaded json file.
+    need to set on-click methods.
+    need to add graphics.
+
+[33mcommit b59eb840ee068bc82a8bdcbdaa8a166a36fce4ea[m
+Author: Stas Rodov <stasr88@gmail.com>
+Date:   Fri Apr 7 15:54:02 2017 +0300
+
+    Fixed Track coloring- color is by trackID
+
+[33mcommit 79f97e3f53549a97437ee5eadb9adcd3bf857a6b[m
+Author: Stas Rodov <stasr88@gmail.com>
+Date:   Fri Apr 7 01:15:44 2017 +0300
+
+    Added feature that attaches a random collor to each new track.
+    Still should work on remembering collors of tracks BT THEIR ID.
+
+[33mcommit 8b99374213a7f6267ccaa1c4882894d54b26d320[m
+Author: Stas Rodov <stasr88@gmail.com>
+Date:   Thu Apr 6 21:54:30 2017 +0300
+
+    Added 'Forward', 'Backward' and 'Reset' buttons and their logic
+
+[33mcommit 93de13d4c7af924c34ecf5e01506d81e184e5a44[m
+Author: Mali Yakobov <mazyakobov@gmail.com>
+Date:   Mon Apr 3 01:11:42 2017 +0300
+
+    added ability to read json object (list of points in time),
+    and show point-after-point with button click
+
+[33mcommit bfa1484da92058d55de8f3ba3584f950b3e9c074[m
+Merge: ba3b2b4 b0dc2d6
+Author: Mali Yakobov <mazyakobov@gmail.com>
+Date:   Sun Apr 2 23:22:40 2017 +0300
+
+    Merge branch 'master' of https://github.com/Mali-yakobov/fusion-project
+
+[33mcommit ba3b2b4dcabdc6ccd0ab9d67e168aa650c509aa3[m
+Author: Mali Yakobov <mazyakobov@gmail.com>
+Date:   Sun Apr 2 23:21:00 2017 +0300
+
+    add commit
+
+[33mcommit b0dc2d6140c0262e74eae9b46226ada317170a55[m
+Author: Maayan Kaduri Hofling <maayan321@gmail.com>
+Date:   Sun Apr 2 23:18:28 2017 +0300
+
+    Maayan Commit - toString updated
+
+[33mcommit c3439b725ba27339d294560070f34a99dfb9ad29[m
+Author: Mali Yakobov <mazyakobov@gmail.com>
+Date:   Sun Apr 2 22:07:58 2017 +0300
+
+    add commit
+
+[33mcommit 51dec5a60899a08733ec0a8d1b9fdb96eaa6a2ed[m
+Author: Maayan Kaduri Hofling <maayan321@gmail.com>
+Date:   Sun Apr 2 21:44:37 2017 +0300
+
+    Added Constructors, Getters and Setters and toString for each class.
+
+[33mcommit 8f3cc652d6c872b8ff161c98ad1f7c8b1d2ade32[m
+Author: Mali Yakobov <mazyakobov@gmail.com>
+Date:   Sun Apr 2 21:04:06 2017 +0300
+
+    add commit
+
+[33mcommit 16544e0171e108bedc92e454519c39d06db38b71[m
+Author: Mali Yakobov <mazyakobov@gmail.com>
+Date:   Sun Apr 2 00:20:37 2017 +0300
+
+    add commit
+
+[33mcommit 3ebf9c3ca78be311fe4130ea8abc3275b111524f[m
+Author: Stas Rodov <stasr88@gmail.com>
+Date:   Sun Mar 26 01:16:12 2017 +0300
+
+    Stas commit
+    
+    Add ellips with right click.
+    Choose/unchoose existing ellipae with left click.
+
+[33mcommit e39d230f6e33c9e78f073ca46fc0b6ee87bd6bf7[m
+Author: Stas Rodov <stasr88@gmail.com>
+Date:   Sat Mar 25 06:38:36 2017 +0300
+
+    Stas commit
+    
+    GUI converted to FXML
+
+[33mcommit 7436491f4e5f82ea485094e2665a6f2e6a90323d[m
+Author: Stas Rodov <stasr88@gmail.com>
+Date:   Mon Jan 2 18:10:26 2017 +0200
+
+    Stas commit
+
+[33mcommit 4b4fe3ccb51d6b2625073a69a0d84facfd0de76a[m
+Author: Mali Yakobov <mazyakobov@gmail.com>
+Date:   Mon Jan 2 16:51:12 2017 +0200
+
+    Merge branch 'master' of https://github.com/Mali-yakobov/fusion-project
+    
+    # Conflicts:
+    #       code/build.gradle
+    #       code/visualization/src/main/java/il/ac/bgu/visualization/AddEllipseBox.java
+
+[33mcommit f9e98c2bb478c18c0314b955f3375fe67108f11b[m
+Author: Mali Yakobov <mazyakobov@gmail.com>
+Date:   Tue Dec 27 12:22:02 2016 +0200
+
+    Merge branch 'master' of https://github.com/Mali-yakobov/fusion-project
+    
+    # Conflicts:
+    #       code/build.gradle
+    #       code/visualization/src/main/java/il/ac/bgu/visualization/AddEllipseBox.java
+
+[33mcommit 10338ed22d0999af1d8f326230825460105021c0[m
+Author: Mali Yakobov <mazyakobov@gmail.com>
+Date:   Tue Dec 27 01:44:13 2016 +0200
+
+    add Commit Mali
+
+[33mcommit f0c909d0e3654649f487e6dabdf23f8aa724e209[m
+Author: Mali Yakobov <mazyakobov@gmail.com>
+Date:   Tue Dec 27 01:41:30 2016 +0200
+
+    Merge branch 'master' of https://github.com/Mali-yakobov/fusion-project
+    
+    # Conflicts:
+    #       code/build.gradle
+    #       code/visualization/src/main/java/il/ac/bgu/visualization/AddEllipseBox.java
+
+[33mcommit 716526ef450180ca8d8a4748f60c4e6f42c74d95[m
+Author: Mali Yakobov <mazyakobov@gmail.com>
+Date:   Thu Dec 22 17:27:59 2016 +0200
+
+    Merge branch 'master' of https://github.com/Mali-yakobov/fusion-project
+    
+    # Conflicts:
+    #       code/build.gradle
+    #       code/visualization/src/main/java/il/ac/bgu/visualization/AddEllipseBox.java
+    
+    Signed-off-by: Mali Yakobov <mazyakobov@gmail.com>
+
+[33mcommit 2ab65a96314aebb8a1c6378d914b9549db94f4c3[m
+Author: Guy Yafe <guy.yafe@elbitsystems.com>
+Date:   Wed Dec 21 17:34:43 2016 +0200
+
+    Add Visualozation Depndency on Fusion
+
+[33mcommit d201cd22999c3829cd0e68cc5cf908775e83a1bc[m
+Merge: 553f824 b563257
+Author: Mali Yakobov <mazyakobov@gmail.com>
+Date:   Wed Dec 21 15:45:08 2016 +0200
+
+    Merge branch 'master' of https://github.com/Mali-yakobov/fusion-project
+    
+    # Conflicts:
+    #       code/build.gradle
+    #       code/visualization/src/main/java/il/ac/bgu/visualization/AddEllipseBox.java
+
+[33mcommit 553f824f2e666ffee93c8ba0f9c6f25f41788da5[m
+Author: Mali Yakobov <mazyakobov@gmail.com>
+Date:   Wed Nov 30 22:00:31 2016 +0200
+
+    commit
+
+[33mcommit b5632578118959183760424cf35853cfddebe6fd[m
+Author: Stas Rodov <stasr88@gmail.com>
+Date:   Wed Nov 30 21:52:18 2016 +0200
+
+    Stas commit
+
+[33mcommit 83695e42e9a0b2883c7c621071fb8affcb95cddf[m
+Author: Stas Rodov <stasr88@gmail.com>
+Date:   Wed Nov 30 21:24:59 2016 +0200
+
+    Signed-off-by: Stas Rodov <stasr88@gmail.com>
+
+[33mcommit 4aa39f663a04a0eebbd4053c56d8ff2526f5c4a8[m
+Author: Mali Yakobov <mazyakobov@gmail.com>
+Date:   Wed Nov 30 20:16:03 2016 +0200
+
+    add commit
+
+[33mcommit c99e89606a498172dd0446e7470a673d7a0ea633[m
+Author: Stas Rodov <stasr88@gmail.com>
+Date:   Wed Nov 30 19:45:28 2016 +0200
+
+    Stas Commit
+    
+    renaming
+
+[33mcommit 5781c4d405a38772c506c82a697975502fb6a7ed[m
+Merge: 6ef19dd c56d8f8
+Author: Stas Rodov <stasr88@gmail.com>
+Date:   Wed Nov 30 19:37:19 2016 +0200
+
+    Merge branch 'master' of https://github.com/Mali-yakobov/fusion-project
+    
+    # Conflicts:
+    #       testEllipse.json
+
+[33mcommit 6ef19ddf04ff66fe2d4520a1ee96a7a2a0dd5818[m
+Author: Stas Rodov <stasr88@gmail.com>
+Date:   Wed Nov 30 19:29:24 2016 +0200
+
+    Stas commit
+
+[33mcommit c56d8f8bbf5f8412507c3e7bcce9bf0449582850[m
+Author: Mali Yakobov <mazyakobov@gmail.com>
+Date:   Wed Nov 30 18:53:59 2016 +0200
+
+    ADD commit
+
+[33mcommit 74211791ad46a6b4112f5f8c7bfde7bccccb2755[m
+Author: Mali Yakobov <mazyakobov@gmail.com>
+Date:   Wed Nov 30 17:44:47 2016 +0200
+
+    commit
+
+[33mcommit 532b9353e6abc2b756682d3d6cefb2481a23945d[m
+Merge: dad0bde e44ef3d
+Author: Stas Rodov <stasr88@gmail.com>
+Date:   Wed Nov 30 16:56:14 2016 +0200
+
+    Merge branch 'master' of https://github.com/Mali-yakobov/fusion-project
+    
+    # Conflicts:
+    #       code/fusion/src/main/java/il/ac/bgu/fusion/Main.java
+
+[33mcommit dad0bde818655ea616d1218946c20373cbf306be[m
+Author: Stas Rodov <stasr88@gmail.com>
+Date:   Wed Nov 30 16:36:40 2016 +0200
+
+    Stas commit
+
+[33mcommit ff63c1a8e4aad9721966186bdd7bbb5ac4eadb50[m
+Merge: bcae8b0 e44ef3d
+Author: Mali Yakobov <mazyakobov@gmail.com>
+Date:   Wed Nov 30 16:35:02 2016 +0200
+
+    Merge branch 'master' of https://github.com/Mali-yakobov/fusion-project
+    
+    # Conflicts:
+    #       code/fusion/src/main/java/il/ac/bgu/fusion/Main.java
+    #       code/fusion/src/main/java/il/ac/bgu/fusion/util/EllipseRepresentationTranslation.java
+
+[33mcommit bcae8b0801d72329cf1628f44dc775cbe6a8144d[m
+Merge: 32921e0 d8247a5
+Author: Mali Yakobov <mazyakobov@gmail.com>
+Date:   Wed Nov 30 16:32:33 2016 +0200
+
+    Merge branch 'master' of https://github.com/Mali-yakobov/fusion-project
+    
+    # Conflicts:
+    #       code/fusion/src/main/java/il/ac/bgu/fusion/Main.java
+
+[33mcommit e44ef3db3a8baa1aeca41085537091bcf65bab27[m
+Author: Guy Yafe <guy.yafe@elbitsystems.com>
+Date:   Wed Nov 30 16:31:03 2016 +0200
+
+    Add Standard Gradle Dependencies
+
+[33mcommit 46d0cac532376652ef72757c4320ad1635297b51[m
+Merge: 64ac57e d8247a5
+Author: Stas Rodov <stasr88@gmail.com>
+Date:   Wed Nov 30 12:41:10 2016 +0200
+
+    Merge branch 'master' of https://github.com/Mali-yakobov/fusion-project
+
+[33mcommit 64ac57e936cc292dc604a4cb1ddb2b5a2a97e8d4[m
+Author: Stas Rodov <stasr88@gmail.com>
+Date:   Wed Nov 30 12:39:21 2016 +0200
+
+    Stas commit
+    
+    Added utility functions for translation between ellipse representation.
+    need more testing.
+
+[33mcommit d8247a5169402ba2b900f254978fe873b3354909[m
+Author: Maayan Kaduri Hofling <maayan321@gmail.com>
+Date:   Wed Nov 30 01:13:52 2016 +0200
+
+    Maayan Commit
+
+[33mcommit 2d930a2a223c16dfdae0c21591713c4495dde112[m
+Author: Maayan Kaduri Hofling <maayan321@gmail.com>
+Date:   Wed Nov 30 01:02:02 2016 +0200
+
+    Added Simple GUI
+
+[33mcommit c592633fa35690af86588b5fa21ff5ab8657bb5a[m
+Author: Stas Rodov <stasr88@gmail.com>
+Date:   Tue Nov 29 18:53:38 2016 +0200
+
+    Stas commit
+
+[33mcommit a8403ee01c074812f323dbe150412c896d8f38a9[m
+Author: Stas Rodov <stasr88@gmail.com>
+Date:   Tue Nov 29 18:30:03 2016 +0200
+
+    Stas commit
+    
+    added JsonREaderWriter utility class
+
+[33mcommit dee1e762b8a95b143dce82611650c022165a6d5b[m
+Author: Alex Shimanovich <shimanov@post.bgu.ac.il>
+Date:   Tue Nov 29 17:34:14 2016 +0200
+
+    alex commit
+
+[33mcommit 7cc0fe7bf2f552ac8134c1a1e509f22ba52bcbd7[m
+Author: Stas Rodov <stasr88@gmail.com>
+Date:   Tue Nov 29 14:09:37 2016 +0200
+
+    Stas commit
+
+[33mcommit 32921e0870c26dfa908e39a037cd6380d6fb026c[m
+Author: Mali Yakobov <mazyakobov@gmail.com>
+Date:   Wed Nov 23 15:43:55 2016 +0200
+
+    Add Commit Main
+
+[33mcommit 0157c2d4603e34e18a9ed633ea6d2cc689cdd620[m
+Merge: 2d8a34f fb4a407
+Author: Guy Yafe <guy.yafe@elbitsystems.com>
+Date:   Wed Nov 23 13:37:54 2016 +0200
+
+    Merge branch 'master' of https://github.com/Mali-yakobov/fusion-project
+    
+    # Conflicts:
+    #       code/fusion/src/main/java/il/ac/bgu/fusion/Main.java
+
+[33mcommit 2d8a34f52738d0aa9507b5a4b65bbe513beac119[m
+Author: Guy Yafe <guy.yafe@elbitsystems.com>
+Date:   Wed Nov 23 13:35:11 2016 +0200
+
+    Change Hello Message
+
+[33mcommit fb4a40726a9e3be4080eae437afdb37414c85389[m
+Author: Mali Yakobov <mazyakobov@gmail.com>
+Date:   Wed Nov 23 13:29:46 2016 +0200
+
+    Add Commit Main
+
+[33mcommit 6f98523b676423c4d02c6b2bd3a4de21151347cc[m
+Author: Maayan Kaduri Hofling <maayan321@gmail.com>
+Date:   Wed Nov 23 13:01:07 2016 +0200
+
+    Maayan Commit
+
+[33mcommit a88456f5cf6f34816316c4b0c87dfef44bacc075[m
+Author: Guy Yafe <guy.yafe@elbitsystems.com>
+Date:   Wed Nov 23 12:49:15 2016 +0200
+
+    Change Main Method
+
+[33mcommit 0b9c464322279326ca75de078dd97f4f212fa244[m
+Author: Guy Yafe <guy.yafe@elbitsystems.com>
+Date:   Wed Nov 23 12:47:23 2016 +0200
+
+    Update Gitignore File
+
+[33mcommit 06107be7a02036bef8436f59784f6fba99367544[m
+Author: Guy Yafe <guy.yafe@elbitsystems.com>
+Date:   Wed Nov 23 12:42:36 2016 +0200
+
+    Add Code Java Module in Gradle
+
+[33mcommit 8512a09b01dde4f68f578fcad9fc1f221c9a492b[m
+Author: Guy Yafe <guy.yafe@elbitsystems.com>
+Date:   Wed Nov 23 12:42:15 2016 +0200
+
+    Add Java Main File
+
+[33mcommit cd9021997bd7924c7ace650f16248f47a7971bba[m
+Author: Guy Yafe <guy.yafe@elbitsystems.com>
+Date:   Wed Nov 23 12:35:14 2016 +0200
+
+    Delete Stas Files
+
+[33mcommit 2f7ee4f5f29b403c1c6ca6ba1082f5f3792819bd[m
+Author: Guy Yafe <guy.yafe@elbitsystems.com>
+Date:   Wed Nov 23 12:34:08 2016 +0200
+
+    Delete Redundant Files
+
+[33mcommit e3953ec89ef36299adb1054255e1b120161aaca2[m
+Author: Guy Yafe <guy.yafe@elbitsystems.com>
+Date:   Wed Nov 23 12:29:59 2016 +0200
+
+    Add Basic Gradle Files
+    
+    Added files: build and settings files.
+
+[33mcommit 08b28f789c3c45e04f1e37ed7314671f50954aae[m
+Merge: e4c7c7f 3ad273b
+Author: Maayan Kaduri Hofling <maayan321@gmail.com>
+Date:   Thu Nov 17 18:11:33 2016 +0200
+
+    Merge branch 'master' of https://github.com/Mali-yakobov/fusion-project
+
+[33mcommit e4c7c7f05b641ddc8408586e00231eb4ac925a69[m
+Author: Maayan Kaduri Hofling <maayan321@gmail.com>
+Date:   Thu Nov 17 18:09:24 2016 +0200
+
+    Maayan Commit
+
+[33mcommit 3ad273b392c312226bdd82c19e447014d1a5dd9a[m
+Author: Mali Yakobov <mazyakobov@gmail.com>
+Date:   Thu Nov 17 18:05:59 2016 +0200
+
+    Mali Commit
+
+[33mcommit 6df5e827d403bda0210c1b6ce70fe03d469085b4[m
+Merge: 498591f ee8ead4
+Author: Stas Rodov <stasr88@gmail.com>
+Date:   Thu Nov 17 17:58:24 2016 +0200
+
+    Merge branch 'master' of https://github.com/Mali-yakobov/fusion-project
+
+[33mcommit ee8ead4f4a36e8badaacef4f4cd6bbf8be88484a[m
+Merge: 54d1ee7 c2a889d
+Author: Alex Shimanovich <shimanov@post.bgu.ac.il>
+Date:   Thu Nov 17 17:56:33 2016 +0200
+
+    Merge branch 'master' of https://github.com/Mali-yakobov/fusion-project
+
+[33mcommit 498591f892cd89d7d354dd318f7ae5f94041fdfa[m
+Merge: 95c46e8 c2a889d
+Author: Stas Rodov <stasr88@gmail.com>
+Date:   Thu Nov 17 17:55:49 2016 +0200
+
+    Merge branch 'master' of https://github.com/Mali-yakobov/fusion-project
+
+[33mcommit 95c46e8f75fbf560b461ee705101e600350e3e4d[m
+Author: Stas Rodov <stasr88@gmail.com>
+Date:   Thu Nov 17 17:54:21 2016 +0200
+
+    Stas Rodov
+
+[33mcommit 54d1ee757b79e8a6477d1514d045f102020da859[m
+Author: Alex Shimanovich <shimanov@post.bgu.ac.il>
+Date:   Thu Nov 17 17:54:11 2016 +0200
+
+    alex commit
+
+[33mcommit c2a889de0bb75a8ccafffb27599dde8df09f7dbe[m
+Author: Guy Yafe <guy.yafe@elbitsystems.com>
+Date:   Thu Nov 17 17:53:58 2016 +0200
+
+    Guy Commit
+
+[33mcommit 9525510cc29f6d47f31c7348af0ede86169fc859[m
+Author: Mali-yakobov <mazyakobov@gmail.com>
+Date:   Thu Nov 17 17:39:08 2016 +0200
+
+    Initial commit
