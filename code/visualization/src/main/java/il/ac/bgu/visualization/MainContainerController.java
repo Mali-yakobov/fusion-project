@@ -193,9 +193,17 @@ public class MainContainerController implements Initializable {
                 Color clF= (Color) ellipse.getFill();
                 if (clF.getOpacity() < 0.7)                   //was not clicked/chosen
                     ellipseSetClicked(ellipse, covEllipse);
-                else                                         //was clicked/chosen
+                else                                          //was clicked/chosen
                     ellipseSetUnclicked(ellipse, covEllipse);
             }
+        });
+
+        ellipse.setOnMouseEntered(e -> {
+            //TODO Alex make a floating thing to appear
+        });
+
+        ellipse.setOnMouseExited(e -> {
+            //TODO Alex make a floating thing to disappear
         });
     }
 
@@ -228,7 +236,6 @@ public class MainContainerController implements Initializable {
         viewArea.getChildren().clear(); //viewArea.getChildren().remove(newEllipse);
         clickedEllipses.clear();
         clickedCovEllipses.clear();
-        //TODO: recursive function that sets all graphicItems of tree nodes to null (enable show again)
     }
 
     public void showPointInTime(PointInTime p){
