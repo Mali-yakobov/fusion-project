@@ -165,7 +165,7 @@ public class MainContainerController implements Initializable {
                                                           node2.setOnMouseExited(ekmeee -> viewAreaMenu2.hide());
 
                                                       }
-                                                      
+
                                                   });
 
 

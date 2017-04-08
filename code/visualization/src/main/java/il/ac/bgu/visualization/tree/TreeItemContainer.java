@@ -1,7 +1,13 @@
 package il.ac.bgu.visualization.tree;
 
+import il.ac.bgu.fusion.objects.CovarianceEllipse;
+import il.ac.bgu.fusion.objects.PointInTime;
+import il.ac.bgu.fusion.objects.State;
+import il.ac.bgu.fusion.objects.Track;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
 
@@ -12,19 +18,26 @@ public class TreeItemContainer implements HierarchyData {
 
     private ObservableList<HierarchyData> children;
     private Object containedItem;
+    private Object containedGraphicItem;
     private String displayName;
+    private long colorId;
 
     public TreeItemContainer(){
         children= FXCollections.observableList(new ArrayList<HierarchyData>());
         containedItem= null;
+        containedGraphicItem= null;
         displayName= null;
+        colorId= -1;
     }
 
     public TreeItemContainer(Object item){
         children= FXCollections.observableList(new ArrayList<HierarchyData>());
         containedItem= item;
-        displayName= item.getClass().getSimpleName();
+        containedGraphicItem= null;
+        displayName= determineName(item);
+        colorId= -1;
     }
+
 
 
 
@@ -33,8 +46,17 @@ public class TreeItemContainer implements HierarchyData {
         return this.children;
     }
 
+
+    public long getColorId() {
+        return colorId;
+    }
+
     public Object getContainedItem() {
         return containedItem;
+    }
+
+    public Object getContainedGraphicItem() {
+        return containedGraphicItem;
     }
 
     public String getDisplayName() {
@@ -42,8 +64,41 @@ public class TreeItemContainer implements HierarchyData {
     }
 
 
+
+    public void setContainedGraphicItem(Object graphicItem) {
+        containedGraphicItem= graphicItem;
+    }
+
+    public void setColorId(long newColorId) {
+        this.colorId = newColorId;
+    }
+
+
     @Override
     public String toString() {
-        return displayName;
+        return this.displayName;
     }
+
+
+
+    private String determineName(Object item){
+        String ans= null;
+
+        if (item instanceof PointInTime)
+            ans= "Timestamp: " + Long.toString(((PointInTime) item).getTimeStamp());
+        else
+            if (item instanceof Track)
+                ans= "Track " + Long.toString(((Track) item).getId());
+            else
+                if (item instanceof State)
+                    ans= "State";
+                else
+                if (item instanceof CovarianceEllipse)
+                    ans= "Ellipse " + Long.toString(((CovarianceEllipse) item).getId());
+                else
+                    // ans= item.getClass().getSimpleName();
+                    ans= "Who Am I?";
+        return ans;
+    }
+
 }
