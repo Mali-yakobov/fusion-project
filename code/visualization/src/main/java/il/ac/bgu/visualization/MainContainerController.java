@@ -1,10 +1,5 @@
 package il.ac.bgu.visualization;
 
-import java.io.File;
-import java.lang.reflect.InvocationTargetException;
-import java.net.URL;
-import java.util.*;
-
 import com.google.gson.JsonSyntaxException;
 import il.ac.bgu.fusion.objects.CovarianceEllipse;
 import il.ac.bgu.fusion.objects.PointInTime;
@@ -22,15 +17,21 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
-import javafx.fxml.*;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Ellipse;
 import javafx.stage.FileChooser;
 import javafx.util.Callback;
+
+import java.io.File;
+import java.net.URL;
+import java.util.*;
 
 
 /**
@@ -61,7 +62,9 @@ public class MainContainerController implements Initializable {
     private ObservableList<HierarchyData> treeItems;  //data source for tree
     private ContextMenu treeMenu;                     //context menu for tree (empty space)
     private TreeItem<HierarchyData> selectedNode;     //currently selected tree item
+
     /* tree end  */
+
 
 
     @Override
@@ -142,14 +145,35 @@ public class MainContainerController implements Initializable {
         }
      }
 
-    public void addEllipseAction() {
-        Ellipse newEllipse= AddEllipseBox.display();
-        Color cl= colorGenerator();
-        newEllipse.setFill(cl);
-        newEllipse.setStroke(new Color(cl.getRed(), cl.getGreen(), cl.getBlue(), 1));
-        ellipseSetOnClick(newEllipse);
-        viewArea.getChildren().addAll(newEllipse);
-    }
+
+        public void addEllipseAction () {
+            Ellipse newEllipse = AddEllipseBox.display();
+            Color cl = colorGenerator();
+            newEllipse.setFill(cl);
+            newEllipse.setStroke(new Color(cl.getRed(), cl.getGreen(), cl.getBlue(), 1));
+            ellipseSetOnClick(newEllipse);
+            viewArea.getChildren().addAll(newEllipse);
+
+                                              for (Node node2 : viewArea.getChildren()
+                                                      ) {
+                                                  node2.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                                                      public void handle(MouseEvent meee) {
+                                                          MenuItem addEllipseMenuItem2 = new MenuItem(node2.toString());
+                                                          ContextMenu viewAreaMenu2 = new ContextMenu(addEllipseMenuItem2);
+                                                          viewAreaMenu2.show(node2, meee.getScreenX(), meee.getScreenY());
+                                                          System.out.println("Mouse entered");
+                                                          node2.setOnMouseExited(ekmeee -> viewAreaMenu2.hide());
+
+                                                      }
+                                                      
+                                                  });
+
+
+
+                                              }
+
+                                          }
+
 
     public void addEllipseOnClickAction(double x, double y) {
         Ellipse newEllipse= AddEllipseBox.display(x, y);
@@ -234,8 +258,23 @@ public class MainContainerController implements Initializable {
             tempEllipse.setStroke(new Color(color.getRed(), color.getGreen(), color.getBlue(), 1));
             ellipseSetOnClick(tempEllipse);
             viewArea.getChildren().addAll(tempEllipse);
+
         }
+        for (Node node3 : viewArea.getChildren()
+                ) {
+            node3.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                public void handle(MouseEvent meee) {
+                    MenuItem addEllipseMenuItem3 = new MenuItem(node3.toString());
+                    ContextMenu viewAreaMenu3 = new ContextMenu(addEllipseMenuItem3);
+                    viewAreaMenu3.show(node3, meee.getScreenX(), meee.getScreenY());
+                //    System.out.println("Mouse entered2222");
+                    node3.setOnMouseExited(ekmeee -> viewAreaMenu3.hide());
+                }
+            });
+        }
+
     }
+
 
     public Color colorGenerator() {
         Random rand = new Random();
@@ -247,7 +286,13 @@ public class MainContainerController implements Initializable {
 
 
 
-
+//viewArea.setOnMouseClicked(new EventHandler<MouseEvent>() {
+//
+//        public void handle(MouseEvent event) {
+//            System.out.println(event.getSceneX());
+//            System.out.println(event.getSceneY());
+//        }
+//    });
 
     /* tree start  */
     private void treeInit() {
