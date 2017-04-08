@@ -199,13 +199,17 @@ public class MainContainerController implements Initializable {
         });
 
         ellipse.setOnMouseEntered(e -> {
-            //TODO Alex make a floating thing to appear
+            /* TODO Alex make a floating thing to appear
+               (try working only with 'ellipse' argument (may transform to covariance representation),
+               because I am thinking of getting rid of the 'covEllipse' argument)
+             */
+
         });
 
         ellipse.setOnMouseExited(e -> {
             //TODO Alex make a floating thing to disappear
         });
-    }
+    }//ellipseSetOnClick
 
     public void ellipseSetClicked(Ellipse ellipse, CovarianceEllipse covEllipse) {
         Color clF= (Color) ellipse.getFill();
