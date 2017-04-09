@@ -1,10 +1,5 @@
 package il.ac.bgu.visualization;
 
-import java.io.File;
-import java.lang.reflect.InvocationTargetException;
-import java.net.URL;
-import java.util.*;
-
 import com.google.gson.JsonSyntaxException;
 import il.ac.bgu.fusion.objects.CovarianceEllipse;
 import il.ac.bgu.fusion.objects.PointInTime;
@@ -22,15 +17,20 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
-import javafx.fxml.*;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Ellipse;
 import javafx.stage.FileChooser;
 import javafx.util.Callback;
+
+import java.io.File;
+import java.net.URL;
+import java.util.*;
 
 
 /**
@@ -188,6 +188,16 @@ public class MainContainerController implements Initializable {
      */
 
     public void ellipseSetOnClick(Ellipse ellipse, CovarianceEllipse covEllipse) {
+        MenuItem addEllipseMenuItem3 = new MenuItem(ellipse.toString());
+        ContextMenu viewAreaMenu3 = new ContextMenu(addEllipseMenuItem3);
+        ellipse.setOnMouseEntered(new EventHandler<MouseEvent>() {
+            public void handle(MouseEvent enterevent) {
+                viewAreaMenu3.show(ellipse, enterevent.getSceneX(), enterevent.getSceneY());
+            }
+        });
+
+        ellipse.setOnMouseExited(exitevent -> viewAreaMenu3.hide());
+
         ellipse.setOnMouseClicked(event -> {
             if (event.getButton().equals(MouseButton.PRIMARY)){
                 Color clF= (Color) ellipse.getFill();
@@ -198,17 +208,8 @@ public class MainContainerController implements Initializable {
             }
         });
 
-        ellipse.setOnMouseEntered(e -> {
-            /* TODO Alex make a floating thing to appear
-               (try working only with 'ellipse' argument (may transform to covariance representation),
-               because I am thinking of getting rid of the 'covEllipse' argument)
-             */
 
-        });
-
-        ellipse.setOnMouseExited(e -> {
-            //TODO Alex make a floating thing to disappear
-        });
+//
     }//ellipseSetOnClick
 
     public void ellipseSetClicked(Ellipse ellipse, CovarianceEllipse covEllipse) {
