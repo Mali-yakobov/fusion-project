@@ -92,7 +92,8 @@ public class MainContainerController implements Initializable {
     /*
      Action functions for GUI components:
      */
-
+    Tooltip mousePositionToolTip = new Tooltip("");
+    
     public void loadFileAction() {
         String filePath= null;
         FileChooser fileChooser = new FileChooser();

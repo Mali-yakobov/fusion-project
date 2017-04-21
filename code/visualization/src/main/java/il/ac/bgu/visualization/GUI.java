@@ -39,6 +39,8 @@ public class GUI extends Application {
     }
 
 
+
+
     private void closeProgram(){
         window.close();
     }
