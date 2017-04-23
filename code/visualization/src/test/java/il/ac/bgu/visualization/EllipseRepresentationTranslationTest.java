@@ -1,7 +1,7 @@
 package il.ac.bgu.visualization;
 
-import com.sun.java.accessibility.util.GUIInitializedListener;
 import il.ac.bgu.fusion.objects.CovarianceEllipse;
+import il.ac.bgu.visualization.util.EllipseRepresentationTranslation;
 import javafx.scene.shape.Ellipse;
 import org.junit.After;
 import org.junit.Before;

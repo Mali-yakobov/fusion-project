@@ -3,6 +3,7 @@ package il.ac.bgu.fusion.util;
 import com.google.gson.Gson;
 import com.sun.java.accessibility.util.GUIInitializedListener;
 import il.ac.bgu.fusion.objects.CovarianceEllipse;
+import il.ac.bgu.fusion.objects.Sensor;
 import org.junit.Before;
 import org.junit.After;
 import org.junit.Test;
@@ -36,10 +37,11 @@ public class JsonReaderWriterTest {
     @Test
     public void elipseToFile() throws Exception {
         String filename= "testEllipse2";
+        Sensor sensor1=new Sensor(123,800,620,"");
         ArrayList<CovarianceEllipse> array=new ArrayList<>();
-        CovarianceEllipse El= new CovarianceEllipse(0, 0, 180, 650, 1450, 1449, 1050);
-        CovarianceEllipse E2= new CovarianceEllipse(1, 1, 500, 300, 1450, 1449, 1050);
-        CovarianceEllipse E3= new CovarianceEllipse(2, 2, 700, 200, 1450, 1449, 1050);
+        CovarianceEllipse El= new CovarianceEllipse(0, 0, 180, 650, 1450, 1449, 1050,sensor1,50);
+        CovarianceEllipse E2= new CovarianceEllipse(1, 1, 500, 300, 1450, 1449, 1050,sensor1,50);
+        CovarianceEllipse E3= new CovarianceEllipse(2, 2, 700, 200, 1450, 1449, 1050,sensor1,50);
 
         array.add(El);
         array.add(E2);
