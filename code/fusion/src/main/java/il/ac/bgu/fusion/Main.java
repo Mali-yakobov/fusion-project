@@ -32,18 +32,6 @@ public class Main {
         CovarianceEllipse c11=new CovarianceEllipse(0, 0, 180, 500, 1450, 1449, 1050,sensor1,50);
         CovarianceEllipse c12=new CovarianceEllipse(0, 0, 350, 300, 1450, 1449, 1050,sensor1,50);
 
-        Ellipse firstEllTmp= new Ellipse();
-        firstEllTmp.setRadiusX(30);
-        firstEllTmp.setRadiusY(90);
-        firstEllTmp.setRotate(45);
-        //CovarianceEllipse firstEll= fromVizualToCovariance(firstEllTmp);
-
-        Ellipse secondEllTmp= new Ellipse();
-        secondEllTmp.setRadiusX(90);
-        secondEllTmp.setRadiusY(30);
-       // CovarianceEllipse secondEll= fromVizualToCovariance(secondEll);
-
-
 
 ///////////    P1      //////////
         ArrayList<CovarianceEllipse> cL1=new ArrayList<CovarianceEllipse>();
