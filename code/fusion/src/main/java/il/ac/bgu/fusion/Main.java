@@ -19,18 +19,7 @@ public class Main {
 
     public static void main(String ... args)throws IOException{
         Sensor sensor1=new Sensor(123,800,620,"");
-        CovarianceEllipse c1= new CovarianceEllipse(0, 0, 180, 300, 1000, 1000, 800,sensor1,50);
-        CovarianceEllipse c2= new CovarianceEllipse(0, 0, 180, 300, 1400, 1449, 1000,sensor1,50);
-        CovarianceEllipse c3= new CovarianceEllipse(0, 0, 250, 300, 1450, 1449, 1050,sensor1,50);
-        CovarianceEllipse c4=new CovarianceEllipse(0, 0, 250, 300, 1400, 1440, 1000,sensor1,50);
-        CovarianceEllipse c5=new CovarianceEllipse(0, 0, 180, 500, 1450, 1449, 1050,sensor1,50);
-        CovarianceEllipse c6=new CovarianceEllipse(0, 0, 180, 500, 1450, 1449, 1050,sensor1,50);
-        CovarianceEllipse c7=new CovarianceEllipse(0, 0, 300, 300, 1450, 1449, 1050,sensor1,50);
-        CovarianceEllipse c8=new CovarianceEllipse(0, 0, 300, 300, 1450, 1449, 1050,sensor1,50);
-        CovarianceEllipse c9=new CovarianceEllipse(0, 0, 180, 400, 1450, 1449, 1050,sensor1,50);
-        CovarianceEllipse c10=new CovarianceEllipse(0, 0, 180, 400, 1450, 1449, 1050,sensor1,50);
-        CovarianceEllipse c11=new CovarianceEllipse(0, 0, 180, 500, 1450, 1449, 1050,sensor1,50);
-        CovarianceEllipse c12=new CovarianceEllipse(0, 0, 350, 300, 1450, 1449, 1050,sensor1,50);
+
 
 
 ///////////    P1      //////////
