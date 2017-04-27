@@ -1,19 +1,18 @@
 package il.ac.bgu.fusion;
 
-
-
 import il.ac.bgu.fusion.objects.*;
 import il.ac.bgu.fusion.util.JsonReaderWriter;
-
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
 
 /**
  * Created by Guy Yafe.
  */
 public class Main {
 
-
+BlockingQueue covEllipseQueue = new ArrayBlockingQueue(Integer.MAX_VALUE);
 
 
   public static void main(String ... args)throws IOException{
