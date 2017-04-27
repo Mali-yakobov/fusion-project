@@ -7,8 +7,7 @@ import java.util.ArrayList;
  */
 public class State {
 
-    // private long startTime;
-    // private long enime;
+
     private ArrayList<CovarianceEllipse> ellipseList;
     private CovarianceEllipse fusionEllipse;
 

@@ -16,12 +16,10 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Ellipse;
@@ -190,11 +188,7 @@ public class MainContainerController implements Initializable {
     public void ellipseSetOnClick(Ellipse ellipse, CovarianceEllipse covEllipse) {
         MenuItem addEllipseMenuItem3 = new MenuItem(ellipse.toString());
         ContextMenu viewAreaMenu3 = new ContextMenu(addEllipseMenuItem3);
-        ellipse.setOnMouseEntered(new EventHandler<MouseEvent>() {
-            public void handle(MouseEvent enterevent) {
-                viewAreaMenu3.show(ellipse, enterevent.getSceneX(), enterevent.getSceneY());
-            }
-        });
+        ellipse.setOnMouseEntered(enterevent -> viewAreaMenu3.show(ellipse, enterevent.getSceneX(), enterevent.getSceneY()));
 
         ellipse.setOnMouseExited(exitevent -> viewAreaMenu3.hide());
 
