@@ -5,11 +5,15 @@ package il.ac.bgu.visualization;
  * Changed by Stas on 23/03/2017 (Converted to FXML)
  */
 
+import il.ac.bgu.fusion.objects.CovarianceEllipse;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.shape.Ellipse;
 import javafx.stage.Stage;
+
+import static il.ac.bgu.visualization.util.EllipseRepresentationTranslation.fromVizualToCovariance;
 
 
 public class GUI extends Application {
@@ -18,6 +22,18 @@ public class GUI extends Application {
 
     public static void main(String[] args) {
         launch(args);
+        Ellipse firstEllTmp= new Ellipse();
+        firstEllTmp.setRadiusX(20);
+        firstEllTmp.setRadiusY(80);
+        firstEllTmp.setRotate(45);
+        CovarianceEllipse firstEll= fromVizualToCovariance(firstEllTmp);
+        firstEllTmp.setRotate(135);
+        CovarianceEllipse firstEll2= fromVizualToCovariance(firstEllTmp);
+        firstEllTmp.setRotate(90);
+        CovarianceEllipse firstEll3= fromVizualToCovariance(firstEllTmp);
+        System.out.println(firstEll);
+        System.out.println(firstEll2);
+        System.out.println(firstEll3);
     }
 
     @Override

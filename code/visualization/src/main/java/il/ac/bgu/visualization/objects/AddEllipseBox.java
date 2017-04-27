@@ -62,6 +62,14 @@ public class AddEllipseBox {
         GridPane.setConstraints(radiusY, 0, 3);
         grid.getChildren().add(radiusY);
 
+        //angle
+        final TextField angle = new TextField();
+        angle.setPrefColumnCount(15);
+        angle.setPromptText("Angle");
+        angle.getText();
+        GridPane.setConstraints(angle, 0, 4);
+        grid.getChildren().add(angle);
+
 //Defining the Submit button
         Button submit = new Button("Add new Ellipse");
         GridPane.setConstraints(submit, 1, 0);
@@ -76,7 +84,7 @@ public class AddEllipseBox {
             ellipse.setCenterY(y[0] );
             ellipse.setRadiusX(rX[0] );
             ellipse.setRadiusY(rY[0] );
-            ellipse.setRotate(30);
+            ellipse.setRotate(Integer.parseInt(angle.getText()));
             window.close();
         });
         grid.getChildren().add(submit);
