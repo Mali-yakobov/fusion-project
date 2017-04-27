@@ -14,12 +14,15 @@ public class CovarianceEllipse {
     private double sx2;
     private double sy2;
     private double sxy;
-    private double velocity;
+    private double vx;
+    private double vy;
+    private double vxy;
+
 
     public CovarianceEllipse(){
     }
 
-    public CovarianceEllipse(long timeStamp, long id, double centreX, double centreY, double sx2, double sy2, double sxy, Sensor sensor, double velocity) {
+    public CovarianceEllipse(long timeStamp, long id, double centreX, double centreY, double sx2, double sy2, double sxy, Sensor sensor) {
         this.timeStamp = timeStamp;
         this.id = id;
         this.centreX = centreX;
@@ -28,7 +31,7 @@ public class CovarianceEllipse {
         this.sy2 = sy2;
         this.sxy = sxy;
         this.sensor=sensor;
-        this.velocity=velocity;
+
 
     }
 
@@ -100,7 +103,6 @@ public class CovarianceEllipse {
                 ", sy2=" + sy2 +"\n"+
                 ", sxy=" + sxy +"\n"+
                 ", Sensor=" + sensor +"\n"+
-                ", velocity=" + velocity +"\n"+
                 '}';
     }
 }
