@@ -43,7 +43,6 @@ public class Main {
     ArrayList<CovarianceEllipse> rawElls1=new ArrayList<CovarianceEllipse>();
     rawElls1.add(c1);
     rawElls1.add(c2);
-    rawElls1.add(c3);
     State s1= new State(rawElls1);
     s1.setFusionEllipse(c3);
     ArrayList<State> states1= new ArrayList<State>();
@@ -57,7 +56,6 @@ public class Main {
     ArrayList<CovarianceEllipse> rawElls12=new ArrayList<CovarianceEllipse>();
     rawElls12.add(c31);
     rawElls12.add(c32);
-    rawElls12.add(c33);
     State s12= new State(rawElls12);
     s12.setFusionEllipse(c33);
     ArrayList<State> states12= new ArrayList<State>();
@@ -68,11 +66,10 @@ public class Main {
     tracks12.add(t12);
 
     ArrayList<CovarianceEllipse> rawElls2=new ArrayList<CovarianceEllipse>();
-    rawElls2.add(c21);
     rawElls2.add(c22);
     rawElls2.add(c23);
     State s2= new State(rawElls2);
-    s1.setFusionEllipse(c23);
+    s2.setFusionEllipse(c21);
     ArrayList<State> states2= new ArrayList<State>();
     states2.add(s2);
     Track t2=new Track(2,10,12,states2);
@@ -84,7 +81,6 @@ public class Main {
     ArrayList<CovarianceEllipse> rawElls13=new ArrayList<CovarianceEllipse>();
     rawElls13.add(c41);
     rawElls13.add(c42);
-    rawElls13.add(c43);
     State s13= new State(rawElls13);
     s13.setFusionEllipse(c43);
     ArrayList<State> states13= new ArrayList<State>();
@@ -96,11 +92,10 @@ public class Main {
     tracks13.add(t13);
 
     ArrayList<CovarianceEllipse> rawElls21=new ArrayList<CovarianceEllipse>();
-    rawElls21.add(c51);
     rawElls21.add(c52);
     rawElls21.add(c53);
     State s21= new State(rawElls21);
-    s1.setFusionEllipse(c53);
+    s21.setFusionEllipse(c51);
     ArrayList<State> states21= new ArrayList<State>();
     states21.add(s2);
     states21.add(s21);

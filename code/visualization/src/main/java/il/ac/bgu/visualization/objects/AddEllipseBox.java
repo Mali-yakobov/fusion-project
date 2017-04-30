@@ -4,6 +4,7 @@ package il.ac.bgu.visualization.objects;
  * Created by Maayan on 30/11/2016.
  */
 
+import il.ac.bgu.visualization.MainContainerController;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -13,8 +14,10 @@ import javafx.scene.shape.Ellipse;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import static il.ac.bgu.visualization.MainContainerController.*;
+
 public class AddEllipseBox {
-    public static Ellipse display(double...axis) {
+    public static MainContainerController.TaggedEllipse display(double...axis) {
         final double[] x = {0};
         final double[] y = { 0 };
         final double[] rX = { 0 };
@@ -74,7 +77,7 @@ public class AddEllipseBox {
         Button submit = new Button("Add new Ellipse");
         GridPane.setConstraints(submit, 1, 0);
 
-        Ellipse ellipse= new Ellipse();
+        MainContainerController.TaggedEllipse ellipse= new MainContainerController.TaggedEllipse();
         submit.setOnAction(e ->{
             x[0] =Double.valueOf(centerX.getText());
             y[0] =Double.parseDouble(centerY.getText());

@@ -18,8 +18,11 @@ public class CovarianceEllipse {
     private double vy;
     private double vxy;
 
+    boolean isFusionEllipse;
+
 
     public CovarianceEllipse(){
+        this.isFusionEllipse= false;
     }
 
     public CovarianceEllipse(long timeStamp, long id, double centreX, double centreY, double sx2, double sy2, double sxy, Sensor sensor) {
@@ -32,7 +35,7 @@ public class CovarianceEllipse {
         this.sxy = sxy;
         this.sensor=sensor;
 
-
+        this.isFusionEllipse= false;
     }
 
     public long getTimeStamp() {
@@ -90,6 +93,18 @@ public class CovarianceEllipse {
     public void setSxy(double sxy) {
         this.sxy = sxy;
     }
+
+
+
+    public boolean getIsFusionEllipse() {
+        return this.isFusionEllipse;
+    }
+
+    public void setIsFusionEllipse(boolean isFusionEllipse) {
+        this.isFusionEllipse= isFusionEllipse;
+    }
+
+
 
 
     @Override

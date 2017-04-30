@@ -1,6 +1,7 @@
 package il.ac.bgu.visualization.util;
 
 import il.ac.bgu.fusion.objects.CovarianceEllipse;
+import il.ac.bgu.visualization.MainContainerController;
 import javafx.scene.shape.Ellipse;
 import org.apache.commons.math3.linear.*;
 
@@ -12,8 +13,8 @@ import java.util.Arrays;
  */
 public class EllipseRepresentationTranslation {
 
-    public static Ellipse fromCovarianceToVizual(CovarianceEllipse covElipse){
-        Ellipse ans= new Ellipse();
+    public static MainContainerController.TaggedEllipse fromCovarianceToVizual(CovarianceEllipse covElipse){
+        MainContainerController.TaggedEllipse ans= new MainContainerController.TaggedEllipse();
 
         double[][] matrixData = { {covElipse.getSx2(), covElipse.getSxy()},
                                   {covElipse.getSxy(), covElipse.getSy2()} };
@@ -40,10 +41,11 @@ public class EllipseRepresentationTranslation {
         ans.setCenterY(covElipse.getCentreY());
         ans.setRotate(Math.toDegrees(theta));
 
+        ans.setIsFusionEllipse(covElipse.getIsFusionEllipse());
         return ans;
     }
 
-    public static CovarianceEllipse fromVizualToCovariance(Ellipse vizElipse) {
+    public static CovarianceEllipse fromVizualToCovariance(MainContainerController.TaggedEllipse vizElipse) {
         CovarianceEllipse ans =  new CovarianceEllipse();
 
         double[][] tempMatData = { {Math.pow(vizElipse.getRadiusX(), 2), 0},

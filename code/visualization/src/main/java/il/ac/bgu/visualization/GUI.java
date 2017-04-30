@@ -22,28 +22,6 @@ public class GUI extends Application {
 
     public static void main(String[] args) {
         launch(args);
-        Ellipse firstEllTmp= new Ellipse();
-        firstEllTmp.setRadiusX(20);
-        firstEllTmp.setRadiusY(80);
-        firstEllTmp.setRotate(50);
-        CovarianceEllipse firstEll1= fromVizualToCovariance(firstEllTmp);
-        System.out.println(firstEll1);
-
-        Ellipse firstEllTmp2= new Ellipse();
-        firstEllTmp2.setRadiusX(20);
-        firstEllTmp2.setRadiusY(80);
-        firstEllTmp2.setRotate(130);
-        CovarianceEllipse firstEll2= fromVizualToCovariance(firstEllTmp2);
-        System.out.println(firstEll2);
-
-        Ellipse firstEllTmp3= new Ellipse();
-        firstEllTmp3.setRadiusX(20);
-        firstEllTmp3.setRadiusY(80);
-        firstEllTmp3.setRotate(95);
-        CovarianceEllipse firstEll3= fromVizualToCovariance(firstEllTmp3);
-        System.out.println(firstEll3);
-
-
     }
 
     @Override
