@@ -24,3 +24,47 @@
 .reset-button-class {
     -fx-graphic: url("reset.png");
 }
+
+
+/* for specific tree nodes: */
+#rawell-cell:filled {
+    -fx-graphic: url("rawell.png");
+}
+#rawell-cell:empty {
+    -fx-graphic: null;
+}
+
+#fusell-cell:filled {
+    -fx-graphic: url("fusell.png");
+}
+#fusell-cell:empty {
+    -fx-graphic: null;
+}
+
+#state-cell:filled {
+    -fx-graphic: url("state.png");
+}
+#state-cell:empty {
+    -fx-graphic: null;
+}
+
+#track-cell:filled {
+    -fx-graphic: url("track.png");
+}
+#track-cell:empty {
+    -fx-graphic: null;
+}
+
+#point-cell:filled {
+    -fx-graphic: url("point.png");
+}
+#point-cell:empty {
+    -fx-graphic: null;
+}
+
+#def-cell:filled {
+    -fx-graphic: null;
+}
+#def-cell:empty {
+    -fx-graphic: null;
+}

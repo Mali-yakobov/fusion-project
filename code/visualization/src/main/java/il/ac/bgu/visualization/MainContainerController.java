@@ -446,7 +446,28 @@ public class MainContainerController implements Initializable {
                 setText(getItem().toString());
                 setContextMenu(defaultTreeContextMenu);
 
-               /* if instanceof... */
+                TreeItemContainer itemTmp= (TreeItemContainer)item;
+                Object containedItem= itemTmp.getContainedItem();
+                if (containedItem instanceof CovarianceEllipse){
+                    CovarianceEllipse ell= (CovarianceEllipse) containedItem;
+                    if (ell.getIsFusionEllipse())
+                        setId("fusell-cell");
+                    else
+                        setId("rawell-cell");
+                }
+                else
+                    if (containedItem instanceof State)
+                        setId("state-cell");
+                    else
+                         if (containedItem instanceof Track)
+                             setId("track-cell");
+                         else
+                            if (containedItem instanceof PointInTime)
+                                setId("point-cell");
+                            else
+                                setId("def-cell");
+
+
 
             }//else (cell is filled)
         }//updateItem
