@@ -27,6 +27,7 @@ import javafx.stage.FileChooser;
 import javafx.util.Callback;
 
 import java.io.File;
+import java.lang.reflect.Array;
 import java.net.URL;
 import java.util.*;
 
@@ -80,6 +81,7 @@ public class MainContainerController implements Initializable {
      */
     public static class TaggedEllipse extends Ellipse{
         private boolean isFusionEllipse= false;
+        private ArrayList<Ellipse> raw=null;
 
         public boolean getIsFusionEllipse(){
             return this.isFusionEllipse;
@@ -87,6 +89,19 @@ public class MainContainerController implements Initializable {
 
         public void setIsFusionEllipse(boolean isFusionEllipse){
             this.isFusionEllipse= isFusionEllipse;
+        }
+        public void addToRaw(Ellipse ellipse){
+            if(this.raw==null){
+                this.raw=new ArrayList<Ellipse>();
+            }
+            this.raw.add(ellipse);
+        }
+        public ArrayList<Ellipse> getRaw() {
+            return raw;
+        }
+
+        public void setRaw(ArrayList<Ellipse> raw) {
+            this.raw = raw;
         }
     }
 
@@ -174,14 +189,14 @@ public class MainContainerController implements Initializable {
     public void addEllipseAction() {
         TaggedEllipse newEllipse= AddEllipseBox.display();
         Color newColor= colorGenerator();
-        ellipseSetOnClick(newEllipse, null);
+        ellipseSetOnClick(newEllipse);
         showEllipse(newEllipse, newColor);
     }
 
     public void addEllipseOnClickAction(double x, double y) {
         TaggedEllipse newEllipse= AddEllipseBox.display(x, y);
         Color newColor= colorGenerator();
-        ellipseSetOnClick(newEllipse, null);
+        ellipseSetOnClick(newEllipse);
         showEllipse(newEllipse, newColor);
     }
 
@@ -213,7 +228,7 @@ public class MainContainerController implements Initializable {
      Misc functions:
      */
 
-    public void ellipseSetOnClick(TaggedEllipse ellipse, CovarianceEllipse covEllipse) {
+    public void ellipseSetOnClick(TaggedEllipse ellipse) {
         MenuItem addEllipseMenuItem3 = new MenuItem(ellipse.toString());
         ContextMenu viewAreaMenu3 = new ContextMenu(addEllipseMenuItem3);
         ellipse.setOnMouseEntered(enterevent -> viewAreaMenu3.show(ellipse, enterevent.getSceneX(), enterevent.getSceneY()));
@@ -223,9 +238,9 @@ public class MainContainerController implements Initializable {
         ellipse.setOnMouseClicked(event -> {
             if (event.getButton().equals(MouseButton.PRIMARY)){
                 if (ellipse.getStrokeWidth() < ellStrokeWidthClicked-0.1)                   //was not clicked/chosen
-                    ellipseSetClicked(ellipse, covEllipse);
+                    ellipseSetClicked(ellipse);
                 else                                          //was clicked/chosen
-                    ellipseSetUnclicked(ellipse, covEllipse);
+                    ellipseSetUnclicked(ellipse);
             }
         });
 
@@ -233,22 +248,54 @@ public class MainContainerController implements Initializable {
 //
     }//ellipseSetOnClick
 
-    public void ellipseSetClicked(TaggedEllipse ellipse, CovarianceEllipse covEllipse) {
-        double currFill= rawEllFillOpacityClicked;
-        if (ellipse.getIsFusionEllipse())
-            currFill= fusEllFillOpacityClicked;
+    public void ellipseSetClicked(TaggedEllipse ellipse) {
 
-        Color clF= (Color) ellipse.getFill();
-        if (ellipse.getStrokeWidth() < ellStrokeWidthClicked-0.1){
-            clickedEllipses.add(ellipse);
-            if (covEllipse != null)
-                clickedCovEllipses.add(covEllipse);
-            ellipse.setFill(new Color(clF.getRed(), clF.getGreen(), clF.getBlue(), currFill));
-            ellipse.setStrokeWidth(ellStrokeWidthClicked);
-        }
+        ellipse.setOnMousePressed(event -> {
+            switch(event.getClickCount()) {
+                case 1:
+                    System.out.println("One click");
+                    double currFill= rawEllFillOpacityClicked;
+                    if (ellipse.getIsFusionEllipse())
+                        currFill= fusEllFillOpacityClicked;
+
+                    Color clF= (Color) ellipse.getFill();
+                    if (ellipse.getStrokeWidth() < ellStrokeWidthClicked-0.1){
+                        clickedEllipses.add(ellipse);
+                        //if (covEllipse != null)
+                         //   clickedCovEllipses.add(covEllipse);
+                        ellipse.setFill(new Color(clF.getRed(), clF.getGreen(), clF.getBlue(), currFill));
+                        ellipse.setStrokeWidth(ellStrokeWidthClicked);
+                    }
+                    break;
+                case 2:
+                    System.out.println("Two clicks");
+                    if (ellipse.getIsFusionEllipse()){
+                        Iterator<Ellipse> itr= ellipse.getRaw().iterator();
+                        while (itr.hasNext()){
+                            Ellipse temp=itr.next();
+                            if(temp.isVisible())
+                                temp.setVisible(false);
+                            else
+                                temp.setVisible(true);
+                        }
+                    }
+                    break;
+                case 3:
+                    System.out.println("Three clicks");
+                    if (ellipse.getIsFusionEllipse()){
+                        Iterator<Ellipse> itr= ellipse.getRaw().iterator();
+                        while (itr.hasNext()){
+                            Ellipse temp=itr.next();
+                            temp.setVisible(true);
+                        }
+                    }
+                    break;
+            }
+        });
+
     }
 
-    public void ellipseSetUnclicked(TaggedEllipse ellipse, CovarianceEllipse covEllipse) {
+    public void ellipseSetUnclicked(TaggedEllipse ellipse) {
         double currFill= rawEllFillOpacityUnClicked;
         if (ellipse.getIsFusionEllipse())
             currFill= fusEllFillOpacityUnClicked;
@@ -257,8 +304,8 @@ public class MainContainerController implements Initializable {
         Color clF= (Color) ellipse.getFill();
         if (ellipse.getStrokeWidth() >= ellStrokeWidthClicked-0.1){
             clickedEllipses.remove(ellipse);
-            if (covEllipse != null)
-                clickedCovEllipses.remove(covEllipse);
+            //if (covEllipse != null)
+             //   clickedCovEllipses.remove(covEllipse);
             ellipse.setFill(new Color(clF.getRed(), clF.getGreen(), clF.getBlue(), currFill));
             ellipse.setStrokeWidth(ellStrokeWidthUnClicked);
         }
@@ -284,17 +331,16 @@ public class MainContainerController implements Initializable {
     }
 
     public void showState(State state, Color color) {
-        CovarianceEllipse fusEll= state.getFusionEllipse();
-        TaggedEllipse tempFusEllipse = EllipseRepresentationTranslation.fromCovarianceToVizual(fusEll);
-        ellipseSetOnClick(tempFusEllipse, fusEll);
-        showEllipse(tempFusEllipse, color);
+        TaggedEllipse fusionEllipse = EllipseRepresentationTranslation.fromCovarianceToVizual(state.getFusionEllipse());
+        ellipseSetOnClick(fusionEllipse);
+        showEllipse(fusionEllipse, color);
 
         ArrayList<CovarianceEllipse> CovarianceEllipseArray = state.getEllipseList();
         Iterator<CovarianceEllipse> itr = CovarianceEllipseArray.iterator();
         while (itr.hasNext()) {
-            CovarianceEllipse tempCovEllipse= itr.next();
-            TaggedEllipse tempEllipse = EllipseRepresentationTranslation.fromCovarianceToVizual(tempCovEllipse);
-            ellipseSetOnClick(tempEllipse, tempCovEllipse);
+            TaggedEllipse tempEllipse = EllipseRepresentationTranslation.fromCovarianceToVizual(itr.next());
+            fusionEllipse.addToRaw(tempEllipse);
+            ellipseSetOnClick(tempEllipse);
             showEllipse(tempEllipse, color);
         }
     }
@@ -530,7 +576,8 @@ public class MainContainerController implements Initializable {
         CovarianceEllipse covEllipse= (CovarianceEllipse)ellipseContainer.getContainedItem();
         if (ellipseContainer.getContainedGraphicItem() == null){
             TaggedEllipse ellipse = EllipseRepresentationTranslation.fromCovarianceToVizual(covEllipse);
-            ellipseSetOnClick(ellipse, covEllipse);
+            //ellipseSetOnClick(ellipse, covEllipse);
+            ellipseSetOnClick(ellipse);
             showEllipse(ellipse, colorByTrackIdTable.get(ellipseContainer.getColorId()));
             //ellipseSetClicked(ellipse, covEllipse);
             ellipseContainer.setContainedGraphicItem(ellipse);
@@ -573,7 +620,8 @@ public class MainContainerController implements Initializable {
             if (graphicItem != null) {
                 CovarianceEllipse covEllipse = (CovarianceEllipse) item;
                 TaggedEllipse ellipse = (TaggedEllipse) graphicItem;
-                ellipseSetClicked(ellipse, covEllipse);
+                //ellipseSetClicked(ellipse, covEllipse);
+                ellipseSetClicked(ellipse);
             }
 
         boolean tmoBool= true;
@@ -603,7 +651,7 @@ public class MainContainerController implements Initializable {
 
         Iterator<TaggedEllipse> toUnclickIterator = toUnclickList.iterator();
         while (toUnclickIterator.hasNext())
-            ellipseSetUnclicked(toUnclickIterator.next(), null);
+            ellipseSetUnclicked(toUnclickIterator.next());
 
         clickedEllipses.clear();
         clickedCovEllipses.clear();
