@@ -7,7 +7,7 @@
 <?import javafx.scene.paint.*?>
 <?import javafx.scene.text.*?>
 
-<VBox prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.ac.bgu.visualization.MainContainerController">
+<VBox prefHeight="600.0" prefWidth="900.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="il.ac.bgu.visualization.MainContainerController">
   <children>
     <MenuBar fx:id="menuBar" VBox.vgrow="NEVER">
       <menus>
@@ -53,18 +53,20 @@
         <Button fx:id="loadFileButton" mnemonicParsing="false" onAction="#loadFileAction" text="Load" />
         <Button fx:id="addEllipseButton" mnemonicParsing="false" onAction="#addEllipseAction" text="Add Ellipse" />
         <Button fx:id="clearButton" mnemonicParsing="false" onAction="#clearAction" text="Clear" />
-            <Separator orientation="VERTICAL" />
-            <Button fx:id="resetButton" disable="true" mnemonicParsing="false" onAction="#resetAction" />
-            <Button fx:id="backwardButton" disable="true" mnemonicParsing="false" onAction="#backwardAction" />
-            <Button fx:id="forwardButton" disable="true" mnemonicParsing="false" onAction="#forwardAction" />
+        <Separator orientation="VERTICAL" />
+        <Button fx:id="resetButton" disable="true" mnemonicParsing="false" onAction="#resetAction" />
+        <Button fx:id="backwardButton" disable="true" mnemonicParsing="false" onAction="#backwardAction" />
+        <Button fx:id="forwardButton" disable="true" mnemonicParsing="false" onAction="#forwardAction" />
+        <Separator orientation="VERTICAL" />
+        <ToggleButton id="showHideRaw" fx:id="showHideRawButton" mnemonicParsing="false" onAction="#showHideRawAction" text="Show Raw Data" />
       </items>
     </ToolBar>
     <SplitPane dividerPositions="0.19599109131403117" focusTraversable="true" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
       <items>
-        <SplitPane dividerPositions="0.7151162790697675" orientation="VERTICAL">
+        <SplitPane dividerPositions="0.7192307692307692" orientation="VERTICAL">
           <items>
             <AnchorPane fx:id="treeArea" minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0" />
-          <AnchorPane fx:id="infoArea" minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0" />
+            <AnchorPane fx:id="infoArea" minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0" />
           </items>
         </SplitPane>
         <ScrollPane prefHeight="-1.0" prefWidth="-1.0">
