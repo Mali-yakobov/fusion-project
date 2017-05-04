@@ -61,8 +61,8 @@ public class MainContainerController implements Initializable {
     private Button backwardButton;
     @FXML
     private Button resetButton;
-    //@FXML
-    //private Button showHideRawButton;
+    @FXML
+    private ToggleButton showHideRawButton;
 
 
     /* tree related code start  */
@@ -234,10 +234,10 @@ public class MainContainerController implements Initializable {
                    rawEllipse.setVisible(true);
            }
         }
-        //if(visible)
-           // this.showHideRawButton.setText("Show");
-        //else
-            //this.showHideRawButton.setText("Hide");
+        if(visible)
+            this.showHideRawButton.setText("Show");
+        else
+            this.showHideRawButton.setText("Hide");
 
     }
 
