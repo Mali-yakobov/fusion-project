@@ -59,9 +59,9 @@
             <Button fx:id="forwardButton" disable="true" mnemonicParsing="false" onAction="#forwardAction" />
       </items>
     </ToolBar>
-    <SplitPane dividerPositions="0.17037861915367483" focusTraversable="true" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
+    <SplitPane dividerPositions="0.19599109131403117" focusTraversable="true" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
       <items>
-        <SplitPane dividerPositions="0.6608527131782945" orientation="VERTICAL">
+        <SplitPane dividerPositions="0.7151162790697675" orientation="VERTICAL">
           <items>
             <AnchorPane fx:id="treeArea" minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0" />
           <AnchorPane fx:id="infoArea" minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0" />

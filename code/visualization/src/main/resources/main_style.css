@@ -26,6 +26,11 @@
 }
 
 
+/* for all tree nodes: */
+.tree-cell {
+    -fx-indent: 19.5;
+}
+
 /* for specific tree nodes: */
 #rawell-cell:filled {
     -fx-graphic: url("rawell.png");

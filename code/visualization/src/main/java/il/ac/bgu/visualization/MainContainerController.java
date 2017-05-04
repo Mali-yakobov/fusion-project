@@ -436,7 +436,7 @@ public class MainContainerController implements Initializable {
         public void updateItem(HierarchyData item, boolean empty) {
             super.updateItem(item, empty);
 
-            if (empty) { //cell is empty and not being rendered (for example collapsed parrent):
+            if (empty) { //cell is empty and not being rendered (for example collapsed parent):
                 setText(null);
                 setContextMenu(null);
                 //setGraphic(null);
