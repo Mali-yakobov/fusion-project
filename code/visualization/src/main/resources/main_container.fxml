@@ -7,7 +7,7 @@
 <?import javafx.scene.paint.*?>
 <?import javafx.scene.text.*?>
 
-<VBox prefHeight="600.0" prefWidth="900.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="il.ac.bgu.visualization.MainContainerController">
+<VBox prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.ac.bgu.visualization.MainContainerController">
   <children>
     <MenuBar fx:id="menuBar" VBox.vgrow="NEVER">
       <menus>
@@ -54,11 +54,24 @@
         <Button fx:id="addEllipseButton" mnemonicParsing="false" onAction="#addEllipseAction" text="Add Ellipse" />
         <Button fx:id="clearButton" mnemonicParsing="false" onAction="#clearAction" text="Clear" />
         <Separator orientation="VERTICAL" />
-        <Button fx:id="resetButton" disable="true" mnemonicParsing="false" onAction="#resetAction" />
-        <Button fx:id="backwardButton" disable="true" mnemonicParsing="false" onAction="#backwardAction" />
-        <Button fx:id="forwardButton" disable="true" mnemonicParsing="false" onAction="#forwardAction" />
+        <Button fx:id="resetButton" disable="true" mnemonicParsing="false" onAction="#resetAction">
+               <tooltip>
+                  <Tooltip text="Reset" />
+               </tooltip></Button>
+        <Button fx:id="backwardButton" disable="true" mnemonicParsing="false" onAction="#backwardAction">
+               <tooltip>
+                  <Tooltip text="Backward" />
+               </tooltip></Button>
+        <Button fx:id="forwardButton" disable="true" mnemonicParsing="false" onAction="#forwardAction">
+               <tooltip>
+                  <Tooltip text="Forward" />
+               </tooltip></Button>
         <Separator orientation="VERTICAL" />
-        <ToggleButton id="showHideRaw" fx:id="showHideRawButton" mnemonicParsing="false" onAction="#showHideRawAction" text="Show Raw Data" />
+        <ToggleButton id="showHideRaw" fx:id="showHideRawButton" maxHeight="14.0" maxWidth="33.0" minHeight="14.0" minWidth="33.0" mnemonicParsing="false" onAction="#showHideRawAction" prefHeight="14.0" prefWidth="33.0">
+               <tooltip>
+                  <Tooltip text="Show/Hide Raw Data" />
+               </tooltip></ToggleButton>
+            <Separator orientation="VERTICAL" />
       </items>
     </ToolBar>
     <SplitPane dividerPositions="0.19599109131403117" focusTraversable="true" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">

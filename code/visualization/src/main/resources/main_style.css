@@ -14,6 +14,26 @@
     -fx-background-color: transparent, rgba(0,0,0,.2), rgba(0,0,0,.2), transparent;
 }
 
+/* for all toggle-buttons: */
+.toggle-button {
+    -fx-background-color: transparent, transparent, transparent, transparent;
+    -fx-graphic: url("toggleof.png");
+}
+.toggle-button:hover{
+    -fx-background-color:  transparent, rgba(0,0,0,.1), rgba(0,0,0,.1), transparent;
+}
+
+.toggle-button:armed {
+    -fx-background-color: transparent, rgba(0, 0, 0, .2), rgba(0, 0, 0, .2), transparent;
+}
+
+.toggle-button:selected {
+   /* -fx-background-color: transparent, rgba(0, 0, 0, .2), transparent, transparent;*/
+    -fx-graphic: url("toggleon.png");
+}
+
+
+
 /* for specific buttons: */
 .forward-button-class {
     -fx-graphic: url("forward.png");
