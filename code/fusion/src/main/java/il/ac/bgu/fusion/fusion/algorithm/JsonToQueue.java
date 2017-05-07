@@ -2,14 +2,15 @@ package il.ac.bgu.fusion.fusion.algorithm;
 
 import il.ac.bgu.fusion.objects.CovarianceEllipse;
 import il.ac.bgu.fusion.util.JsonReaderWriter;
-import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.Callable;
 
 /**
  * Created by Maayan on 27/04/2017.
  */
-public class JsonToQueue implements Runnable {
+public class JsonToQueue implements Callable {
 
   protected BlockingQueue queue = null;
 
@@ -18,28 +19,20 @@ public class JsonToQueue implements Runnable {
   }
 
   @Override
-  public void run() {
+  public Object call() throws Exception {
 
     String filename = "json-input";
-   // String fileaddress = "D:\\sigmabit\\fusion-project\\";
+    // String fileaddress = "D:\\sigmabit\\fusion-project\\";
     String filepath = /*fileaddress*/ filename + ".json";
-    ArrayList<CovarianceEllipse> ellipseList = JsonReaderWriter.elipseFromFile(filepath);
+    List<CovarianceEllipse> ellipseList = JsonReaderWriter.elipseFromFile(filepath);
     System.out.print(ellipseList);
 
     Iterator ellipseIter = ellipseList.iterator();
 
-    while(ellipseIter.hasNext()){
-      try {
-        queue.put(ellipseIter.next());
-
-      }
-      catch (InterruptedException e) {
-        e.printStackTrace();
-      }
+    while(ellipseIter.hasNext())
+    {
+      queue.put(ellipseIter.next());
     }
-
-
-
-
-    }
+    return null;
+  }
 }
