@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Callable;
 
+import static java.lang.Thread.sleep;
+
 /**
  * Created by Maayan on 27/04/2017.
  */
@@ -21,17 +23,19 @@ public class JsonToQueue implements Callable {
   @Override
   public Object call() throws Exception {
 
-    String filename = "json-input";
+    String filename = "forAlg";
     // String fileaddress = "D:\\sigmabit\\fusion-project\\";
     String filepath = /*fileaddress*/ filename + ".json";
     List<CovarianceEllipse> ellipseList = JsonReaderWriter.elipseFromFile(filepath);
-    System.out.print(ellipseList);
+   // System.out.print(ellipseList);
 
     Iterator ellipseIter = ellipseList.iterator();
 
     while(ellipseIter.hasNext())
     {
       queue.put(ellipseIter.next());
+      sleep(2000); //sleeps 2 seconds
+      System.out.println("ellipse added to queue");
     }
     return null;
   }

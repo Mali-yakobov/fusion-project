@@ -19,16 +19,23 @@ public class QueueToPipeline implements Callable {
   }
 
   private void runPipeline(List<CovarianceEllipse> ellipseList) {
-    System.out.println("ellipseList = " + ellipseList);
+    System.out.println("pipeline :" + queue.size());
   }
 
   @Override
   public Object call() throws Exception {
-    while(!queue.isEmpty())
+    int ellipseCount = 0;
+    while(queue.isEmpty())
     {
-      queue.drainTo(ellipseList);
+      System.out.printf("entering while");
+      if(queue.size() > 0) {
+        queue.drainTo(ellipseList);
+        System.out.println("after drain"+ queue.size() );
+      }
+
       runPipeline(ellipseList);
-      sleep(1000); //sleeps 1 second
+      sleep(5000); //sleeps 5 seconds
+      System.out.println("waking up");
     }
     return null;
   }

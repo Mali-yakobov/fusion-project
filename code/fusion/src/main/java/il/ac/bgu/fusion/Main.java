@@ -2,6 +2,7 @@ package il.ac.bgu.fusion;
 
 import il.ac.bgu.fusion.objects.*;
 import il.ac.bgu.fusion.util.JsonReaderWriter;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -12,7 +13,7 @@ import java.util.concurrent.BlockingQueue;
  */
 public class Main {
 
-  BlockingQueue covEllipseQueue = new ArrayBlockingQueue(Integer.MAX_VALUE);
+  static BlockingQueue covEllipseQueue = new ArrayBlockingQueue(10000000);
 
 
   public static void main(String ... args)throws IOException{
@@ -122,13 +123,9 @@ public class Main {
 //===============================================================================================================
 
 
-    ArrayList<CovarianceEllipse> rawEllsForAlg=new ArrayList<CovarianceEllipse>();
+    ArrayList<CovarianceEllipse> rawEllsForAlg =new ArrayList<CovarianceEllipse>();
     for (int i=0; i<=100000; i++)
       rawEllsForAlg.add( new CovarianceEllipse(0, 0, 150, 130, 3920.944533000791, 2879.0554669992093, -2954.4232590366246, sensor1));
     JsonReaderWriter.elipseToFile(rawEllsForAlg, "forAlg");
-
   }
-
-
-
 }
