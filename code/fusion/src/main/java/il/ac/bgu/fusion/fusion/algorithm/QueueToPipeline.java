@@ -27,7 +27,7 @@ public class QueueToPipeline implements Callable {
     int ellipseCount = 0;
     while(queue.isEmpty())
     {
-      System.out.printf("entering while");
+      System.out.println("entering while");
       if(queue.size() > 0) {
         queue.drainTo(ellipseList);
         System.out.println("after drain"+ queue.size() );
@@ -39,4 +39,6 @@ public class QueueToPipeline implements Callable {
     }
     return null;
   }
+
+
 }

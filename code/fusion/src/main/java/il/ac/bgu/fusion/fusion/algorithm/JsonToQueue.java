@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Callable;
+//import java.util.concurrent.Callable;
 
 import static java.lang.Thread.sleep;
 
@@ -27,12 +28,11 @@ public class JsonToQueue implements Callable {
     // String fileaddress = "D:\\sigmabit\\fusion-project\\";
     String filepath = /*fileaddress*/ filename + ".json";
     List<CovarianceEllipse> ellipseList = JsonReaderWriter.elipseFromFile(filepath);
-   // System.out.print(ellipseList);
+    // System.out.print(ellipseList);
 
     Iterator ellipseIter = ellipseList.iterator();
 
-    while(ellipseIter.hasNext())
-    {
+    while (ellipseIter.hasNext()) {
       queue.put(ellipseIter.next());
       sleep(2000); //sleeps 2 seconds
       System.out.println("ellipse added to queue");
@@ -40,3 +40,4 @@ public class JsonToQueue implements Callable {
     return null;
   }
 }
+

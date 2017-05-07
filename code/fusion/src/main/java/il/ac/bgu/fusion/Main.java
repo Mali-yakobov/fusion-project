@@ -132,11 +132,12 @@ public class Main {
     JsonToQueue jsonToQueue = new JsonToQueue (covEllipseQueue);
     QueueToPipeline queueToPipeline = new QueueToPipeline(covEllipseQueue);
 
-    try {
-      System.out.println("calling jsonToQueue");
-      jsonToQueue.call();
+    try
+    {
       System.out.println("calling queueToPipeline");
       queueToPipeline.call();
+      System.out.println("calling jsonToQueue");
+      jsonToQueue.call();
 
 
     } catch (Exception e) {
