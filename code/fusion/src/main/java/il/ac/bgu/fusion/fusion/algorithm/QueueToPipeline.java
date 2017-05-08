@@ -1,44 +1,59 @@
 package il.ac.bgu.fusion.fusion.algorithm;
 
 import il.ac.bgu.fusion.objects.CovarianceEllipse;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.Callable;
 import static java.lang.Thread.sleep;
 
 /**
  * Created by Maayan on 27/04/2017.
  */
-public class QueueToPipeline implements Callable {
+public class QueueToPipeline implements Runnable {
 
-  protected BlockingQueue queue = null;
-  List<CovarianceEllipse> ellipseList;
 
-  public QueueToPipeline(BlockingQueue queue) {
-    this.queue = queue;
+  private final BlockingQueue<CovarianceEllipse> sharedQueue;
+  List ellipseList = new ArrayList() ;
+  public QueueToPipeline(BlockingQueue<CovarianceEllipse> sharedQueue) {
+    this.sharedQueue = sharedQueue;
   }
 
   private void runPipeline(List<CovarianceEllipse> ellipseList) {
-    System.out.println("pipeline :" + queue.size());
+    System.out.println("Ellipse List size is: " + ellipseList.size());
+    //System.out.println(ellipseList);
   }
+
 
   @Override
-  public Object call() throws Exception {
-    int ellipseCount = 0;
-    while(queue.isEmpty())
-    {
-      System.out.println("entering while");
-      if(queue.size() > 0) {
-        queue.drainTo(ellipseList);
-        System.out.println("after drain"+ queue.size() );
+  public void run() {
+
+    while (true) {
+      //check if queue is empty
+      if (sharedQueue.size() == 0) {
+        System.out.println("Queue is empty " + Thread.currentThread().getName()
+                           + " is waiting , size: " + sharedQueue.size());
       }
-
-      runPipeline(ellipseList);
-      sleep(5000); //sleeps 5 seconds
-      System.out.println("waking up");
+      else {
+        try {
+          System.out.println("Queue is not empty " + Thread.currentThread().getName() + "is working");
+          //takes all the ellipses from the queue to the ellipseList
+          sharedQueue.drainTo(ellipseList);
+          //sleeps 2 seconds
+          sleep(2000);
+        } catch (InterruptedException e) {
+          e.printStackTrace();
+        }
+        System.out.println("Drain succeeded");
+        runPipeline(ellipseList);
+        try {
+          //sleeps 3 seconds
+          sleep(3000);
+        } catch (InterruptedException e) {
+          e.printStackTrace();
+        }
+        System.out.println("OueueToPipeline Thread is trying again");
+      }
     }
-    return null;
   }
-
 
 }

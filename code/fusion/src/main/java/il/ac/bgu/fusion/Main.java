@@ -14,7 +14,9 @@ import java.util.concurrent.BlockingQueue;
  */
 public class Main {
 
-  static BlockingQueue covEllipseQueue = new ArrayBlockingQueue(10000000);
+  static int queueSize = 10000000;  //Integer.MAX_VALUE - exceeds VM limit
+  static BlockingQueue covEllipseQueue = new ArrayBlockingQueue(queueSize);
+  public static boolean done = false;
 
 
   public static void main(String ... args)throws IOException{
@@ -129,15 +131,15 @@ public class Main {
       rawEllsForAlg.add( new CovarianceEllipse(0, 0, 150, 130, 3920.944533000791, 2879.0554669992093, -2954.4232590366246, sensor1));
     JsonReaderWriter.elipseToFile(rawEllsForAlg, "forAlg");
 
-    JsonToQueue jsonToQueue = new JsonToQueue (covEllipseQueue);
-    QueueToPipeline queueToPipeline = new QueueToPipeline(covEllipseQueue);
+    Thread jsonToQueue = new Thread( new JsonToQueue (covEllipseQueue));
+    Thread queueToPipeline = new Thread( new QueueToPipeline(covEllipseQueue));
 
     try
     {
-      System.out.println("calling queueToPipeline");
-      queueToPipeline.call();
-      System.out.println("calling jsonToQueue");
-      jsonToQueue.call();
+      System.out.println("Running jsonToQueue");
+      jsonToQueue.start();
+      System.out.println("Running queueToPipeline");
+      queueToPipeline.start();
 
 
     } catch (Exception e) {
