@@ -18,7 +18,8 @@ public class CovarianceEllipse {
     private double vy;
     private double vxy;
 
-    boolean isFusionEllipse;
+    private boolean isFusionEllipse;
+
 
 
     public CovarianceEllipse(){
@@ -120,5 +121,7 @@ public class CovarianceEllipse {
                 ", Sensor=" + sensor +"\n"+
                 '}';
     }
+
+
 }
 

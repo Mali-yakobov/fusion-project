@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
+import static il.ac.bgu.fusion.fusion.algorithm.InitialClustring.CalcDistance;
+
 /**
  * Created by Guy Yafe.
  */
@@ -133,7 +135,7 @@ public class Main {
 
     Thread jsonToQueue = new Thread( new JsonToQueue (covEllipseQueue));
     Thread queueToPipeline = new Thread( new QueueToPipeline(covEllipseQueue));
-
+/*
     try
     {
       System.out.println("Running jsonToQueue");
@@ -145,6 +147,11 @@ public class Main {
     } catch (Exception e) {
       e.printStackTrace();
     }
+*/
+
+    System.out.println(CalcDistance(c1, c2));
+
+
 
   }
 }
