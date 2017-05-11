@@ -1,6 +1,7 @@
 package il.ac.bgu.fusion.objects;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Mali on 4/1/2017.
@@ -8,24 +9,24 @@ import java.util.ArrayList;
 public class State {
 
 
-    private ArrayList<CovarianceEllipse> ellipseList;
+    private List<CovarianceEllipse> ellipseList;
     private CovarianceEllipse fusionEllipse;
 
     public State(){}//empty constructor
 
-    public State(ArrayList<CovarianceEllipse> ellipseList, CovarianceEllipse fusionEllipse) {
+    public State(List<CovarianceEllipse> ellipseList, CovarianceEllipse fusionEllipse) {
         this.ellipseList = ellipseList;
         this.fusionEllipse= fusionEllipse;
     }
-    public State(ArrayList<CovarianceEllipse> ellipseList) {
+    public State(List<CovarianceEllipse> ellipseList) {
         this.ellipseList = ellipseList;
     }
 
-    public ArrayList<CovarianceEllipse> getEllipseList() {
+    public List<CovarianceEllipse> getEllipseList() {
         return ellipseList;
     }
 
-    public void setEllipseList(ArrayList<CovarianceEllipse> ellipseList) {
+    public void setEllipseList(List<CovarianceEllipse> ellipseList) {
         this.ellipseList = ellipseList;
     }
 

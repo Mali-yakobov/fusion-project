@@ -1,5 +1,7 @@
 package il.ac.bgu.fusion;
 
+import il.ac.bgu.fusion.fusion.algorithm.JsonToQueue;
+import il.ac.bgu.fusion.fusion.algorithm.QueueToPipeline;
 import il.ac.bgu.fusion.objects.*;
 import il.ac.bgu.fusion.util.JsonReaderWriter;
 import java.io.IOException;
@@ -7,12 +9,16 @@ import java.util.ArrayList;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
+import static il.ac.bgu.fusion.fusion.algorithm.InitialClustring.CalcDistance;
+
 /**
  * Created by Guy Yafe.
  */
 public class Main {
 
-  BlockingQueue covEllipseQueue = new ArrayBlockingQueue(Integer.MAX_VALUE);
+  static int queueSize = 10000000;  //Integer.MAX_VALUE - exceeds VM limit
+  static BlockingQueue covEllipseQueue = new ArrayBlockingQueue(queueSize);
+  public static boolean done = false;
 
 
   public static void main(String ... args)throws IOException{
@@ -122,13 +128,30 @@ public class Main {
 //===============================================================================================================
 
 
-    ArrayList<CovarianceEllipse> rawEllsForAlg=new ArrayList<CovarianceEllipse>();
+    ArrayList<CovarianceEllipse> rawEllsForAlg =new ArrayList<CovarianceEllipse>();
     for (int i=0; i<=100000; i++)
       rawEllsForAlg.add( new CovarianceEllipse(0, 0, 150, 130, 3920.944533000791, 2879.0554669992093, -2954.4232590366246, sensor1));
     JsonReaderWriter.elipseToFile(rawEllsForAlg, "forAlg");
 
+    Thread jsonToQueue = new Thread( new JsonToQueue (covEllipseQueue));
+    Thread queueToPipeline = new Thread( new QueueToPipeline(covEllipseQueue));
+/*
+    try
+    {
+      System.out.println("Running jsonToQueue");
+      jsonToQueue.start();
+      System.out.println("Running queueToPipeline");
+      queueToPipeline.start();
+
+
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+*/
+
+    System.out.println(CalcDistance(c1, c2));
+
+
+
   }
-
-
-
 }
