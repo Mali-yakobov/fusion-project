@@ -1,0 +1,16 @@
+ellipses <= list of all raw ellipses
+clusters <= empty list of states
+for each ellipse in ellipses:
+  best_distance <= INFINITY
+  closest_cluster <= null
+  for each cluster in clusters:
+    distance <= distance between ellipse and state
+    if distance < best_distance:
+      best_distance <= distance
+      closest_cluster <= cluster
+  if best_distance < THRESHOLD
+    merge ellipse into state
+  else
+    create new cluster from ellipse
+    add cluster into clusters
+    
