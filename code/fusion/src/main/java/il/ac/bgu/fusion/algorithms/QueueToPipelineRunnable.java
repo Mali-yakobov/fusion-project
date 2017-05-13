@@ -1,4 +1,4 @@
-package il.ac.bgu.fusion.fusion.algorithm;
+package il.ac.bgu.fusion.algorithms;
 
 import il.ac.bgu.fusion.objects.CovarianceEllipse;
 import java.util.ArrayList;
@@ -9,12 +9,12 @@ import static java.lang.Thread.sleep;
 /**
  * Created by Maayan on 27/04/2017.
  */
-public class QueueToPipeline implements Runnable {
+public class QueueToPipelineRunnable implements Runnable {
 
 
   private final BlockingQueue<CovarianceEllipse> sharedQueue;
   List ellipseList = new ArrayList() ;
-  public QueueToPipeline(BlockingQueue<CovarianceEllipse> sharedQueue) {
+  public QueueToPipelineRunnable(BlockingQueue<CovarianceEllipse> sharedQueue) {
     this.sharedQueue = sharedQueue;
   }
 

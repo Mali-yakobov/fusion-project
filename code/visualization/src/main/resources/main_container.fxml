@@ -41,6 +41,17 @@
             <MenuItem disable="true" mnemonicParsing="false" text="Unselect All" />
           </items>
         </Menu>
+            <Menu mnemonicParsing="false" text="Selection">
+              <items>
+                  <Menu mnemonicParsing="false" text="Apply Algorithm">
+                    <items>
+                      <MenuItem disable="true" mnemonicParsing="false" text="Pipeline" />
+                        <SeparatorMenuItem mnemonicParsing="false" />
+                        <MenuItem mnemonicParsing="false" onAction="#selectionInitialClusteringAction" text="Initial Clustering" />
+                    </items>
+                  </Menu>
+              </items>
+            </Menu>
         <Menu mnemonicParsing="false" text="Help">
           <items>
             <MenuItem disable="true" mnemonicParsing="false" text="About Fusion Project" />

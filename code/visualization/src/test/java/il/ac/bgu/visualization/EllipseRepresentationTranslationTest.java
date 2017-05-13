@@ -40,7 +40,7 @@ public class EllipseRepresentationTranslationTest {
     @Test
     public void fromCovarianceToVizual() throws Exception {
         CovarianceEllipse covarianceEllipse=new CovarianceEllipse(0,0,400.0,300.0,1450.0,1449.0,1050.0, null);
-        Ellipse ellipseFromCovarianceEllipse= EllipseRepresentationTranslation.fromCovarianceToVizual(covarianceEllipse);
+        MainContainerController.TaggedEllipse ellipseFromCovarianceEllipse= EllipseRepresentationTranslation.fromCovarianceToVizual(covarianceEllipse);
         CovarianceEllipse covarianceEllipseFromEllipse=EllipseRepresentationTranslation.fromVizualToCovariance(ellipseFromCovarianceEllipse);
         assertEquals("equal",covarianceEllipse.getCentreX(),covarianceEllipseFromEllipse.getCentreX());
         assertEquals("equal",covarianceEllipse.getCentreY(),covarianceEllipseFromEllipse.getCentreY());
@@ -55,7 +55,8 @@ public class EllipseRepresentationTranslationTest {
 
     @Test
     public void fromVizualToCovariance() throws Exception {
-        Ellipse ellipse= new Ellipse(170,400,50,20);
+        MainContainerController.TaggedEllipse ellipse=
+            (MainContainerController.TaggedEllipse) new Ellipse(170, 400, 50, 20);
         ellipse.setRotate(45);
         CovarianceEllipse covarianceEllipseFromEllipse= EllipseRepresentationTranslation.fromVizualToCovariance(ellipse);
         Ellipse ellipseFromCovarianceEllipse= EllipseRepresentationTranslation.fromCovarianceToVizual(covarianceEllipseFromEllipse);

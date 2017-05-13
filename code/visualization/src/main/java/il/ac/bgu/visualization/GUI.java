@@ -6,19 +6,28 @@ package il.ac.bgu.visualization;
  */
 
 import il.ac.bgu.fusion.objects.CovarianceEllipse;
+import il.ac.bgu.fusion.objects.State;
+import il.ac.bgu.visualization.util.EllipseRepresentationTranslation;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Ellipse;
 import javafx.stage.Stage;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+import static il.ac.bgu.fusion.algorithms.InitialClustering.initialClustering;
 import static il.ac.bgu.visualization.util.EllipseRepresentationTranslation.fromVizualToCovariance;
 
 
 public class GUI extends Application {
     public static Stage window;
     public static Scene scene1;
+
 
     public static void main(String[] args) {
         launch(args);

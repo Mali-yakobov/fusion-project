@@ -1,4 +1,4 @@
-package il.ac.bgu.fusion.fusion.algorithm;
+package il.ac.bgu.fusion.algorithms;
 
 import il.ac.bgu.fusion.objects.CovarianceEllipse;
 import il.ac.bgu.fusion.util.JsonReaderWriter;
@@ -9,17 +9,17 @@ import java.util.concurrent.BlockingQueue;
 /**
  * Created by Maayan on 27/04/2017.
  */
-public class JsonToQueue implements Runnable {
+public class JsonToQueueRunnable implements Runnable {
 
   private final BlockingQueue sharedQueue;
 
-  public JsonToQueue(BlockingQueue sharedQueue) {
+  public JsonToQueueRunnable(BlockingQueue sharedQueue) {
     this.sharedQueue = sharedQueue;
   }
 
   @Override
   public void run() {
-    String filename = "forAlg";
+    String filename = "jsonForThreadTesting1";
     String filepath = filename + ".json";
     List<CovarianceEllipse> ellipseList = JsonReaderWriter.elipseFromFile(filepath);
     Iterator ellipseIter = ellipseList.iterator();
@@ -36,7 +36,7 @@ public class JsonToQueue implements Runnable {
           e.printStackTrace();
         }
     }
-    System.out.println("JsonToQueue Thread finished - no more ellipses in .json file");
+    System.out.println("JsonToQueueRunnable Thread finished - no more ellipses in .json file");
   }
 
 }

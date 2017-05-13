@@ -27,9 +27,10 @@ import javafx.stage.FileChooser;
 import javafx.util.Callback;
 
 import java.io.File;
-import java.lang.reflect.Array;
 import java.net.URL;
 import java.util.*;
+
+import static il.ac.bgu.fusion.algorithms.InitialClustering.initialClustering;
 
 
 /**
@@ -62,8 +63,6 @@ public class MainContainerController implements Initializable {
   private Button backwardButton;
   @FXML
   private Button resetButton;
-  @FXML
-  private ToggleButton showHideRawButton;
 
 
   /* tree related code start  */
@@ -79,10 +78,11 @@ public class MainContainerController implements Initializable {
 
   /**
    * Ellipse with a tag, to determine whether it represents a raw ellipse or a fused one.
+   * Also if the ellipse tagged as fused, it contains list of the raw ellipses.
    */
   public static class TaggedEllipse extends Ellipse {
     private boolean isFusionEllipse = false;
-    private ArrayList<Ellipse> raw = null;
+    private ArrayList<Ellipse> rawList = null;
 
     public boolean getIsFusionEllipse() {
       return this.isFusionEllipse;
@@ -93,20 +93,21 @@ public class MainContainerController implements Initializable {
     }
 
     public void addToRaw(Ellipse ellipse) {
-      if (this.raw == null) {
-        this.raw = new ArrayList<Ellipse>();
+      if (this.rawList == null) {
+        this.rawList = new ArrayList<Ellipse>();
       }
-      this.raw.add(ellipse);
+      this.rawList.add(ellipse);
     }
 
     public ArrayList<Ellipse> getRaw() {
-      return raw;
+      return rawList;
     }
 
     public void setRaw(ArrayList<Ellipse> raw) {
-      this.raw = raw;
+      this.rawList = raw;
     }
   }
+
 
   @Override
   public void initialize(URL url, ResourceBundle rb) {
@@ -127,12 +128,14 @@ public class MainContainerController implements Initializable {
         /* tree related code start  */
     treeInit();
         /* tree related code end  */
+
   }//initialize
 
 
-    /*
-     Action functions for GUI components:
-     */
+
+  /*
+    Action functions for GUI components:
+   */
 
   public void loadFileAction() {
     String filePath = null;
@@ -223,27 +226,37 @@ public class MainContainerController implements Initializable {
   }
 
   public void showHideRawAction() {
-    boolean visible = false;
-    for (TaggedEllipse fusEllipse : fusEllipseList) {
+    for (TaggedEllipse fusEllipse : fusEllipseList)
       for (Ellipse rawEllipse : fusEllipse.getRaw()) {
-        if (rawEllipse.isVisible()) {
-          visible = true;
+        if (rawEllipse.isVisible())
           rawEllipse.setVisible(false);
-        } else {
-          rawEllipse.setVisible(true);
-        }
-      }
-    }
-        /*if(visible)
-            this.showHideRawButton.setText("Show");
         else
-            this.showHideRawButton.setText("Hide");*/
-
+          rawEllipse.setVisible(true);
+      }
   }
 
-    /*
-     Misc functions:
-     */
+  public void selectionInitialClusteringAction(){
+    List<CovarianceEllipse> clickedEllipsesCov= new ArrayList<CovarianceEllipse>();
+    for(TaggedEllipse clickedEllipse: clickedEllipses)
+      clickedEllipsesCov.add(EllipseRepresentationTranslation.fromVizualToCovariance(clickedEllipse));
+    List<State> clusters= initialClustering(clickedEllipsesCov);
+
+    if (clusters.size() < clickedEllipsesCov.size()){ // if some actual clustering happened
+      for(TaggedEllipse clickedEllipse: clickedEllipses)
+        clickedEllipse.setVisible(false);
+      clickedEllipses.clear();
+      Color color= colorGenerator();
+      for(State cluster: clusters)
+        showState(cluster, color);
+    }
+  }
+
+
+
+
+  /*
+    Misc functions:
+   */
 
   public void ellipseSetOnClick(TaggedEllipse ellipse) {
     MenuItem addEllipseMenuItem3 = new MenuItem(ellipse.toString());
@@ -336,19 +349,28 @@ public class MainContainerController implements Initializable {
 
   public void showState(State state, Color color) {
     CovarianceEllipse fusEll = state.getFusionEllipse();
-    TaggedEllipse tempFusEllipse = EllipseRepresentationTranslation.fromCovarianceToVizual(fusEll);
-    ellipseSetOnClick(tempFusEllipse);
-    showEllipse(tempFusEllipse, color);
-    fusEllipseList.add(tempFusEllipse);
+    TaggedEllipse tempFusEllipse= null;
+    if (fusEll != null) {
+      tempFusEllipse = EllipseRepresentationTranslation.fromCovarianceToVizual(fusEll);
+      ellipseSetOnClick(tempFusEllipse);
+      fusEllipseList.add(tempFusEllipse);
+    }
     List<CovarianceEllipse> CovarianceEllipseArray = state.getEllipseList();
-    Iterator<CovarianceEllipse> itr = CovarianceEllipseArray.iterator();
-    while (itr.hasNext()) {
-      CovarianceEllipse tempCovEllipse = itr.next();
+    Iterator<CovarianceEllipse> covEllItr = CovarianceEllipseArray.iterator();
+    while (covEllItr.hasNext()) {
+      CovarianceEllipse tempCovEllipse = covEllItr.next();
       TaggedEllipse tempEllipse = EllipseRepresentationTranslation.fromCovarianceToVizual(tempCovEllipse);
-      tempFusEllipse.addToRaw(tempEllipse);
       ellipseSetOnClick(tempEllipse);
       showEllipse(tempEllipse, color);
+      if (tempFusEllipse != null)
+        tempFusEllipse.addToRaw(tempEllipse);
     }
+
+    // outside the first 'if' just in order to make fused ellipse appear "on top" of raw ellipses,
+    // to ensure accessibility by mouse click:
+    if (fusEll != null)
+      showEllipse(tempFusEllipse, color);
+
   }
 
   public void showEllipse(TaggedEllipse ellipse, Color color) {
@@ -375,7 +397,9 @@ public class MainContainerController implements Initializable {
 
 
 
-    /* tree related code start  */
+  /*
+    tree related code start
+   */
 
   /**
    * On-click settings of the tree cells are here
@@ -545,17 +569,19 @@ public class MainContainerController implements Initializable {
           TreeItemContainer currStateItem = new TreeItemContainer(currState);  /*3*/
           currStateItem.setColorId(currTrack.getId());
           CovarianceEllipse currFusEl = currState.getFusionEllipse();
-          currFusEl.setIsFusionEllipse(true);
-          TreeItemContainer currFusElItem = new TreeItemContainer(currFusEl);  /*4*/
-          currFusElItem.setColorId(currTrack.getId());
+          if (currFusEl != null){
+            currFusEl.setIsFusionEllipse(true);
+            TreeItemContainer currFusElItem = new TreeItemContainer(currFusEl);  /*4.0*/
+            currFusElItem.setColorId(currTrack.getId());
+            currStateItem.getChildren().add(currFusElItem);                      /*4.0*/
+          }
           Iterator<CovarianceEllipse> ellipseIterator = currState.getEllipseList().iterator();
           while (ellipseIterator.hasNext()) {
             CovarianceEllipse currEllipse = ellipseIterator.next();
-            TreeItemContainer currEllipseItem = new TreeItemContainer(currEllipse); /*5*/
+            TreeItemContainer currEllipseItem = new TreeItemContainer(currEllipse); /*4.1*/
             currEllipseItem.setColorId(currTrack.getId());
-            currFusElItem.getChildren().add(currEllipseItem);                      /*5*/
+            currStateItem.getChildren().add(currEllipseItem);                       /*4.1*/
           }//no more ellipses in current state
-          currStateItem.getChildren().add(currFusElItem);                     /*4*/
           currTrackItem.getChildren().add(currStateItem); /*3*/
         }//no more states in current track
         currPointItem.getChildren().add(currTrackItem);/*2*/
@@ -667,7 +693,9 @@ public class MainContainerController implements Initializable {
     clickedEllipses.clear();
   }
 
-    /* tree related code end  */
+  /*
+    tree related code end
+   */
 
 
 }//MainContainerController
