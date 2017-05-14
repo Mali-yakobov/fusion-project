@@ -15,7 +15,7 @@ import static il.ac.bgu.fusion.util.LinearAlgebraUtils.*;
  */
 public class InitialClustering {
   private static final double THRESHOLD= 9.21;
-  private static final double INFINITY= Double.MAX_VALUE;
+  private static final double INFINITY= Double.POSITIVE_INFINITY;
 
 
   /*
@@ -69,9 +69,9 @@ public class InitialClustering {
 
     // Updating the state with newly merged ellipse:
     CovarianceEllipse mergedEllipse = matricesToEllipse(mergedCovMatrix, mergedPosVector);
-    //mergedEllipse.setTimeStamp();  something logical
+    //mergedEllipse.setTimeStamp();  something logical (and update State start/end time)
     //mergedEllipse.setId();         random
-    //mergedEllipse.setSensor();     implement methods set/getSensors (list of all sensors)
+    //mergedEllipse.setSensor();     implement methods set/getSensors (list of all sensors from raw data)
     //mergedEllipse velocity update  same as covariance (velocity is *5* numbers)
     cluster.getEllipseList().add(rawEllipse);
     cluster.setFusionEllipse(mergedEllipse);
