@@ -31,7 +31,6 @@ public class JsonToQueueRunnable implements Runnable {
           System.out.println("New ellipse added to queue");
           //sleeps 2 seconds
           Thread.sleep(2000);
-         // queue.notifyAll(); //do we need this?
         } catch (InterruptedException e) {
           e.printStackTrace();
         }

@@ -4,17 +4,14 @@ import il.ac.bgu.fusion.algorithms.JsonToQueueRunnable;
 import il.ac.bgu.fusion.algorithms.QueueToPipelineRunnable;
 
 import java.io.IOException;
-import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * Created by Guy Yafe.
  */
 public class Main {
-  static int queueSize = 10000000;  //Integer.MAX_VALUE - exceeds VM limit
-  static BlockingQueue covEllipseQueue = new ArrayBlockingQueue(queueSize);
-  public static boolean done = false;
-
+  static BlockingQueue covEllipseQueue = new LinkedBlockingQueue();
 
   public static void main(String ... args)throws IOException{
      // Running the threads:
