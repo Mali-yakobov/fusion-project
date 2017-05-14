@@ -69,10 +69,10 @@ public class InitialClustering {
 
     // Updating the state with newly merged ellipse:
     CovarianceEllipse mergedEllipse = matricesToEllipse(mergedCovMatrix, mergedPosVector);
-    //mergedEllipse.setTimeStamp(); ?
-    //mergedEllipse.setId();        ?
-    //mergedEllipse.setSensor();    ?
-    //mergedEllipse velocity update ?
+    //mergedEllipse.setTimeStamp();  something logical
+    //mergedEllipse.setId();         random
+    //mergedEllipse.setSensor();     implement methods set/getSensors (list of all sensors)
+    //mergedEllipse velocity update  same as covariance (velocity is *5* numbers)
     cluster.getEllipseList().add(rawEllipse);
     cluster.setFusionEllipse(mergedEllipse);
   }
@@ -110,7 +110,7 @@ public class InitialClustering {
     RealMatrix deltaR= r1.subtract(r2);                                           // dim=(1,2)
     RealMatrix deltaRTrnsp= deltaR.transpose();                                   // dim=(2,1)
 
-    RealMatrix DRMulCInvSummed= deltaR.multiply(cInvSummed);                      // dim= (1,2)x(2,2)= (1,2)
+    RealMatrix DRMulCInvSummed= deltaR.multiply(cInvSummed);                      // dim=(1,2)x(2,2)=(1,2)
     RealMatrix DRMulCInvSummedMulDRTrans= DRMulCInvSummed.multiply(deltaRTrnsp);  // dim=(1,2)x(2,1)=(1,1)
     return DRMulCInvSummedMulDRTrans.getEntry(0,0);
   }
