@@ -374,6 +374,9 @@ public class MainContainerController implements Initializable {
   }
 
   public void showEllipse(TaggedEllipse ellipse, Color color) {
+    Tooltip tooltip= new Tooltip("Bla");
+    Tooltip.install(ellipse, tooltip);
+
     ellipse.getStrokeDashArray().addAll(5d, 12d);
     if (ellipse.getIsFusionEllipse()) {
       color = new Color(color.getRed(), color.getGreen(), color.getBlue(), fusEllFillOpacityUnClicked);
