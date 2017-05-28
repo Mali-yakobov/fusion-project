@@ -1,6 +1,6 @@
 .viewarea-class {
-    -fx-background-image: url("map.gif");
-    -fx-background-repeat: no-repeat;
+    /*-fx-background-image: url("map.gif");
+    -fx-background-repeat: no-repeat;*/
 }
 
 /* for all buttons: */

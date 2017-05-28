@@ -37,8 +37,7 @@ public class GUI extends Application {
     public void start(Stage primaryStage) throws Exception{
         window = primaryStage;
         window.setTitle("Fusion Project");
-        window.setHeight(700);
-        window.setWidth(1000);
+        window.setMaximized(true);
         window.setOnCloseRequest(event -> {
             event.consume();
             closeProgram();

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.web.*?>
 <?import java.lang.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
@@ -85,12 +86,20 @@
             <Separator orientation="VERTICAL" />
       </items>
     </ToolBar>
-    <SplitPane dividerPositions="0.19599109131403117" focusTraversable="true" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
+    <SplitPane dividerPositions="0.3574610244988864" focusTraversable="true" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
       <items>
-        <SplitPane dividerPositions="0.7192307692307692" orientation="VERTICAL">
+        <SplitPane dividerPositions="0.5368217054263565" orientation="VERTICAL" SplitPane.resizableWithParent="false">
           <items>
             <AnchorPane fx:id="treeArea" minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0" />
-            <AnchorPane fx:id="infoArea" minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0" />
+            <AnchorPane fx:id="infoArea" minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+                     <children>
+                        <TreeTableView fx:id="dataTable" editable="true" prefHeight="236.0" prefWidth="318.0" showRoot="false" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                          <columns>
+                            <TreeTableColumn fx:id="dataTableNameCol" prefWidth="150.0" text="C1" />
+                            <TreeTableColumn fx:id="dataTableValueCol" prefWidth="500.0" text="C2" />
+                          </columns>
+                        </TreeTableView>
+                     </children></AnchorPane>
           </items>
         </SplitPane>
         <ScrollPane prefHeight="-1.0" prefWidth="-1.0">

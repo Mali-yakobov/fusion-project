@@ -1,6 +1,11 @@
 package il.ac.bgu.visualization;
 
 import com.google.gson.JsonSyntaxException;
+import com.sun.javafx.collections.MappingChange;
+import com.sun.javafx.scene.control.skin.NestedTableColumnHeader;
+import com.sun.javafx.scene.control.skin.TableColumnHeader;
+import com.sun.javafx.scene.control.skin.TableHeaderRow;
+import com.sun.javafx.scene.control.skin.TableViewSkin;
 import il.ac.bgu.fusion.objects.CovarianceEllipse;
 import il.ac.bgu.fusion.objects.PointInTime;
 import il.ac.bgu.fusion.objects.State;
@@ -12,6 +17,8 @@ import il.ac.bgu.visualization.tree.HierarchyData;
 import il.ac.bgu.visualization.tree.TreeItemContainer;
 import il.ac.bgu.visualization.tree.TreeViewWithItems;
 import il.ac.bgu.visualization.util.EllipseRepresentationTranslation;
+import javafx.application.Platform;
+import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -19,16 +26,21 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.MapValueFactory;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Ellipse;
 import javafx.stage.FileChooser;
 import javafx.util.Callback;
 
 import java.io.File;
+import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicLong;
 
 import static il.ac.bgu.fusion.algorithms.InitialClustering.initialClustering;
 
@@ -45,11 +57,11 @@ public class MainContainerController implements Initializable {
   private HashMap<Long, Color> colorByTrackIdTable = new HashMap<Long, Color>();
   private ArrayList<TaggedEllipse> fusEllipseList = new ArrayList<TaggedEllipse>();
 
-  final private double rawEllFillOpacityUnClicked = 0.1;
-  final private double rawEllFillOpacityClicked = 0.3;
+  final private double rawEllFillOpacityUnClicked = 0;//0.1;
+  final private double rawEllFillOpacityClicked = 0;//0.3;
 
-  final private double fusEllFillOpacityUnClicked = 0.25;
-  final private double fusEllFillOpacityClicked = 0.45;
+  final private double fusEllFillOpacityUnClicked = 0;//0.25;
+  final private double fusEllFillOpacityClicked = 0;//0.45;
 
   final private double ellStrokeWidthUnClicked = 4.65;
   final private double ellStrokeWidthClicked = 6.15;
@@ -65,7 +77,21 @@ public class MainContainerController implements Initializable {
   private Button resetButton;
 
 
-  /* tree related code start  */
+
+  /* Table related code start  */
+  @FXML
+  private TreeTableView dataTable;                         //get data table from fxml
+  @FXML
+  private TreeTableColumn<Map, String> dataTableNameCol;   //get left column from fxml
+  @FXML
+  private TreeTableColumn<Map, String> dataTableValueCol;  //get right column from fxml
+  TreeItem<String> dataRoot;
+  TreeItem<String> metadataRoot;
+  final String nameColKey = "A";
+  final String valueColKey = "B";
+  /* Table related code End  */
+
+  /* Tree related code start  */
   @FXML
   private AnchorPane treeArea;                      //get place for tree from fxml
   private TreeItem<HierarchyData> root;             //root for tree
@@ -73,7 +99,7 @@ public class MainContainerController implements Initializable {
   private ObservableList<HierarchyData> treeItems;  //data source for tree
   private ContextMenu treeMenu;                     //context menu for tree (empty space)
   private TreeItemContainer selectedItemContainer;  //currently selected tree item container
-    /* tree related code end  */
+    /* Tree related code end  */
 
 
   /**
@@ -125,10 +151,8 @@ public class MainContainerController implements Initializable {
       viewAreaMenu.show(viewArea, event.getScreenX(), event.getScreenY());
     });
 
-        /* tree related code start  */
     treeInit();
-        /* tree related code end  */
-
+    tableInit();
   }//initialize
 
 
@@ -269,11 +293,12 @@ public class MainContainerController implements Initializable {
       switch (event.getClickCount()) {
         case 1:
           if (event.getButton().equals(MouseButton.PRIMARY)) {
-            if (ellipse.getStrokeWidth() < ellStrokeWidthClicked - 0.1)                   //was not clicked/chosen
-            {
+            if (ellipse.getStrokeWidth() < ellStrokeWidthClicked - 0.1) {                  //was not clicked/chosen
+              generateDataForTable(EllipseRepresentationTranslation.fromVizualToCovariance(ellipse));
               ellipseSetClicked(ellipse);
-            } else                                          //was clicked/chosen
-            {
+            }
+            else{                                          //was clicked/chosen
+              dataTable.setVisible(false);
               ellipseSetUnclicked(ellipse);
             }
           }
@@ -332,6 +357,7 @@ public class MainContainerController implements Initializable {
   public void clearScreen() { /* TODO Add lists to clear*/
     viewArea.getChildren().clear(); //viewArea.getChildren().remove(newEllipse);
     clickedEllipses.clear();
+    dataTable.setVisible(false);
   }
 
   public void showPointInTime(PointInTime p) {
@@ -374,7 +400,7 @@ public class MainContainerController implements Initializable {
   }
 
   public void showEllipse(TaggedEllipse ellipse, Color color) {
-    Tooltip tooltip= new Tooltip("Bla");
+    Tooltip tooltip= new Tooltip("Bla\nBla");
     Tooltip.install(ellipse, tooltip);
 
     ellipse.getStrokeDashArray().addAll(5d, 12d);
@@ -396,6 +422,119 @@ public class MainContainerController implements Initializable {
     return new Color(r, g, b, rawEllFillOpacityUnClicked);
   }
 
+
+
+
+  /*
+    Table related code start
+  */
+  private void tableInit(){
+    dataRoot = new TreeItem<>("Data:");
+    dataRoot.setExpanded(true);
+
+    metadataRoot = new TreeItem<>("Metadata:");
+    metadataRoot.setExpanded(true);
+
+    TreeItem<String> root = new TreeItem<>("Root");
+    root.setExpanded(true);
+    root.getChildren().setAll(dataRoot, metadataRoot);
+    dataTable.setRoot(root);
+    tableHideHeader(dataTable);
+
+    dataTableNameCol.setCellValueFactory((TreeTableColumn.CellDataFeatures<Map, String> p) -> {
+      TreeItem treeItem = p.getValue();
+      Object treeValue = treeItem.getValue();
+      String value = null;
+      if (treeValue instanceof Map){
+        Map map = (Map)treeValue;
+        value = (String)map.get(nameColKey);
+      }
+      else
+        value = treeValue.toString();
+      return new ReadOnlyStringWrapper(value);
+    });
+
+    dataTableValueCol.setCellValueFactory((TreeTableColumn.CellDataFeatures<Map, String> p) -> {
+      TreeItem treeItem = p.getValue();
+      Object treeValue = treeItem.getValue();
+      String value = null;
+      if (treeValue instanceof Map){
+        Map map = (Map)treeValue;
+        value = (String)map.get(valueColKey);
+      }
+      return new ReadOnlyStringWrapper(value);
+    });
+  }//tablesInit
+
+  private void tableHideHeader(TreeTableView table){
+    table.widthProperty().addListener((source, oldWidth, newWidth) -> {
+      Pane header = (Pane) table.lookup("TableHeaderRow");
+      if (header.isVisible()){
+        header.setMaxHeight(0);
+        header.setMinHeight(0);
+        header.setPrefHeight(0);
+        header.setVisible(false);
+      }
+    });
+  }
+
+
+  private void generateEllipseDataForTable(CovarianceEllipse ellipse) {
+    // Data Part:
+    Map<String, String> ellipseId = new HashMap<>();
+    ellipseId.put(nameColKey, "ID:");
+    ellipseId.put(valueColKey, Long.toString(ellipse.getId()));
+
+    Map<String, String> ellipseTime = new HashMap<>();
+    ellipseTime.put(nameColKey, "Timestamp:");
+    ellipseTime.put(valueColKey, Long.toString(ellipse.getTimeStamp()));
+
+    Map<String, String> ellipseX = new HashMap<>();
+    ellipseX.put(nameColKey, "X Axis:");
+    ellipseX.put(valueColKey, Double.toString(ellipse.getCentreX()));
+
+    Map<String, String> ellipseY = new HashMap<>();
+    ellipseY.put(nameColKey, "Y Axis:");
+    ellipseY.put(valueColKey, Double.toString(ellipse.getCentreY()));
+
+    dataRoot.setValue("Ellipse Data:");
+    dataRoot.getChildren().setAll(new TreeItem(ellipseId), new TreeItem(ellipseX), new TreeItem(ellipseY));
+
+    // Metadata Part:
+    Map<String, String> ellipseColor = new HashMap<>();
+    ellipseColor.put(nameColKey, "Is Fused:");
+    ellipseColor.put(valueColKey, Boolean.toString(ellipse.getIsFusionEllipse()));
+
+    TaggedEllipse taggedEllipse= EllipseRepresentationTranslation.fromCovarianceToVizual(ellipse);
+    Map<String, String> ellipseRadX = new HashMap<>();
+    ellipseRadX.put(nameColKey, "Radius X:");
+    ellipseRadX.put(valueColKey, Double.toString(taggedEllipse.getRadiusX()));
+
+    Map<String, String> ellipseRadY = new HashMap<>();
+    ellipseRadY.put(nameColKey, "Radius Y:");
+    ellipseRadY.put(valueColKey, Double.toString(taggedEllipse.getRadiusY()));
+
+    Map<String, String> ellipseAngle = new HashMap<>();
+    ellipseAngle.put(nameColKey, "Angle:");
+    ellipseAngle.put(valueColKey, Double.toString(taggedEllipse.getRotate()));
+
+    metadataRoot.setValue("Ellipse Metadata:");
+    metadataRoot.getChildren().setAll(new TreeItem(ellipseColor), new TreeItem(ellipseRadX), new TreeItem(ellipseRadY),
+                                      new TreeItem(ellipseAngle));
+  }
+
+  private void generateDataForTable(Object item){
+    dataTable.setVisible(false);
+
+    if (item instanceof CovarianceEllipse){
+      generateEllipseDataForTable((CovarianceEllipse)item);
+      dataTable.setVisible(true);
+    }
+
+  }
+  /*
+    Table related code end
+  */
 
 
 
@@ -431,56 +570,19 @@ public class MainContainerController implements Initializable {
     });
 
     //set actions for selecting a node on tree
-    this.tree.getSelectionModel().selectedItemProperty().addListener(
-        new ChangeListener() {
-          @Override
-          public void changed(ObservableValue observable, Object oldValue, Object newValue) {
-            if (newValue != null) {
+    this.tree.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+          if (newValue != null) {
+            TreeItem<HierarchyData> selectedTreeNode = (TreeItem<HierarchyData>) newValue;
+            TreeItemContainer newItemContainer = (TreeItemContainer) selectedTreeNode.getValue();
+            selectedItemContainer = newItemContainer;
+            Object newItem= newItemContainer.getContainedItem();
 
-              TreeItem<HierarchyData> selectedTreeNode = (TreeItem<HierarchyData>) newValue;
-              TreeItem<HierarchyData> oldTreeNode = (TreeItem<HierarchyData>) oldValue;
-
-              TreeItemContainer newItemContainer = (TreeItemContainer) selectedTreeNode.getValue();
-              selectedItemContainer = newItemContainer;
-              TreeItemContainer oldItemContainer = null;
-              if (oldTreeNode != null) {
-                oldItemContainer = (TreeItemContainer) oldTreeNode.getValue();
-              }
-
-              unclickAll();
-              recursiveTreeClick(newItemContainer);
-
-                        /* if old item exist: */
-                        /*if (oldItemContainer != null) {
-                            Object oldItem = oldItemContainer.getContainedItem();
-                            Object oldGraphicItem = oldItemContainer.getContainedGraphicItem();
-
-                            if (oldItem instanceof CovarianceEllipse) {
-                                CovarianceEllipse covEllipse = (CovarianceEllipse) oldItem;
-                                if (oldGraphicItem != null) {
-                                    Ellipse ellipse = (Ellipse) oldGraphicItem;
-                                    ellipseSetUnclicked(ellipse, covEllipse);
-                                }
-                            }
-                        }*/ /* if old item exist: */
-
-
-                        /* dealing with the new item: */
-                        /*Object newItem= newItemContainer.getContainedItem();
-                        Object newGraphicItem= newItemContainer.getContainedGraphicItem();
-
-                        if (newItem instanceof CovarianceEllipse){
-                            CovarianceEllipse covEllipse= (CovarianceEllipse)newItem;
-                            if (newGraphicItem != null){
-                                Ellipse ellipse= (Ellipse)newGraphicItem;
-                                ellipseSetClicked(ellipse, covEllipse);
-                            }
-                        }*/
-
-            }
-          }//changed(...)
+            unclickAll();
+            recursiveTreeClick(newItemContainer);
+            generateDataForTable(newItem);
+          }
         }//new ChangeListener(){
-    );//.addListener(
+    );//addListener(
 
     treeItems = FXCollections.observableList(new ArrayList<HierarchyData>()); //init data source for tree
     tree.setItems(treeItems);                                                //bind tree with data source (items)
@@ -488,9 +590,8 @@ public class MainContainerController implements Initializable {
   }//treeInit
 
   /**
-   * cc
    * Modify TreeCell class for cell-factory of the tree
-   * <p>
+   *
    * On-create settings of the tree cells are here
    */
   private final class NameIconAddCell extends TreeCell<HierarchyData> {
