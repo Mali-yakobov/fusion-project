@@ -23,7 +23,8 @@ import java.util.List;
 import static il.ac.bgu.fusion.algorithms.InitialClustering.initialClustering;
 import static il.ac.bgu.visualization.util.EllipseRepresentationTranslation.fromVizualToCovariance;
 
-
+import org.slf4j.Logger;
+import org.apache.log4j.spi.LoggerFactory;
 public class GUI extends Application {
     public static Stage window;
     public static Scene scene1;

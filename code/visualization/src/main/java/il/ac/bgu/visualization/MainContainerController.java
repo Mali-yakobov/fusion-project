@@ -1,6 +1,12 @@
 package il.ac.bgu.visualization;
 
+import com.github.ansell.shp.UTM;
+import com.lynden.gmapsfx.javascript.object.*;
+import com.lynden.gmapsfx.shapes.PolylineOptions;
+import il.ac.bgu.visualization.util.EllipseBuilder;
 import com.google.gson.JsonSyntaxException;
+import com.lynden.gmapsfx.GoogleMapView;
+import com.lynden.gmapsfx.MapComponentInitializedListener;
 import com.sun.javafx.collections.MappingChange;
 import com.sun.javafx.scene.control.skin.NestedTableColumnHeader;
 import com.sun.javafx.scene.control.skin.TableColumnHeader;
@@ -43,13 +49,15 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
 
 import static il.ac.bgu.fusion.algorithms.InitialClustering.initialClustering;
+import static org.jscience.geography.coordinates.UTM.utmToLatLong;
+import static org.jscience.geography.coordinates.crs.ReferenceEllipsoid.WGS84;
 
 
 /**
  * FXML Controller class for main_container.fxml
  */
-public class MainContainerController implements Initializable {
-
+public class MainContainerController implements Initializable, MapComponentInitializedListener{
+  private GoogleMap map;
   private ArrayList<PointInTime> pointInTimeArray = null;
   private int pointInTimeArrayIndex = -1;
 
@@ -76,7 +84,8 @@ public class MainContainerController implements Initializable {
   @FXML
   private Button resetButton;
 
-
+  @FXML
+  protected GoogleMapView mapView;
 
   /* Table related code start  */
   @FXML
@@ -99,7 +108,23 @@ public class MainContainerController implements Initializable {
   private ObservableList<HierarchyData> treeItems;  //data source for tree
   private ContextMenu treeMenu;                     //context menu for tree (empty space)
   private TreeItemContainer selectedItemContainer;  //currently selected tree item container
-    /* Tree related code end  */
+
+  /* Tree related code end  */
+
+  @Override
+  public void mapInitialized() {
+    double centerLat = 31.166724;
+    double centerLong = 34.793119;
+    //lblClick=new Label();
+    MapOptions options = new MapOptions();
+    options.center(new LatLong(centerLat, centerLong))
+           .zoomControl(true)
+           .zoom(12)
+           .overviewMapControl(false)
+           .mapType(MapTypeIdEnum.ROADMAP);
+     map = mapView.createMap(options);
+  }
+
 
 
   /**
@@ -137,6 +162,8 @@ public class MainContainerController implements Initializable {
 
   @Override
   public void initialize(URL url, ResourceBundle rb) {
+    mapView.addMapInializedListener(this);
+
     viewArea.getStyleClass().add("viewarea-class");
     forwardButton.getStyleClass().add("forward-button-class");
     backwardButton.getStyleClass().add("backward-button-class");
@@ -386,6 +413,7 @@ public class MainContainerController implements Initializable {
     while (covEllItr.hasNext()) {
       CovarianceEllipse tempCovEllipse = covEllItr.next();
       TaggedEllipse tempEllipse = EllipseRepresentationTranslation.fromCovarianceToVizual(tempCovEllipse);
+
       ellipseSetOnClick(tempEllipse);
       showEllipse(tempEllipse, color);
       if (tempFusEllipse != null)
@@ -400,6 +428,23 @@ public class MainContainerController implements Initializable {
   }
 
   public void showEllipse(TaggedEllipse ellipse, Color color) {
+    double distanceFromStart = ellipse.getRadiusX();
+    double distanceFromEnd =ellipse.getRadiusY();
+    double rotAngle = ellipse.getRotate();
+    double centerX=ellipse.getCenterX();
+    double centerY=ellipse.getCenterY();
+    /////////UTM c=new UTM();//find how convert center point to UTM
+    //LatLong centreP = new LatLong(centerLat, centerLong);
+    //LatLong centerP=utmToLatLong(c,WGS84 );
+    LatLong centreP = new LatLong(31.166724, 34.793119);
+    MVCArray p = EllipseBuilder.buildEllipsePoints(centreP, distanceFromStart, distanceFromEnd, rotAngle);
+
+    PolylineOptions options1=new PolylineOptions().path(p).strokeColor(String.valueOf(color)).clickable(true);
+    com.lynden.gmapsfx.shapes.Polyline pp = new com.lynden.gmapsfx.shapes.Polyline(options1);
+    pp.setPath(p);
+    map.addMapShape(pp);
+
+    /*
     Tooltip tooltip= new Tooltip("Bla\nBla");
     Tooltip.install(ellipse, tooltip);
 
@@ -411,7 +456,7 @@ public class MainContainerController implements Initializable {
     ellipse.setFill(color);
     ellipse.setStroke(new Color(color.getRed(), color.getGreen(), color.getBlue(), 1));
     ellipse.setStrokeWidth(ellStrokeWidthUnClicked);
-    viewArea.getChildren().addAll(ellipse);
+    viewArea.getChildren().addAll(ellipse);*/
   }
 
   public Color colorGenerator() {
