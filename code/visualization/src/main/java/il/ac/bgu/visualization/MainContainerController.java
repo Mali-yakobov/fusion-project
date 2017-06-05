@@ -1,7 +1,9 @@
 package il.ac.bgu.visualization;
 
 import com.github.ansell.shp.UTM;
+import com.lynden.gmapsfx.javascript.event.UIEventType;
 import com.lynden.gmapsfx.javascript.object.*;
+import com.lynden.gmapsfx.javascript.object.LatLong;
 import com.lynden.gmapsfx.shapes.PolylineOptions;
 import il.ac.bgu.visualization.util.EllipseBuilder;
 import com.google.gson.JsonSyntaxException;
@@ -41,7 +43,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Ellipse;
 import javafx.stage.FileChooser;
 import javafx.util.Callback;
+import org.jscience.geography.coordinates.*;
 
+import javax.measure.unit.SI;
 import java.io.File;
 import java.lang.reflect.Method;
 import java.net.URL;
@@ -76,13 +80,13 @@ public class MainContainerController implements Initializable, MapComponentIniti
 
 
   @FXML
-  private AnchorPane viewArea;
-  @FXML
   private Button forwardButton;
   @FXML
   private Button backwardButton;
   @FXML
   private Button resetButton;
+  @FXML
+  private Slider slider;
 
   @FXML
   protected GoogleMapView mapView;
@@ -164,25 +168,13 @@ public class MainContainerController implements Initializable, MapComponentIniti
   public void initialize(URL url, ResourceBundle rb) {
     mapView.addMapInializedListener(this);
 
-    viewArea.getStyleClass().add("viewarea-class");
     forwardButton.getStyleClass().add("forward-button-class");
     backwardButton.getStyleClass().add("backward-button-class");
     resetButton.getStyleClass().add("reset-button-class");
 
-    //make context menu for viewArea (empty space):
-    MenuItem addEllipseMenuItem = new MenuItem("Add Ellipse");
-    ContextMenu viewAreaMenu = new ContextMenu(addEllipseMenuItem);
-    viewArea.setOnMouseClicked(event -> viewAreaMenu.hide());
-    viewArea.setOnContextMenuRequested(event -> {
-      addEllipseMenuItem.setOnAction(e -> addEllipseOnClickAction(event.getX(), event.getY()));
-      viewAreaMenu.show(viewArea, event.getScreenX(), event.getScreenY());
-    });
-
     treeInit();
     tableInit();
   }//initialize
-
-
 
   /*
     Action functions for GUI components:
@@ -193,7 +185,8 @@ public class MainContainerController implements Initializable, MapComponentIniti
     FileChooser fileChooser = new FileChooser();
     fileChooser.setTitle("Select Json File");
     fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("json", "*.json"));
-    File file = fileChooser.showOpenDialog(viewArea.getScene().getWindow());
+    File file = fileChooser.showOpenDialog(mapView.getScene().getWindow());
+
     if (file != null) {
       filePath = file.getAbsolutePath();
     }
@@ -201,8 +194,8 @@ public class MainContainerController implements Initializable, MapComponentIniti
       try {
         pointInTimeArray = JsonReaderWriter.jsonToObject(filePath);
         colorByTrackIdTable.clear();
-        treeItems.clear();
-        fillTreeItemsFromJson(pointInTimeArray, treeItems);
+        //treeItems.clear();
+        //fillTreeItemsFromJson(pointInTimeArray, treeItems);
         resetAction();
         // System.out.println(pointInTimeArray.get(0).getClass().getSimpleName());
       } catch (JsonSyntaxException e) {
@@ -212,6 +205,7 @@ public class MainContainerController implements Initializable, MapComponentIniti
   }
 
   public void forwardAction() {
+    slider.increment();
     pointInTimeArrayIndex++;
     PointInTime pointInTime = pointInTimeArray.get(pointInTimeArrayIndex);
     clearScreen();
@@ -225,6 +219,7 @@ public class MainContainerController implements Initializable, MapComponentIniti
   }
 
   public void backwardAction() {
+    slider.decrement();
     pointInTimeArrayIndex--;
     clearScreen();
     if (pointInTimeArrayIndex == -1) {
@@ -371,7 +366,6 @@ public class MainContainerController implements Initializable, MapComponentIniti
       currFill = fusEllFillOpacityUnClicked;
     }
 
-
     Color clF = (Color) ellipse.getFill();
     if (ellipse.getStrokeWidth() >= ellStrokeWidthClicked - 0.1) {
       clickedEllipses.remove(ellipse);
@@ -382,7 +376,7 @@ public class MainContainerController implements Initializable, MapComponentIniti
 
 
   public void clearScreen() { /* TODO Add lists to clear*/
-    viewArea.getChildren().clear(); //viewArea.getChildren().remove(newEllipse);
+    //viewArea.getChildren().remove(newEllipse);
     clickedEllipses.clear();
     dataTable.setVisible(false);
   }
@@ -428,21 +422,26 @@ public class MainContainerController implements Initializable, MapComponentIniti
   }
 
   public void showEllipse(TaggedEllipse ellipse, Color color) {
-    double distanceFromStart = ellipse.getRadiusX();
-    double distanceFromEnd =ellipse.getRadiusY();
+    double radiusX = ellipse.getRadiusX();
+    double radiusY =ellipse.getRadiusY();
     double rotAngle = ellipse.getRotate();
+
     double centerX=ellipse.getCenterX();
     double centerY=ellipse.getCenterY();
-    /////////UTM c=new UTM();//find how convert center point to UTM
-    //LatLong centreP = new LatLong(centerLat, centerLong);
-    //LatLong centerP=utmToLatLong(c,WGS84 );
-    LatLong centreP = new LatLong(31.166724, 34.793119);
-    MVCArray p = EllipseBuilder.buildEllipsePoints(centreP, distanceFromStart, distanceFromEnd, rotAngle);
 
-    PolylineOptions options1=new PolylineOptions().path(p).strokeColor(String.valueOf(color)).clickable(true);
+    org.jscience.geography.coordinates.UTM c= org.jscience.geography.coordinates.UTM.valueOf(36, 'N', centerX,centerY,SI.METRE);//find how convert center point to U
+    org.jscience.geography.coordinates.LatLong centerPTemp= utmToLatLong(c, WGS84);
+    LatLong centerP= new LatLong(centerPTemp.getCoordinates()[1], centerPTemp.getCoordinates()[0]);
+    //LatLong centerP = new LatLong(31.166724, 34.793119);
+    MVCArray p = EllipseBuilder.buildEllipsePoints(centerP, radiusX, radiusY, rotAngle);
+
+    PolylineOptions options1=new PolylineOptions().path(p).strokeColor("#ff00c9").clickable(true);
     com.lynden.gmapsfx.shapes.Polyline pp = new com.lynden.gmapsfx.shapes.Polyline(options1);
-    pp.setPath(p);
-    map.addMapShape(pp);
+     map.addMapShape(pp);
+
+    map.addUIEventHandler(pp, UIEventType.click, jsObject -> {
+      pp.setVisible(false);
+     });
 
     /*
     Tooltip tooltip= new Tooltip("Bla\nBla");
@@ -787,7 +786,7 @@ public class MainContainerController implements Initializable, MapComponentIniti
   private void hideEllipseContainer(TreeItemContainer ellipseContainer) {
     TaggedEllipse ellipse = (TaggedEllipse) ellipseContainer.getContainedGraphicItem();
     if (ellipse != null) {
-      viewArea.getChildren().remove(ellipse);
+      //viewArea.getChildren().remove(ellipse);
       clickedEllipses.remove(ellipse);
       ellipseContainer.setContainedGraphicItem(null);
     }

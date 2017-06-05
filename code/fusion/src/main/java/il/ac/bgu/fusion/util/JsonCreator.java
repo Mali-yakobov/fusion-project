@@ -10,27 +10,27 @@ import java.util.ArrayList;
  */
 public class JsonCreator {
   static Sensor sensor1=new Sensor(123, 800, 620, "");
-  static CovarianceEllipse c1= new CovarianceEllipse(0, 0, 150, 130, 3920.944533000791, 2879.0554669992093, -2954.4232590366246, sensor1);
-  static CovarianceEllipse c2= new CovarianceEllipse(0, 0, 150, 130, 3920.944533000791, 2879.0554669992093, 2954.4232590366246,sensor1);
-  static CovarianceEllipse c3= new CovarianceEllipse(0, 0, 150, 130, 6354.423259036625, 445.5767409633759, 520.9445330007915,sensor1);
+  static CovarianceEllipse c1= new CovarianceEllipse(0, 0, 341338.64930353255, 3847283.031396312, 3920.944533000791, 2879.0554669992093, -2954.4232590366246, sensor1);
+  static CovarianceEllipse c2= new CovarianceEllipse(0, 0, 341338.64930353255, 3847283.031396312, 3920.944533000791, 2879.0554669992093, 2954.4232590366246,sensor1);
+  static CovarianceEllipse c3= new CovarianceEllipse(0, 0, 341338.64930353255, 3847283.031396312, 6354.423259036625, 445.5767409633759, 520.9445330007915,sensor1);
 
 
-  static CovarianceEllipse c31= new CovarianceEllipse(0, 0, 350, 130, 3920.944533000791, 2879.0554669992093, -2954.4232590366246, sensor1);
-  static CovarianceEllipse c32= new CovarianceEllipse(0, 0, 350, 130, 3920.944533000791, 2879.0554669992093, 2954.4232590366246,sensor1);
-  static CovarianceEllipse c33= new CovarianceEllipse(0, 0, 350, 130, 6354.423259036625, 445.5767409633759, 520.9445330007915,sensor1);
+  static CovarianceEllipse c31= new CovarianceEllipse(0, 0, 341541.14443520096, 3851394.9664129233, 3920.944533000791, 2879.0554669992093, -2954.4232590366246, sensor1);
+  static CovarianceEllipse c32= new CovarianceEllipse(0, 0, 341541.14443520096, 3851394.9664129233, 3920.944533000791, 2879.0554669992093, 2954.4232590366246,sensor1);
+  static CovarianceEllipse c33= new CovarianceEllipse(0, 0, 341541.14443520096, 3851394.9664129233, 6354.423259036625, 445.5767409633759, 520.9445330007915,sensor1);
 
-  static CovarianceEllipse c21= new CovarianceEllipse(0, 0, 150, 470, 3920.944533000791, 2879.0554669992093, -2954.4232590366246, sensor1);
-  static CovarianceEllipse c22= new CovarianceEllipse(0, 0, 150, 470, 3920.944533000791, 2879.0554669992093, 2954.4232590366246,sensor1);
-  static CovarianceEllipse c23= new CovarianceEllipse(0, 0, 150, 470, 6354.423259036625, 445.5767409633759, 520.9445330007915,sensor1);
+  static CovarianceEllipse c21= new CovarianceEllipse(0, 0, 338630.3717402127, 3848631.424409331, 3920.944533000791, 2879.0554669992093, -2954.4232590366246, sensor1);
+  static CovarianceEllipse c22= new CovarianceEllipse(0, 0, 338630.3717402127, 3848631.424409331, 3920.944533000791, 2879.0554669992093, 2954.4232590366246,sensor1);
+  static CovarianceEllipse c23= new CovarianceEllipse(0, 0, 338630.3717402127, 3848631.424409331, 6354.423259036625, 445.5767409633759, 520.9445330007915,sensor1);
 
 
-  static CovarianceEllipse c41= new CovarianceEllipse(0, 0, 550, 130, 3920.944533000791, 2879.0554669992093, -2954.4232590366246, sensor1);
-  static CovarianceEllipse c42= new CovarianceEllipse(0, 0, 550, 130, 3920.944533000791, 2879.0554669992093, 2954.4232590366246,sensor1);
-  static CovarianceEllipse c43= new CovarianceEllipse(0, 0, 550, 130, 6354.423259036625, 445.5767409633759, 520.9445330007915,sensor1);
+  static CovarianceEllipse c41= new CovarianceEllipse(0, 0, 341727.84113126114, 3855935.550058786, 3920.944533000791, 2879.0554669992093, -2954.4232590366246, sensor1);
+  static CovarianceEllipse c42= new CovarianceEllipse(0, 0, 341727.84113126114, 3855935.550058786, 3920.944533000791, 2879.0554669992093, 2954.4232590366246,sensor1);
+  static CovarianceEllipse c43= new CovarianceEllipse(0, 0, 341727.84113126114, 3855935.550058786, 6354.423259036625, 445.5767409633759, 520.9445330007915,sensor1);
 
-  static CovarianceEllipse c51= new CovarianceEllipse(0, 0, 350, 300, 3920.944533000791, 2879.0554669992093, -2954.4232590366246, sensor1);
-  static CovarianceEllipse c52= new CovarianceEllipse(0, 0, 350, 300, 3920.944533000791, 2879.0554669992093, 2954.4232590366246,sensor1);
-  static CovarianceEllipse c53= new CovarianceEllipse(0, 0, 350, 300, 6354.423259036625, 445.5767409633759, 520.9445330007915,sensor1);
+  static CovarianceEllipse c51= new CovarianceEllipse(0, 0, 339982.56589317543, 3849749.287213925, 3920.944533000791, 2879.0554669992093, -2954.4232590366246, sensor1);
+  static CovarianceEllipse c52= new CovarianceEllipse(0, 0, 339982.56589317543, 3849749.287213925, 3920.944533000791, 2879.0554669992093, 2954.4232590366246,sensor1);
+  static CovarianceEllipse c53= new CovarianceEllipse(0, 0, 339982.56589317543, 3849749.287213925, 6354.423259036625, 445.5767409633759, 520.9445330007915,sensor1);
 
 
   public static void createDummyScenario(){
@@ -45,7 +45,7 @@ public class JsonCreator {
     Track t1=new Track(1, 10, 12, states1);
     ArrayList<Track> tracks1=new ArrayList<Track>();
     tracks1.add(t1);
-    PointInTime p1=new PointInTime(10, tracks1);
+    PointInTime p1=new PointInTime(123, tracks1);
 
     /*   P2      */
     ArrayList<CovarianceEllipse> rawElls12=new ArrayList<CovarianceEllipse>();
@@ -70,7 +70,7 @@ public class JsonCreator {
     Track t2=new Track(2,10,12,states2);
     tracks12.add(t2);
 
-    PointInTime p2=new PointInTime(10,tracks12);
+    PointInTime p2=new PointInTime(124,tracks12);
 
     /*     P3      */
     ArrayList<CovarianceEllipse> rawElls13=new ArrayList<CovarianceEllipse>();
@@ -97,7 +97,7 @@ public class JsonCreator {
     Track t21=new Track(2,10,12,states21);
     tracks13.add(t21);
 
-    PointInTime p3=new PointInTime(10,tracks13);
+    PointInTime p3=new PointInTime(125,tracks13);
 
     /* ************************************************************** */
     ArrayList<PointInTime> listPointInTime=new ArrayList<PointInTime>();

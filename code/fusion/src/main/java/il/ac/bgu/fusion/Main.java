@@ -2,6 +2,7 @@ package il.ac.bgu.fusion;
 
 import il.ac.bgu.fusion.algorithms.JsonToQueueRunnable;
 import il.ac.bgu.fusion.algorithms.QueueToPipelineRunnable;
+import il.ac.bgu.fusion.util.JsonCreator;
 
 import java.io.IOException;
 import java.util.concurrent.BlockingQueue;
@@ -14,6 +15,9 @@ public class Main {
   static BlockingQueue covEllipseQueue = new LinkedBlockingQueue();
 
   public static void main(String ... args)throws IOException{
+
+    //JsonCreator.createDummyScenario();
+
      // Running the threads:
     Thread jsonToQueue = new Thread( new JsonToQueueRunnable(covEllipseQueue));
     Thread queueToPipeline = new Thread( new QueueToPipelineRunnable(covEllipseQueue));
