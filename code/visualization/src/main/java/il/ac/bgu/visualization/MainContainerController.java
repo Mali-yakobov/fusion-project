@@ -1,6 +1,6 @@
 package il.ac.bgu.visualization;
 
-import com.github.ansell.shp.UTM;
+//import com.github.ansell.shp.UTM;
 import com.lynden.gmapsfx.javascript.event.UIEventType;
 import com.lynden.gmapsfx.javascript.object.*;
 import com.lynden.gmapsfx.javascript.object.LatLong;
