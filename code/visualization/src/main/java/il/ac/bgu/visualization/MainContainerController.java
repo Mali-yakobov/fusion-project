@@ -32,11 +32,14 @@ import javafx.scene.shape.Ellipse;
 import javafx.stage.FileChooser;
 import javafx.util.Callback;
 
+import javax.measure.unit.SI;
 import java.io.File;
 import java.net.URL;
 import java.util.*;
 
 import static il.ac.bgu.fusion.algorithms.InitialClustering.initialClustering;
+import static org.jscience.geography.coordinates.UTM.utmToLatLong;
+import static org.jscience.geography.coordinates.crs.ReferenceEllipsoid.WGS84;
 
 
 /**
@@ -413,6 +416,7 @@ public class MainContainerController implements Initializable, MapComponentIniti
 
     org.jscience.geography.coordinates.UTM c= org.jscience.geography.coordinates.UTM.valueOf(36, 'N', centerX,centerY,SI.METRE);//find how convert center point to U
     org.jscience.geography.coordinates.LatLong centerPTemp= utmToLatLong(c, WGS84);
+
     LatLong centerP= new LatLong(centerPTemp.getCoordinates()[1], centerPTemp.getCoordinates()[0]);
     //LatLong centerP = new LatLong(31.166724, 34.793119);
     MVCArray p = EllipseBuilder.buildEllipsePoints(centerP, radiusX, radiusY, rotAngle);
@@ -421,9 +425,7 @@ public class MainContainerController implements Initializable, MapComponentIniti
     com.lynden.gmapsfx.shapes.Polyline pp = new com.lynden.gmapsfx.shapes.Polyline(options1);
      map.addMapShape(pp);
 
-    map.addUIEventHandler(pp, UIEventType.click, jsObject -> {
-      pp.setVisible(false);
-     });
+
 
     /*
     Tooltip tooltip= new Tooltip("Bla\nBla");
