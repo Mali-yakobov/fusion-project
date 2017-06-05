@@ -38,6 +38,7 @@ import java.util.*;
 
 import static il.ac.bgu.fusion.algorithms.InitialClustering.initialClustering;
 
+
 /**
  * FXML Controller class for main_container.fxml
  */
