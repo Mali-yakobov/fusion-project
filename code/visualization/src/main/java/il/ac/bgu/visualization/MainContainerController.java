@@ -1,17 +1,11 @@
 package il.ac.bgu.visualization;
 
-import com.github.ansell.shp.UTM;
-import com.lynden.gmapsfx.javascript.object.*;
-import com.lynden.gmapsfx.shapes.PolylineOptions;
-import il.ac.bgu.visualization.util.EllipseBuilder;
+//import com.github.ansell.shp.UTM;
 import com.google.gson.JsonSyntaxException;
 import com.lynden.gmapsfx.GoogleMapView;
 import com.lynden.gmapsfx.MapComponentInitializedListener;
-import com.sun.javafx.collections.MappingChange;
-import com.sun.javafx.scene.control.skin.NestedTableColumnHeader;
-import com.sun.javafx.scene.control.skin.TableColumnHeader;
-import com.sun.javafx.scene.control.skin.TableHeaderRow;
-import com.sun.javafx.scene.control.skin.TableViewSkin;
+import com.lynden.gmapsfx.javascript.object.*;
+import com.lynden.gmapsfx.shapes.PolylineOptions;
 import il.ac.bgu.fusion.objects.CovarianceEllipse;
 import il.ac.bgu.fusion.objects.PointInTime;
 import il.ac.bgu.fusion.objects.State;
@@ -22,18 +16,14 @@ import il.ac.bgu.visualization.objects.AlertWindow;
 import il.ac.bgu.visualization.tree.HierarchyData;
 import il.ac.bgu.visualization.tree.TreeItemContainer;
 import il.ac.bgu.visualization.tree.TreeViewWithItems;
+import il.ac.bgu.visualization.util.EllipseBuilder;
 import il.ac.bgu.visualization.util.EllipseRepresentationTranslation;
-import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyStringWrapper;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.MapValueFactory;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
@@ -43,14 +33,10 @@ import javafx.stage.FileChooser;
 import javafx.util.Callback;
 
 import java.io.File;
-import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicLong;
 
 import static il.ac.bgu.fusion.algorithms.InitialClustering.initialClustering;
-import static org.jscience.geography.coordinates.UTM.utmToLatLong;
-import static org.jscience.geography.coordinates.crs.ReferenceEllipsoid.WGS84;
 
 
 /**
