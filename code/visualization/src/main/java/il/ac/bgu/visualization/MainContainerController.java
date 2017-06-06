@@ -159,6 +159,7 @@ public class MainContainerController implements Initializable, MapComponentIniti
 
     treeInit();
     tableInit();
+    sliderInit(20); //random number
   }//initialize
 
   /*
@@ -178,6 +179,8 @@ public class MainContainerController implements Initializable, MapComponentIniti
     if (filePath != null) {
       try {
         pointInTimeArray = JsonReaderWriter.jsonToObject(filePath);
+        int numOfPoints = pointInTimeArray.size();
+        sliderInit(numOfPoints); //initializes slider with number of points in time
         colorByTrackIdTable.clear();
         //treeItems.clear();
         //fillTreeItemsFromJson(pointInTimeArray, treeItems);
@@ -450,7 +453,15 @@ public class MainContainerController implements Initializable, MapComponentIniti
     return new Color(r, g, b, rawEllFillOpacityUnClicked);
   }
 
+  /*
+  Slider initialization:
+  initializes the slider with the current number of points in time
+   */
+  private void sliderInit(int max) {
+    slider.setMin(0);
+    slider.setMax(max);
 
+  }
 
 
   /*
