@@ -57,7 +57,7 @@ public class MainContainerController implements Initializable, MapComponentIniti
   private ArrayList<VizualEllipse> clickedEllipses = new ArrayList<VizualEllipse>();
   private HashMap<Long, Color> colorByTrackIdTable = new HashMap<Long, Color>();
   private ArrayList<VizualEllipse> fusEllipseList = new ArrayList<VizualEllipse>();
-
+  private ArrayList<com.lynden.gmapsfx.shapes.Polyline> polylineArray=new ArrayList<com.lynden.gmapsfx.shapes.Polyline>();
   final private double rawEllFillOpacityUnClicked = 0;//0.1;
   final private double rawEllFillOpacityClicked = 0;//0.3;
 
@@ -391,7 +391,10 @@ public class MainContainerController implements Initializable, MapComponentIniti
 
   public void clearScreen() { /* TODO Add lists to clear*/
     //viewArea.getChildren().remove(newEllipse);
-    mapInitialized();
+    for (com.lynden.gmapsfx.shapes.Polyline polyline : polylineArray){
+      map.removeMapShape(polyline);
+    }
+      //mapInitialized();
     clickedEllipses.clear();
     dataTable.setVisible(false);
   }
@@ -440,6 +443,7 @@ public class MainContainerController implements Initializable, MapComponentIniti
   public void showEllipse(VizualEllipse ellipse, String color,double stroke) {
     com.lynden.gmapsfx.shapes.Polyline polyline=ellipse.ellipseToDraw(color,stroke);
     map.addMapShape(polyline);
+    polylineArray.add(polyline);
 
     /*
     Tooltip tooltip= new Tooltip("Bla\nBla");
