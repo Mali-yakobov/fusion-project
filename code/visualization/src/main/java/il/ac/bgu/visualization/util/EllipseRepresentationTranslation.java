@@ -2,6 +2,7 @@ package il.ac.bgu.visualization.util;
 
 import il.ac.bgu.fusion.objects.CovarianceEllipse;
 import il.ac.bgu.visualization.MainContainerController;
+import il.ac.bgu.visualization.objects.VizualEllipse;
 import javafx.scene.shape.Ellipse;
 import org.apache.commons.math3.linear.*;
 
@@ -13,8 +14,8 @@ import java.util.Arrays;
  */
 public class EllipseRepresentationTranslation {
 
-    public static MainContainerController.TaggedEllipse fromCovarianceToVizual(CovarianceEllipse covElipse){
-        MainContainerController.TaggedEllipse ans= new MainContainerController.TaggedEllipse();
+    public static VizualEllipse fromCovarianceToVizual(CovarianceEllipse covElipse){
+        VizualEllipse ans= new VizualEllipse();
 
         double[][] matrixData = { {covElipse.getSx2(), covElipse.getSxy()},
                                   {covElipse.getSxy(), covElipse.getSy2()} };
@@ -37,21 +38,22 @@ public class EllipseRepresentationTranslation {
 
         ans.setRadiusX(rx);
         ans.setRadiusY(ry);
-        ans.setCenterX(covElipse.getCentreX());
-        ans.setCenterY(covElipse.getCentreY());
-        ans.setRotate(Math.toDegrees(theta));
-        ans.setIsFusionEllipse(covElipse.getIsFusionEllipse());
+        ans.setCentreX(covElipse.getCentreX());
+        ans.setCentreY(covElipse.getCentreY());
+        ans.setAngle(Math.toDegrees(theta));
+        ans.setFusionEllipse(covElipse.getIsFusionEllipse());
+
         return ans;
     }
 
-    public static CovarianceEllipse fromVizualToCovariance(MainContainerController.TaggedEllipse vizElipse) {
+    public static CovarianceEllipse fromVizualToCovariance(VizualEllipse vizElipse) {
         CovarianceEllipse ans =  new CovarianceEllipse();
 
         double[][] tempMatData = { {Math.pow(vizElipse.getRadiusX(), 2), 0},
                                    {0                                  , Math.pow(vizElipse.getRadiusY(), 2)} };
         Array2DRowRealMatrix tempMatrix = new Array2DRowRealMatrix(tempMatData);
 
-        double theta= Math.toRadians(vizElipse.getRotate());
+        double theta= Math.toRadians(vizElipse.getAngle());
         double[][] rData = { {Math.cos(theta), -Math.sin(theta)},
                              {Math.sin(theta), Math.cos(theta)} };
 
@@ -59,12 +61,12 @@ public class EllipseRepresentationTranslation {
         Array2DRowRealMatrix Rt = (Array2DRowRealMatrix) R.transpose();
         Array2DRowRealMatrix covMatrix= R.multiply(tempMatrix).multiply(Rt);
 
-        ans.setCentreX(vizElipse.getCenterX());
-        ans.setCentreY(vizElipse.getCenterY());
+        ans.setCentreX(vizElipse.getCentreX());
+        ans.setCentreY(vizElipse.getCentreY());
         ans.setSx2(covMatrix.getEntry(0, 0));
         ans.setSy2(covMatrix.getEntry(1, 1));
         ans.setSxy(covMatrix.getEntry(0, 1));
-        ans.setIsFusionEllipse(vizElipse.getIsFusionEllipse());
+        ans.setIsFusionEllipse(vizElipse.isFusionEllipse());
         return ans;
     }
 

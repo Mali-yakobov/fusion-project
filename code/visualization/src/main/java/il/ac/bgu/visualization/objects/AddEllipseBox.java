@@ -17,7 +17,7 @@ import javafx.stage.Stage;
 import static il.ac.bgu.visualization.MainContainerController.*;
 
 public class AddEllipseBox {
-    public static MainContainerController.TaggedEllipse display(double...axis) {
+    public static VizualEllipse display(double...axis) {
         final double[] x = {0};
         final double[] y = { 0 };
         final double[] rX = { 0 };
@@ -77,17 +77,17 @@ public class AddEllipseBox {
         Button submit = new Button("Add new Ellipse");
         GridPane.setConstraints(submit, 1, 0);
 
-        MainContainerController.TaggedEllipse ellipse= new MainContainerController.TaggedEllipse();
+        VizualEllipse ellipse= new VizualEllipse();
         submit.setOnAction(e ->{
             x[0] =Double.valueOf(centerX.getText());
             y[0] =Double.parseDouble(centerY.getText());
             rX[0] =Double.parseDouble(radiusX.getText());
             rY[0] =Double.parseDouble(radiusY.getText());
-            ellipse.setCenterX(x[0] );
-            ellipse.setCenterY(y[0] );
+            ellipse.setCentreX(x[0] );
+            ellipse.setCentreY(y[0] );
             ellipse.setRadiusX(rX[0] );
             ellipse.setRadiusY(rY[0] );
-            ellipse.setRotate(Integer.parseInt(angle.getText()));
+            ellipse.setAngle(Integer.parseInt(angle.getText()));
             window.close();
         });
         grid.getChildren().add(submit);
