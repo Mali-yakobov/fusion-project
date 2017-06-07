@@ -55,9 +55,9 @@ public class MainContainerController implements Initializable, MapComponentIniti
   private int pointInTimeArrayIndex = -1;
 
   private ArrayList<VizualEllipse> clickedEllipses = new ArrayList<VizualEllipse>();
-  private HashMap<Long, Color> colorByTrackIdTable = new HashMap<Long, Color>();
+  private HashMap<Long, String> colorByTrackIdTable = new HashMap<Long, String>();
   private ArrayList<VizualEllipse> fusEllipseList = new ArrayList<VizualEllipse>();
-  private ArrayList<com.lynden.gmapsfx.shapes.Polyline> polylineArray=new ArrayList<com.lynden.gmapsfx.shapes.Polyline>();
+  private ArrayList<com.lynden.gmapsfx.shapes.Polyline> polylineArray = new ArrayList<com.lynden.gmapsfx.shapes.Polyline>();
   final private double rawEllFillOpacityUnClicked = 0;//0.1;
   final private double rawEllFillOpacityClicked = 0;//0.3;
 
@@ -76,11 +76,10 @@ public class MainContainerController implements Initializable, MapComponentIniti
   private Button resetButton;
   @FXML
   private Slider slider;
-
   @FXML
   protected GoogleMapView mapView;
 
-  /* Table related code start  */
+  /* Table related declarations start  */
   @FXML
   private TreeTableView dataTable;                         //get data table from fxml
   @FXML
@@ -91,9 +90,9 @@ public class MainContainerController implements Initializable, MapComponentIniti
   TreeItem<String> metadataRoot;
   final String nameColKey = "A";
   final String valueColKey = "B";
-  /* Table related code End  */
+  /* Table related declarations end  */
 
-  /* Tree related code start  */
+  /* Tree related declarations start  */
   @FXML
   private AnchorPane treeArea;                      //get place for tree from fxml
   private TreeItem<HierarchyData> root;             //root for tree
@@ -101,21 +100,34 @@ public class MainContainerController implements Initializable, MapComponentIniti
   private ObservableList<HierarchyData> treeItems;  //data source for tree
   private ContextMenu treeMenu;                     //context menu for tree (empty space)
   private TreeItemContainer selectedItemContainer;  //currently selected tree item container
+  /* Tree related declarations end  */
 
-  /* Tree related code end  */
+
+
+  @Override
+  public void initialize(URL url, ResourceBundle rb) {
+    mapView.addMapInializedListener(this);
+
+    forwardButton.getStyleClass().add("forward-button-class");
+    backwardButton.getStyleClass().add("backward-button-class");
+    resetButton.getStyleClass().add("reset-button-class");
+
+    treeInit();
+    tableInit();
+    sliderInit(0); //random number
+  }//initialize
 
   @Override
   public void mapInitialized() {
-    double centerLat = 31.166724;
-    double centerLong = 34.793119;
-    //lblClick=new Label();
+    double centerLat = 31.264801;
+    double centerLong = 34.760233;
     MapOptions options = new MapOptions();
     options.center(new LatLong(centerLat, centerLong))
            .zoomControl(true)
-           .zoom(12)
+           .zoom(17)
            .overviewMapControl(false)
            .mapType(MapTypeIdEnum.ROADMAP);
-     map = mapView.createMap(options);
+    map = mapView.createMap(options);
 
     map.addMouseEventHandler(UIEventType.click, (GMapMouseEvent event) -> {
       LatLong latLong = event.getLatLong();
@@ -130,53 +142,6 @@ public class MainContainerController implements Initializable, MapComponentIniti
   }
 
 
-
-  /**
-   * Ellipse with a tag, to determine whether it represents a raw ellipse or a fused one.
-   * Also if the ellipse tagged as fused, it contains list of the raw ellipses.
-   */
-  /*
-  public static class TaggedEllipse extends Ellipse {
-    private boolean isFusionEllipse = false;
-    private ArrayList<Ellipse> rawList = null;
-
-    public boolean getIsFusionEllipse() {
-      return this.isFusionEllipse;
-    }
-
-    public void setIsFusionEllipse(boolean isFusionEllipse) {
-      this.isFusionEllipse = isFusionEllipse;
-    }
-
-    public void addToRaw(Ellipse ellipse) {
-      if (this.rawList == null) {
-        this.rawList = new ArrayList<Ellipse>();
-      }
-      this.rawList.add(ellipse);
-    }
-
-    public ArrayList<Ellipse> getRaw() {
-      return rawList;
-    }
-
-    public void setRaw(ArrayList<Ellipse> raw) {
-      this.rawList = raw;
-    }
-  }
-*/
-
-  @Override
-  public void initialize(URL url, ResourceBundle rb) {
-    mapView.addMapInializedListener(this);
-
-    forwardButton.getStyleClass().add("forward-button-class");
-    backwardButton.getStyleClass().add("backward-button-class");
-    resetButton.getStyleClass().add("reset-button-class");
-
-    treeInit();
-    tableInit();
-    sliderInit(20); //random number
-  }//initialize
 
   /*
     Action functions for GUI components:
@@ -199,7 +164,7 @@ public class MainContainerController implements Initializable, MapComponentIniti
         sliderInit(numOfPoints); //initializes slider with number of points in time
         colorByTrackIdTable.clear();
         //treeItems.clear();
-        //fillTreeItemsFromJson(pointInTimeArray, treeItems);
+        fillTreeItemsFromJson(pointInTimeArray, treeItems);  // this is also where each Track gets his color
         resetAction();
         // System.out.println(pointInTimeArray.get(0).getClass().getSimpleName());
       } catch (JsonSyntaxException e) {
@@ -240,16 +205,16 @@ public class MainContainerController implements Initializable, MapComponentIniti
 
   public void addEllipseAction() {
     VizualEllipse newEllipse = AddEllipseBox.display();
-    Color newColor = colorGenerator();
+    String newColor = colorGenerator();
     //ellipseSetOnClick(newEllipse);
-    showEllipse(newEllipse, "red",1);
+    showEllipse(newEllipse, newColor, 1);
   }
 
   public void addEllipseOnClickAction(double x, double y) {
     VizualEllipse newEllipse = AddEllipseBox.display(x, y);
-    Color newColor = colorGenerator();
+    String newColor = colorGenerator();
     //ellipseSetOnClick(newEllipse);
-    showEllipse(newEllipse, "red",1);
+    showEllipse(newEllipse, newColor ,1);
   }
 
   public void clearAction() {
@@ -261,6 +226,7 @@ public class MainContainerController implements Initializable, MapComponentIniti
     resetButton.setDisable(true);
     colorByTrackIdTable.clear();
     treeItems.clear();
+    sliderInit(0);
   }
 
   public void resetAction() {
@@ -295,9 +261,9 @@ public class MainContainerController implements Initializable, MapComponentIniti
       //for(VizualEllipse clickedEllipse: clickedEllipses)
         //clickedEllipse.setVisible(false);
       clickedEllipses.clear();
-      Color color= colorGenerator();
+      String color= colorGenerator();
       for(State cluster: clusters)
-        showState(cluster, "blue");///change
+        showState(cluster, color);///change
     }
   }
 
@@ -390,7 +356,6 @@ public class MainContainerController implements Initializable, MapComponentIniti
 
 
   public void clearScreen() { /* TODO Add lists to clear*/
-    //viewArea.getChildren().remove(newEllipse);
     for (com.lynden.gmapsfx.shapes.Polyline polyline : polylineArray){
       map.removeMapShape(polyline);
     }
@@ -400,15 +365,17 @@ public class MainContainerController implements Initializable, MapComponentIniti
   }
 
   public void showPointInTime(PointInTime p) {
+    //map.setZoom(map.getZoom()+3);
+    //map.setCenter();
+    //VizualEllipse ell= p.getTrackList().get(0).getStateList().get(0).getFusionEllipse();
     Iterator<Track> trackIterator = p.getTrackList().iterator();
     while (trackIterator.hasNext()) {
       Track currTrack = trackIterator.next(); //colorByTrackIdTable
       Iterator<State> stateIterator = currTrack.getStateList().iterator();
-           /* if (!colorByTrackIdTable.containsKey(currTrack.getId()))
-                colorByTrackIdTable.put(currTrack.getId(), colorGenerator());*/
+            if (!colorByTrackIdTable.containsKey(currTrack.getId()))
+                colorByTrackIdTable.put(currTrack.getId(), colorGenerator());
       while (stateIterator.hasNext()) {
-        //showState(stateIterator.next(), colorByTrackIdTable.get(currTrack.getId()));   change
-        showState(stateIterator.next(), "blue");
+        showState(stateIterator.next(), colorByTrackIdTable.get(currTrack.getId()));
       }
     }
   }
@@ -436,14 +403,15 @@ public class MainContainerController implements Initializable, MapComponentIniti
     // outside the first 'if' just in order to make fused ellipse appear "on top" of raw ellipses,
     // to ensure accessibility by mouse click:
     if (fusEll != null)
-      showEllipse(tempFusEllipse, color,10);
+      showEllipse(tempFusEllipse, color, 10);
 
   }
 
-  public void showEllipse(VizualEllipse ellipse, String color,double stroke) {
-    com.lynden.gmapsfx.shapes.Polyline polyline=ellipse.ellipseToDraw(color,stroke);
+  public void showEllipse(VizualEllipse ellipse, String color, double stroke) {
+    com.lynden.gmapsfx.shapes.Polyline polyline= ellipse.ellipseToDraw(color,stroke);
     map.addMapShape(polyline);
     polylineArray.add(polyline);
+    clickedEllipses.add(ellipse); // TEMPORARY
 
     /*
     Tooltip tooltip= new Tooltip("Bla\nBla");
@@ -460,23 +428,38 @@ public class MainContainerController implements Initializable, MapComponentIniti
     viewArea.getChildren().addAll(ellipse);*/
   }
 
-  public Color colorGenerator() {
+  public static String colorToRGBCode(Color color){
+    return String.format( "#%02X%02X%02X",
+                          (int)(color.getRed() * 255),
+                          (int)(color.getGreen() * 255),
+                          (int)(color.getBlue() * 255));
+  }
+
+  public String colorGenerator() {
     Random rand = new Random();
     float r = rand.nextFloat();
     float g = rand.nextFloat();
     float b = rand.nextFloat();
-    return new Color(r, g, b, rawEllFillOpacityUnClicked);
+    Color color= new Color(r, g, b, rawEllFillOpacityUnClicked);
+    return colorToRGBCode(color);
   }
 
-  /*
+  /**
   Slider initialization:
-  initializes the slider with the current number of points in time
+  initializes the slider with the current number of points in time.
+  If param max is zero then initialize to empty slider
    */
   private void sliderInit(int max) {
     slider.setMin(0);
     slider.setMax(max);
-
+    if (max == 0)
+      slider.setShowTickLabels(false);
+    else
+      slider.setShowTickLabels(true);
   }
+
+
+
 
 
   /*
@@ -602,7 +585,7 @@ public class MainContainerController implements Initializable, MapComponentIniti
    */
   private void treeInit() {
     //init root (for tree):
-    root = new TreeItem<>(new TreeItemContainer());
+   /* root = new TreeItem<>(new TreeItemContainer());
     root.setExpanded(true);
 
     //init tree:
@@ -637,9 +620,9 @@ public class MainContainerController implements Initializable, MapComponentIniti
           }
         }//new ChangeListener(){
     );//addListener(
-
+*/
     treeItems = FXCollections.observableList(new ArrayList<HierarchyData>()); //init data source for tree
-    tree.setItems(treeItems);                                                //bind tree with data source (items)
+    //tree.setItems(treeItems);                                                //bind tree with data source (items)
 
   }//treeInit
 

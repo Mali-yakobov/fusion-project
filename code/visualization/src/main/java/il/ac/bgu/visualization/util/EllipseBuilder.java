@@ -1,5 +1,6 @@
 package il.ac.bgu.visualization.util;
-;import com.lynden.gmapsfx.javascript.object.LatLong;
+
+import com.lynden.gmapsfx.javascript.object.LatLong;
 import com.lynden.gmapsfx.javascript.object.MVCArray;
 
 public class EllipseBuilder {
