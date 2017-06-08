@@ -125,7 +125,7 @@ public class MainContainerController implements Initializable, MapComponentIniti
     options.center(new LatLong(centerLat, centerLong))
            .zoomControl(true)
            .zoom(17)
-           .overviewMapControl(false)
+           .overviewMapControl(true)
            .mapType(MapTypeIdEnum.ROADMAP);
     map = mapView.createMap(options);
 
