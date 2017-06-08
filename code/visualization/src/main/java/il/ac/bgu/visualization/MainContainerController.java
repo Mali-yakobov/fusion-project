@@ -281,7 +281,7 @@ public class MainContainerController implements Initializable, MapComponentIniti
    */
 
   public void ellipseSetOnClick(VizualEllipse ellipse) {
-    com.lynden.gmapsfx.shapes.Polyline polyline=ellipse.getPolylineObject();
+    com.lynden.gmapsfx.shapes.Polyline polyline= ellipse.getPolylineObject();
 
     map.addUIEventHandler(polyline, UIEventType.click,jsObject -> {
       double newStroke=0;
@@ -291,7 +291,8 @@ public class MainContainerController implements Initializable, MapComponentIniti
         else
           newStroke=10;
         map.removeMapShape(polyline);
-        showEllipse(ellipse,ellipse.getEllipseColor(),newStroke);
+        showEllipse(ellipse, ellipse.getEllipseColor(), newStroke);
+        ellipseSetOnClick(ellipse);///check
       }
      else{
         if(ellipse.getStroke()==10)
@@ -300,6 +301,7 @@ public class MainContainerController implements Initializable, MapComponentIniti
           newStroke=10;
         map.removeMapShape(polyline);
         showEllipse(ellipse,ellipse.getEllipseColor(),newStroke);
+        ellipseSetOnClick(ellipse);///check
       }
     });
 
@@ -308,6 +310,7 @@ public class MainContainerController implements Initializable, MapComponentIniti
     });
 
     map.addUIEventHandler(polyline, UIEventType.dblclick, jsObject -> {
+        map.setZoom(map.getZoom()-1);
         if(ellipse.isFusionEllipse()) {
           for (VizualEllipse ellipseInRaw : ellipse.getRawList()) {
             if (!ellipseInRaw.isVisible()) {
