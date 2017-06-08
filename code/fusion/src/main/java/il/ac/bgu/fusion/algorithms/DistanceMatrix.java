@@ -7,8 +7,11 @@ package il.ac.bgu.fusion.algorithms;
 
 import il.ac.bgu.fusion.objects.CovarianceEllipse;
 import il.ac.bgu.fusion.objects.State;
+import il.ac.bgu.fusion.objects.Track;
 import org.apache.commons.math3.linear.Array2DRowRealMatrix;
 import org.apache.commons.math3.linear.RealMatrix;
+
+import java.util.List;
 
 import static il.ac.bgu.fusion.util.LinearAlgebraUtils.calcDistanceBetweenEllipses;
 
@@ -16,24 +19,41 @@ import static il.ac.bgu.fusion.util.LinearAlgebraUtils.calcDistanceBetweenEllips
  * Implementation of the Distance Matrix algorithm.
  * Calculates statistical distance between ellipse and the last state of a track
  */
+
 public class DistanceMatrix {
 
-  /*
-  int states = 10;
-  int existingTracks = 10;
 
-  double[][] staticModelDistanceMatrix = new double[existingTracks][states];
-  double[][] linearModelDistanceMatrix = new double[existingTracks][states];
-*/
+  static int states = 10;
+  static int existingTracks = 10;
 
-  double calcDistance(State state, CovarianceEllipse ellipse) {
+  static double[][] staticModelDistanceMatrix = new double[existingTracks][states];
+  static double[][] linearModelDistanceMatrix = new double[existingTracks][states];
+
+
+  public static distanceMatrix distanceMatrix(List<Track> trackList,List<State> stateList){
+    int i=0;
+    int j=0;
+    for(Track track : trackList){
+
+      State lastState=track.getStateList().get(track.getStateList().size() - 1);//get the last state in the track
+      for(State state : stateList){
+        staticModelDistanceMatrix[i][j]= calcDistance(lastState,state.getFusionEllipse());
+        linearModelDistanceMatrix[i][j]=calcDistanceBetweenEllipses(lastState.getFusionEllipse(),state.getFusionEllipse());
+        j++;
+      }
+    i++;
+    }
+
+    return new distanceMatrix(staticModelDistanceMatrix,linearModelDistanceMatrix);
+  }
+  static double calcDistance(State state, CovarianceEllipse ellipse) {
     double dt = ellipse.getTimeStamp() - state.getFusionEllipse().getTimeStamp();
     CovarianceEllipse extrapolatedEllipse = extrapolateState(state, ellipse, dt);
     double distance = calcDistanceBetweenEllipses(extrapolatedEllipse, ellipse);
     return distance;
   }
 
-  CovarianceEllipse extrapolateState(State state, CovarianceEllipse ellipse, double dt) {
+  static CovarianceEllipse extrapolateState(State state, CovarianceEllipse ellipse, double dt) {
     double state4d[][] ={
       {
         state.getFusionEllipse().getCentreY(), state.getFusionEllipse().getVx(),
@@ -54,12 +74,12 @@ public class DistanceMatrix {
 
     RealMatrix extrapolation4d = phiMatrix.multiply(state4dMatrix); //extrapolation4d is now {x, vx, y, vy}
 
-
+/*
     double[][] matrixData = { {state.getFusionEllipse().getSx2(), state.getFusionEllipse().getSxy()},
                               {state.getFusionEllipse().getSxy(), state.getFusionEllipse().getSy2()} };
     Array2DRowRealMatrix stateCovarianceMatrix = new Array2DRowRealMatrix(matrixData);
-
-    RealMatrix newCovarianceMatrix = phiMatrix.multiply(stateCovarianceMatrix).multiply(phiMatrix.transpose());
+*/
+    RealMatrix newCovarianceMatrix = phiMatrix.multiply(extrapolation4d).multiply(phiMatrix.transpose());
 
         /*
         ask about timeStamp , Id and Sensor of the new Ellipse
@@ -73,5 +93,11 @@ public class DistanceMatrix {
                                                               );
     //return new CovarianceEllipse(extrapolation4d, newCovarianceMatrix);
     return returnedEllipse;
+  }
+
+  private static class distanceMatrix {
+    public distanceMatrix(double[][] staticModelDistanceMatrix,
+                          double[][] linearModelDistanceMatrix) {
+    }
   }
 }

@@ -30,6 +30,7 @@ public class VizualEllipse {
   private boolean visible;
   private String ellipseColor;
   private double stroke;
+  private LatLong latLong;
 
 
   public VizualEllipse(){
@@ -55,6 +56,7 @@ public class VizualEllipse {
     this.polylineObject=polyline;
     this.ellipseColor=color;
     this.stroke=strokeWeight;
+    this.latLong=centerP;
     return polyline;
   }
 
@@ -154,5 +156,13 @@ public class VizualEllipse {
 
   public void setStroke(double stroke) {
     this.stroke = stroke;
+  }
+
+  public LatLong getLatLong() {
+    return latLong;
+  }
+
+  public void setLatLong(LatLong latLong) {
+    this.latLong = latLong;
   }
 }

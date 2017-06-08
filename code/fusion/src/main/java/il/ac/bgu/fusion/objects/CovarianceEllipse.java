@@ -58,6 +58,25 @@ public class CovarianceEllipse {
         this.svy2 = svy2;
         this.isFusionEllipse = false;
     }
+    public CovarianceEllipse(long timeStamp,
+                             long id,
+                             double centreX,
+                             double centreY,
+                             double sx2,
+                             double sy2,
+                             double sxy,Sensor sensor)
+      {
+        this.timeStamp = timeStamp;
+        this.id = id;
+        this.sensor = sensor;
+        this.centreX = centreX;
+        this.centreY = centreY;
+        this.sx2 = sx2;
+        this.sy2 = sy2;
+        this.sxy = sxy;
+
+        this.isFusionEllipse = false;
+    }
 
     public long getTimeStamp() {
         return timeStamp;

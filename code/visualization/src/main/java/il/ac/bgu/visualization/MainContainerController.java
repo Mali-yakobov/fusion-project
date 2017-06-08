@@ -304,9 +304,19 @@ public class MainContainerController implements Initializable, MapComponentIniti
         ellipseSetOnClick(ellipse);///check
       }
     });
+    InfoWindowOptions infoWindowOptions = new InfoWindowOptions();
+    infoWindowOptions.content("<h2>MetaData</h2>"
+                              + "Current Location:"+ellipse.getLatLong() +"<br>"
+                              + "*********" );
 
+    InfoWindow polylineInfoWindow = new InfoWindow(infoWindowOptions);
+    polylineInfoWindow.setPosition(ellipse.getLatLong());
     map.addUIEventHandler(polyline,UIEventType.mouseover,jsObject -> {
-      //lblClick.setText("hiii");
+
+      polylineInfoWindow.open(map);
+    });
+    map.addUIEventHandler(polyline,UIEventType.mouseout,jsObject -> {
+      polylineInfoWindow.close();
     });
 
     map.addUIEventHandler(polyline, UIEventType.dblclick, jsObject -> {
