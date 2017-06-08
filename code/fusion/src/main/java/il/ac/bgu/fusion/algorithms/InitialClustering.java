@@ -32,7 +32,7 @@ public class InitialClustering {
       State closestCluster= null;
 
       for(State cluster: clusters){
-        double distance= calcDistance(cluster.getFusionEllipse(), rawEllipse);
+        double distance= calcDistanceBetweenEllipses(cluster.getFusionEllipse(), rawEllipse);
         if(distance < minDistance){
           minDistance=distance;
           closestCluster= cluster;
@@ -97,23 +97,8 @@ public class InitialClustering {
     return  w1MulR1.add(w2MulR2);                          // dim=(1,2)+(1,2)=(2,1)
   }
 
-  /*
-   * Calculate statistical distance between two covariance ellipses
-   */
-  public static double calcDistance(CovarianceEllipse ellipse1, CovarianceEllipse ellipse2){
-    RealMatrix c1Inv = MatrixUtils.inverse(ellipseToCovarianceMatrix(ellipse1));
-    RealMatrix c2Inv = MatrixUtils.inverse(ellipseToCovarianceMatrix(ellipse2));
-    RealMatrix cInvSummed= c1Inv.add(c2Inv);                                      // dim=(2,2)
 
-    RealMatrix r1 = ellipseToPositionVector(ellipse1);
-    RealMatrix r2 = ellipseToPositionVector(ellipse2);
-    RealMatrix deltaR= r1.subtract(r2);                                           // dim=(1,2)
-    RealMatrix deltaRTrnsp= deltaR.transpose();                                   // dim=(2,1)
 
-    RealMatrix DRMulCInvSummed= deltaR.multiply(cInvSummed);                      // dim=(1,2)x(2,2)=(1,2)
-    RealMatrix DRMulCInvSummedMulDRTrans= DRMulCInvSummed.multiply(deltaRTrnsp);  // dim=(1,2)x(2,1)=(1,1)
-    return DRMulCInvSummedMulDRTrans.getEntry(0,0);
-  }
 
 
 }

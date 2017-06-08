@@ -10,13 +10,17 @@ public class CovarianceEllipse {
     private Sensor sensor;
     private double centreX;
     private double centreY;
-
     private double sx2;
     private double sy2;
     private double sxy;
+
     private double vx;
     private double vy;
-    private double vxy;
+    private double svxy;
+    private double svx2;
+    private double svy2;
+
+
 
     private boolean isFusionEllipse;
 
@@ -26,17 +30,33 @@ public class CovarianceEllipse {
         this.isFusionEllipse= false;
     }
 
-    public CovarianceEllipse(long timeStamp, long id, double centreX, double centreY, double sx2, double sy2, double sxy, Sensor sensor) {
+    public CovarianceEllipse(long timeStamp,
+                             long id,
+                             Sensor sensor,
+                             double centreX,
+                             double centreY,
+                             double sx2,
+                             double sy2,
+                             double sxy,
+                             double vx,
+                             double vy,
+                             double svxy,
+                             double svx2,
+                             double svy2) {
         this.timeStamp = timeStamp;
         this.id = id;
+        this.sensor = sensor;
         this.centreX = centreX;
         this.centreY = centreY;
         this.sx2 = sx2;
         this.sy2 = sy2;
         this.sxy = sxy;
-        this.sensor=sensor;
-
-        this.isFusionEllipse= false;
+        this.vx = vx;
+        this.vy = vy;
+        this.svxy = svxy;
+        this.svx2 = svx2;
+        this.svy2 = svy2;
+        this.isFusionEllipse = false;
     }
 
     public long getTimeStamp() {
@@ -95,7 +115,61 @@ public class CovarianceEllipse {
         this.sxy = sxy;
     }
 
+    public Sensor getSensor() {
+        return sensor;
+    }
 
+    public void setSensor(Sensor sensor) {
+        this.sensor = sensor;
+    }
+
+    public double getVx() {
+        return vx;
+    }
+
+    public void setVx(double vx) {
+        this.vx = vx;
+    }
+
+    public double getVy() {
+        return vy;
+    }
+
+    public void setVy(double vy) {
+        this.vy = vy;
+    }
+
+    public double getVxy() {
+        return svxy;
+    }
+
+    public void setVxy(double vxy) {
+        this.svxy = vxy;
+    }
+
+    public double getSvxy() {
+        return svxy;
+    }
+
+    public void setSvxy(double svxy) {
+        this.svxy = svxy;
+    }
+
+    public double getSvx2() {
+        return svx2;
+    }
+
+    public void setSvx2(double svx2) {
+        this.svx2 = svx2;
+    }
+
+    public double getSvy2() {
+        return svy2;
+    }
+
+    public void setSvy2(double svy2) {
+        this.svy2 = svy2;
+    }
 
     public boolean getIsFusionEllipse() {
         return this.isFusionEllipse;
@@ -106,22 +180,24 @@ public class CovarianceEllipse {
     }
 
 
-
-
     @Override
     public String toString() {
-        return "CovarianceEllipse{" +"\n"+
-                "timeStamp=" + timeStamp +"\n"+
-                ", id=" + id +"\n"+
-                ", centreX=" + centreX +"\n"+
-                ", centreY=" + centreY +"\n"+
-                ", sx2=" + sx2 +"\n"+
-                ", sy2=" + sy2 +"\n"+
-                ", sxy=" + sxy +"\n"+
-                ", Sensor=" + sensor +"\n"+
-                '}';
+        return "CovarianceEllipse{" +
+               "timeStamp=" + timeStamp +
+               ", id=" + id +
+               ", sensor=" + sensor +
+               ", centreX=" + centreX +
+               ", centreY=" + centreY +
+               ", sx2=" + sx2 +
+               ", sy2=" + sy2 +
+               ", sxy=" + sxy +
+               ", vx=" + vx +
+               ", vy=" + vy +
+               ", svxy=" + svxy +
+               ", svx2=" + svx2 +
+               ", svy2=" + svy2 +
+               ", isFusionEllipse=" + isFusionEllipse +
+               '}';
     }
-
-
 }
 

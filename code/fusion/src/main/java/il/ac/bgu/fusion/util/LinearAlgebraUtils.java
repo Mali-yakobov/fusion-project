@@ -2,6 +2,7 @@ package il.ac.bgu.fusion.util;
 
 import il.ac.bgu.fusion.objects.CovarianceEllipse;
 import org.apache.commons.math3.linear.Array2DRowRealMatrix;
+import org.apache.commons.math3.linear.MatrixUtils;
 import org.apache.commons.math3.linear.RealMatrix;
 
 /**
@@ -53,6 +54,24 @@ public class LinearAlgebraUtils {
     newEllipse.setSxy(cNew.getEntry(0,1));
     newEllipse.setIsFusionEllipse(true);
     return newEllipse;
+  }
+
+  /*
+ * Calculate statistical distance between two covariance ellipses
+ */
+  public static double calcDistanceBetweenEllipses(CovarianceEllipse ellipse1, CovarianceEllipse ellipse2){
+    RealMatrix c1Inv = MatrixUtils.inverse(ellipseToCovarianceMatrix(ellipse1));
+    RealMatrix c2Inv = MatrixUtils.inverse(ellipseToCovarianceMatrix(ellipse2));
+    RealMatrix cInvSummed= c1Inv.add(c2Inv);                                      // dim=(2,2)
+
+    RealMatrix r1 = ellipseToPositionVector(ellipse1);
+    RealMatrix r2 = ellipseToPositionVector(ellipse2);
+    RealMatrix deltaR= r1.subtract(r2);                                           // dim=(1,2)
+    RealMatrix deltaRTrnsp= deltaR.transpose();                                   // dim=(2,1)
+
+    RealMatrix DRMulCInvSummed= deltaR.multiply(cInvSummed);                      // dim=(1,2)x(2,2)=(1,2)
+    RealMatrix DRMulCInvSummedMulDRTrans= DRMulCInvSummed.multiply(deltaRTrnsp);  // dim=(1,2)x(2,1)=(1,1)
+    return DRMulCInvSummedMulDRTrans.getEntry(0,0);
   }
 
 }
