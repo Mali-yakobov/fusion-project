@@ -129,7 +129,7 @@ public class MainContainerController implements Initializable, MapComponentIniti
            .mapType(MapTypeIdEnum.ROADMAP);
     map = mapView.createMap(options);
 
-    map.addMouseEventHandler(UIEventType.click, (GMapMouseEvent event) -> {
+    map.addMouseEventHandler(UIEventType.dblclick, (GMapMouseEvent event) -> {
       LatLong latLong = event.getLatLong();
       //VizualEllipse newEllipse=new VizualEllipse();
       MVCArray polyluneArray = EllipseBuilder.buildEllipsePoints(latLong, 500, 300, 20);
@@ -282,6 +282,7 @@ public class MainContainerController implements Initializable, MapComponentIniti
 
   public void ellipseSetOnClick(VizualEllipse ellipse) {
     com.lynden.gmapsfx.shapes.Polyline polyline=ellipse.getPolylineObject();
+
     map.addUIEventHandler(polyline, UIEventType.click,jsObject -> {
       double newStroke=0;
       if(ellipse.isFusionEllipse()){
@@ -301,12 +302,12 @@ public class MainContainerController implements Initializable, MapComponentIniti
         showEllipse(ellipse,ellipse.getEllipseColor(),newStroke);
       }
     });
-    map.addUIEventHandler(polyline,UIEventType.mouseover,jsObject -> {
 
+    map.addUIEventHandler(polyline,UIEventType.mouseover,jsObject -> {
       //lblClick.setText("hiii");
     });
 
-      map.addUIEventHandler(polyline,UIEventType.dblclick,jsObject -> {
+    map.addUIEventHandler(polyline, UIEventType.dblclick, jsObject -> {
         if(ellipse.isFusionEllipse()) {
           for (VizualEllipse ellipseInRaw : ellipse.getRawList()) {
             if (!ellipseInRaw.isVisible()) {
