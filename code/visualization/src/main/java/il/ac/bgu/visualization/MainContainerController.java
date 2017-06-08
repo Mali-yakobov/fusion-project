@@ -206,15 +206,17 @@ public class MainContainerController implements Initializable, MapComponentIniti
   public void addEllipseAction() {
     VizualEllipse newEllipse = AddEllipseBox.display();
     String newColor = colorGenerator();
-    //ellipseSetOnClick(newEllipse);
     showEllipse(newEllipse, newColor, 1);
+    ellipseSetOnClick(newEllipse);
+
   }
 
   public void addEllipseOnClickAction(double x, double y) {
     VizualEllipse newEllipse = AddEllipseBox.display(x, y);
     String newColor = colorGenerator();
-    //ellipseSetOnClick(newEllipse);
+
     showEllipse(newEllipse, newColor ,1);
+    ellipseSetOnClick(newEllipse);
   }
 
   public void clearAction() {
@@ -244,10 +246,14 @@ public class MainContainerController implements Initializable, MapComponentIniti
   public void showHideRawAction() {
     for (VizualEllipse fusEllipse : fusEllipseList)
       for (VizualEllipse rawEllipse : fusEllipse.getRawList()) {
-        if (rawEllipse.getPolyline().getVisible())
-          map.removeMapShape(rawEllipse.getPolyline());
-        else
-          map.addMapShape(rawEllipse.getPolyline());
+        if (rawEllipse.isVisible()) {
+          map.removeMapShape(rawEllipse.getPolylineObject());
+          rawEllipse.setVisible(false);
+        }
+        else {
+          map.addMapShape(rawEllipse.getPolylineObject());
+          rawEllipse.setVisible(true);
+        }
       }
   }
 
@@ -275,20 +281,46 @@ public class MainContainerController implements Initializable, MapComponentIniti
    */
 
   public void ellipseSetOnClick(VizualEllipse ellipse) {
-    com.lynden.gmapsfx.shapes.Polyline polyline=ellipse.getPolyline();
+    com.lynden.gmapsfx.shapes.Polyline polyline=ellipse.getPolylineObject();
     map.addUIEventHandler(polyline, UIEventType.click,jsObject -> {
-      //options2.strokeWeight(20);
-      polyline.setVisible(true);
-      // pp2.setMap(map);
+      double newStroke=0;
+      if(ellipse.isFusionEllipse()){
+        if(ellipse.getStroke()==10)
+          newStroke=20;
+        else
+          newStroke=10;
+        map.removeMapShape(polyline);
+        showEllipse(ellipse,ellipse.getEllipseColor(),newStroke);
+      }
+     else{
+        if(ellipse.getStroke()==10)
+          newStroke=20;
+        else
+          newStroke=10;
+        map.removeMapShape(polyline);
+        showEllipse(ellipse,ellipse.getEllipseColor(),newStroke);
+      }
     });
     map.addUIEventHandler(polyline,UIEventType.mouseover,jsObject -> {
 
       //lblClick.setText("hiii");
     });
-    map.addUIEventHandler(polyline,UIEventType.dblclick,jsObject -> {
 
-      //lblClick.setText("hiii");
-    });
+      map.addUIEventHandler(polyline,UIEventType.dblclick,jsObject -> {
+        if(ellipse.isFusionEllipse()) {
+          for (VizualEllipse ellipseInRaw : ellipse.getRawList()) {
+            if (!ellipseInRaw.isVisible()) {
+              map.addMapShape(ellipseInRaw.getPolylineObject());
+              ellipseInRaw.setVisible(true);
+            } else {
+              map.removeMapShape(ellipseInRaw.getPolylineObject());
+              ellipseInRaw.setVisible(false);
+            }
+          }
+        }
+      });
+
+
     /*ellipse.setOnMousePressed(event -> {
       switch (event.getClickCount()) {
         case 1:
@@ -385,7 +417,7 @@ public class MainContainerController implements Initializable, MapComponentIniti
     VizualEllipse tempFusEllipse= null;
     if (fusEll != null) {
       tempFusEllipse = EllipseRepresentationTranslation.fromCovarianceToVizual(fusEll);
-      //ellipseSetOnClick(tempFusEllipse);
+
       fusEllipseList.add(tempFusEllipse);
     }
     List<CovarianceEllipse> CovarianceEllipseArray = state.getEllipseList();
@@ -393,21 +425,25 @@ public class MainContainerController implements Initializable, MapComponentIniti
     while (covEllItr.hasNext()) {
       CovarianceEllipse tempCovEllipse = covEllItr.next();
       VizualEllipse tempEllipse = EllipseRepresentationTranslation.fromCovarianceToVizual(tempCovEllipse);
-
-      //ellipseSetOnClick(tempEllipse);
       showEllipse(tempEllipse, color,1);
+      ellipseSetOnClick(tempEllipse);
+
       if (tempFusEllipse != null)
         tempFusEllipse.addToRaw(tempEllipse);
     }
 
     // outside the first 'if' just in order to make fused ellipse appear "on top" of raw ellipses,
     // to ensure accessibility by mouse click:
-    if (fusEll != null)
+    if (fusEll != null){
       showEllipse(tempFusEllipse, color, 10);
+      ellipseSetOnClick(tempFusEllipse);
+    }
+
 
   }
 
   public void showEllipse(VizualEllipse ellipse, String color, double stroke) {
+    ellipse.setVisible(true);
     com.lynden.gmapsfx.shapes.Polyline polyline= ellipse.ellipseToDraw(color,stroke);
     map.addMapShape(polyline);
     polylineArray.add(polyline);
@@ -752,9 +788,10 @@ public class MainContainerController implements Initializable, MapComponentIniti
     CovarianceEllipse covEllipse = (CovarianceEllipse) ellipseContainer.getContainedItem();
     if (ellipseContainer.getContainedGraphicItem() == null) {
       VizualEllipse ellipse = EllipseRepresentationTranslation.fromCovarianceToVizual(covEllipse);
-      //ellipseSetOnClick(ellipse);
+
       //showEllipse(ellipse, colorByTrackIdTable.get(ellipseContainer.getColorId()));
       showEllipse(ellipse, "blue",1);  ////change
+      ellipseSetOnClick(ellipse);
       //ellipseSetClicked(ellipse, covEllipse);
       ellipseContainer.setContainedGraphicItem(ellipse);
     }

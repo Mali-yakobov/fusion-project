@@ -24,15 +24,19 @@ public class VizualEllipse {
   private double angle;
   private boolean IsFusionEllipse;
   private ArrayList<VizualEllipse> rawList = null;
-  private Polyline polyline;
+  private com.lynden.gmapsfx.shapes.Polyline polylineObject;
   private static final char hemisphere='N';
   private static final int zone=36;
+  private boolean visible;
+  private String ellipseColor;
+  private double stroke;
 
 
   public VizualEllipse(){
-
+    visible=false;
   }
   public VizualEllipse(double radiusX, double radiusY) {
+    visible=false;
     setRadiusX(radiusX);
     setRadiusY(radiusY);
   }
@@ -48,7 +52,9 @@ public class VizualEllipse {
 
     PolylineOptions polylineOptions=new PolylineOptions().path(polyluneArray).strokeColor(color).clickable(true).strokeWeight(strokeWeight);
     com.lynden.gmapsfx.shapes.Polyline polyline = new com.lynden.gmapsfx.shapes.Polyline(polylineOptions);
-    setPolyline(polyline);
+    this.polylineObject=polyline;
+    this.ellipseColor=color;
+    this.stroke=strokeWeight;
     return polyline;
   }
 
@@ -116,11 +122,37 @@ public class VizualEllipse {
     this.rawList = rawList;
   }
 
-  public Polyline getPolyline() {
-    return polyline;
+
+
+  public boolean isVisible() {
+    return visible;
   }
 
-  public void setPolyline(Polyline polyline) {
-    this.polyline = polyline;
+  public void setVisible(boolean visible) {
+    this.visible = visible;
+  }
+
+  public Polyline getPolylineObject() {
+    return polylineObject;
+  }
+
+  public void setPolylineObject(Polyline polylineObject) {
+    this.polylineObject = polylineObject;
+  }
+
+  public String getEllipseColor() {
+    return ellipseColor;
+  }
+
+  public void setEllipseColor(String ellipseColor) {
+    this.ellipseColor = ellipseColor;
+  }
+
+  public double getStroke() {
+    return stroke;
+  }
+
+  public void setStroke(double stroke) {
+    this.stroke = stroke;
   }
 }
