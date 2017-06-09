@@ -14,6 +14,7 @@ import il.ac.bgu.fusion.objects.State;
 import il.ac.bgu.fusion.objects.Track;
 import il.ac.bgu.fusion.util.JsonReaderWriter;
 import il.ac.bgu.visualization.objects.AddEllipseBox;
+import il.ac.bgu.visualization.objects.AddEllipseBox2;
 import il.ac.bgu.visualization.objects.AlertWindow;
 import il.ac.bgu.visualization.objects.VizualEllipse;
 import il.ac.bgu.visualization.tree.HierarchyData;
@@ -27,23 +28,16 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-import javafx.scene.input.MouseButton;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Ellipse;
-import javafx.scene.shape.Polyline;
 import javafx.stage.FileChooser;
-import javafx.util.Callback;
 
-import javax.measure.unit.SI;
 import java.io.File;
 import java.net.URL;
 import java.util.*;
 
 import static il.ac.bgu.fusion.algorithms.InitialClustering.initialClustering;
-import static org.jscience.geography.coordinates.UTM.utmToLatLong;
-import static org.jscience.geography.coordinates.crs.ReferenceEllipsoid.WGS84;
 
 
 /**
@@ -138,6 +132,17 @@ public class MainContainerController implements Initializable, MapComponentIniti
       map.addMapShape(polyline);
       System.out.println("Latitude: " + latLong.getLatitude());
       System.out.println("Longitude: " + latLong.getLongitude());
+    });
+
+    map.addMouseEventHandler(UIEventType.rightclick ,(GMapMouseEvent rclickevent) -> {
+      VizualEllipse newEllipse = AddEllipseBox2.display();
+      LatLong lLong =rclickevent.getLatLong();
+      System.out.println("latlong " + lLong);
+      MVCArray polylune = EllipseBuilder.buildEllipsePoints(lLong, newEllipse.getRadiusX(), newEllipse.getRadiusY(), newEllipse.getAngle());
+      PolylineOptions polylineOpt=new PolylineOptions().path(polylune).strokeColor("blue").clickable(true);
+      com.lynden.gmapsfx.shapes.Polyline polyl = new com.lynden.gmapsfx.shapes.Polyline(polylineOpt);
+      map.addMapShape(polyl);
+
     });
   }
 
