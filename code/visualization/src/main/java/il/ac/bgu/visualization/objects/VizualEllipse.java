@@ -6,6 +6,7 @@ import com.lynden.gmapsfx.shapes.Polyline;
 import com.lynden.gmapsfx.shapes.PolylineOptions;
 import il.ac.bgu.visualization.util.EllipseBuilder;
 import javafx.scene.shape.Ellipse;
+import org.jscience.geography.coordinates.UTM;
 
 import javax.measure.unit.SI;
 import java.util.ArrayList;
@@ -22,9 +23,11 @@ public class VizualEllipse {
   private double radiusX;
   private double radiusY;
   private double angle;
+
   private boolean IsFusionEllipse;
   private ArrayList<VizualEllipse> rawList = null;
   private com.lynden.gmapsfx.shapes.Polyline polylineObject;
+
   private static final char hemisphere='N';
   private static final int zone=36;
   private boolean visible;
@@ -48,7 +51,6 @@ public class VizualEllipse {
     org.jscience.geography.coordinates.LatLong centerPTemp= utmToLatLong(c, WGS84);
 
     LatLong centerP= new LatLong(centerPTemp.getCoordinates()[1], centerPTemp.getCoordinates()[0]);
-    //LatLong centerP = new LatLong(31.166724, 34.793119);
     MVCArray polyluneArray = EllipseBuilder.buildEllipsePoints(centerP, radiusX, radiusY, angle);
 
     PolylineOptions polylineOptions=new PolylineOptions().path(polyluneArray).strokeColor(color).clickable(true).strokeWeight(strokeWeight);

@@ -7,6 +7,7 @@ import com.lynden.gmapsfx.MapComponentInitializedListener;
 import com.lynden.gmapsfx.javascript.event.GMapMouseEvent;
 import com.lynden.gmapsfx.javascript.event.UIEventType;
 import com.lynden.gmapsfx.javascript.object.*;
+import com.lynden.gmapsfx.shapes.Polyline;
 import com.lynden.gmapsfx.shapes.PolylineOptions;
 import il.ac.bgu.fusion.objects.CovarianceEllipse;
 import il.ac.bgu.fusion.objects.PointInTime;
@@ -32,12 +33,15 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
+import org.jscience.geography.coordinates.UTM;
 
 import java.io.File;
 import java.net.URL;
 import java.util.*;
 
 import static il.ac.bgu.fusion.algorithms.InitialClustering.initialClustering;
+import static javax.measure.unit.NonSI.DEGREE_ANGLE;
+import static org.jscience.geography.coordinates.crs.ReferenceEllipsoid.WGS84;
 
 
 /**
@@ -135,14 +139,22 @@ public class MainContainerController implements Initializable, MapComponentIniti
     });
 
     map.addMouseEventHandler(UIEventType.rightclick ,(GMapMouseEvent rclickevent) -> {
-      VizualEllipse newEllipse = AddEllipseBox2.display();
-      LatLong lLong =rclickevent.getLatLong();
-      System.out.println("latlong " + lLong);
-      MVCArray polylune = EllipseBuilder.buildEllipsePoints(lLong, newEllipse.getRadiusX(), newEllipse.getRadiusY(), newEllipse.getAngle());
-      PolylineOptions polylineOpt=new PolylineOptions().path(polylune).strokeColor("blue").clickable(true);
-      com.lynden.gmapsfx.shapes.Polyline polyl = new com.lynden.gmapsfx.shapes.Polyline(polylineOpt);
+      // convert GMaps LatLong to jscience LatLong, then to UTM:
+      LatLong lLong = rclickevent.getLatLong();
+      org.jscience.geography.coordinates.LatLong lLong2= org.jscience.geography.coordinates.LatLong.valueOf(lLong.getLongitude(), lLong.getLatitude(), DEGREE_ANGLE);
+      org.jscience.geography.coordinates.UTM utm = UTM.latLongToUtm(lLong2, WGS84);
+
+      // get ellipse from user (display LatLong coordinates), then set UTM coordinates:
+      VizualEllipse newEllipse = AddEllipseBox.display(lLong.getLatitude(), lLong.getLongitude());
+      newEllipse.setCentreX(utm.getCoordinates()[0]);
+      newEllipse.setCentreY(utm.getCoordinates()[1]);
+
+      // get polyline from ellipse and draw it:
+      Polyline polyl = newEllipse.ellipseToDraw(colorGenerator() ,2);
       map.addMapShape(polyl);
 
+      // add onClick handlers:
+      ellipseSetOnClick(newEllipse);
     });
   }
 
@@ -288,7 +300,8 @@ public class MainContainerController implements Initializable, MapComponentIniti
   public void ellipseSetOnClick(VizualEllipse ellipse) {
     com.lynden.gmapsfx.shapes.Polyline polyline= ellipse.getPolylineObject();
 
-    map.addUIEventHandler(polyline, UIEventType.click,jsObject -> {
+    // single left click:
+    map.addUIEventHandler(polyline, UIEventType.click, jsObject -> {
       double newStroke=0;
       if(ellipse.isFusionEllipse()){
         if(ellipse.getStroke()==10)
@@ -309,21 +322,22 @@ public class MainContainerController implements Initializable, MapComponentIniti
         ellipseSetOnClick(ellipse);///check
       }
     });
+
+    // hover:
     InfoWindowOptions infoWindowOptions = new InfoWindowOptions();
     infoWindowOptions.content("<h2>MetaData</h2>"
                               + "Current Location:"+ellipse.getLatLong() +"<br>"
                               + "*********" );
-
     InfoWindow polylineInfoWindow = new InfoWindow(infoWindowOptions);
     polylineInfoWindow.setPosition(ellipse.getLatLong());
-    map.addUIEventHandler(polyline,UIEventType.mouseover,jsObject -> {
-
+    map.addUIEventHandler(polyline, UIEventType.mouseover, jsObject -> {
       polylineInfoWindow.open(map);
     });
-    map.addUIEventHandler(polyline,UIEventType.mouseout,jsObject -> {
+    map.addUIEventHandler(polyline, UIEventType.mouseout, jsObject -> {
       polylineInfoWindow.close();
     });
 
+    // double click:
     map.addUIEventHandler(polyline, UIEventType.dblclick, jsObject -> {
         map.setZoom(map.getZoom()-1);
         if(ellipse.isFusionEllipse()) {
@@ -530,6 +544,7 @@ public class MainContainerController implements Initializable, MapComponentIniti
     TreeItem<String> root = new TreeItem<>("Root");
     root.setExpanded(true);
     root.getChildren().setAll(dataRoot, metadataRoot);
+
     dataTable.setRoot(root);
     tableHideHeader(dataTable);
 
@@ -610,7 +625,7 @@ public class MainContainerController implements Initializable, MapComponentIniti
     ellipseAngle.put(nameColKey, "Angle:");
     ellipseAngle.put(valueColKey, Double.toString(taggedEllipse.getAngle()));
 
-    metadataRoot.setValue("Ellipse Metadata:");
+    metadataRoot.setValue("Ellipse Metadata:");//111
     metadataRoot.getChildren().setAll(new TreeItem(ellipseColor), new TreeItem(ellipseRadX), new TreeItem(ellipseRadY),
                                       new TreeItem(ellipseAngle));
   }

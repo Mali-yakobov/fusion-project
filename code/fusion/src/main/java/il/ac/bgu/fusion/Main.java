@@ -20,7 +20,7 @@ public class Main {
     //JsonCreator.createRawOnlyScenario1();
 
      // Running the threads:
-    /*Thread jsonToQueue = new Thread( new JsonToQueueRunnable(covEllipseQueue));
+    Thread jsonToQueue = new Thread( new JsonToQueueRunnable(covEllipseQueue));
     Thread queueToPipeline = new Thread( new QueueToPipelineRunnable(covEllipseQueue));
     try
     {
@@ -31,7 +31,7 @@ public class Main {
 
     } catch (Exception e) {
       e.printStackTrace();
-    }*/
+    }
 
   }
 }
