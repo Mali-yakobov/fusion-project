@@ -302,6 +302,7 @@ public class MainContainerController implements Initializable, MapComponentIniti
 
     // single left click:
     map.addUIEventHandler(polyline, UIEventType.click, jsObject -> {
+      generateDataForTable(EllipseRepresentationTranslation.fromVizualToCovariance(ellipse));
       double newStroke=0;
       if(ellipse.isFusionEllipse()){
         if(ellipse.getStroke()==10)
