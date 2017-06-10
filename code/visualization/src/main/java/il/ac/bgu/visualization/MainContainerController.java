@@ -114,7 +114,6 @@ public class MainContainerController implements Initializable, MapComponentIniti
 
     treeInit();
     tableInit();
-    sliderInit(0); //random number
 
   }//initialize
 
@@ -199,7 +198,7 @@ public class MainContainerController implements Initializable, MapComponentIniti
   }
 
   public void forwardAction() {
-    slider.increment();
+    //slider.increment();
     pointInTimeArrayIndex++;
     PointInTime pointInTime = pointInTimeArray.get(pointInTimeArrayIndex);
     clearScreen();
@@ -213,7 +212,7 @@ public class MainContainerController implements Initializable, MapComponentIniti
   }
 
   public void backwardAction() {
-    slider.decrement();
+   // slider.decrement();
     pointInTimeArrayIndex--;
     clearScreen();
     if (pointInTimeArrayIndex == -1) {
@@ -536,23 +535,41 @@ public class MainContainerController implements Initializable, MapComponentIniti
   private void sliderInit(int max) {
     slider.setMin(0);
     slider.setMax(max);
+    slider.setValue(0);
     if (max == 0)
       slider.setShowTickLabels(false);
     else
       slider.setShowTickLabels(true);
 
+
+    /*
+    //hover slider option
+
+    slider.hoverProperty().addListener((observable) -> {
+
+        Label label= new Label();
+      label.setText("Address Book: "
+                + person.getFirstName() + " "
+                + person.getLastName()
+        );
+      } else {
+        label.setText("Address Book");
+      }
+    });
+    */
+
     slider.valueProperty().addListener((observable, oldValue, newValue) -> {
         int old = oldValue.intValue();
         int roundValue =(int) Math.round(slider.getValue());
         slider.setValue(roundValue);
-/*
 
+/*
         if (roundValue > old)
         {
             int diff = roundValue - old;
-            System.out.println("*********************************************"+diff);
+            System.out.println("******** forward **********************  "+diff);
 
-            for (int i=0 ; i<diff-1 ; i++)
+            for (int i=0 ; i<diff ; i++)
             {
                 forwardAction();
         }}
@@ -560,14 +577,14 @@ public class MainContainerController implements Initializable, MapComponentIniti
         if (roundValue < old)
         {
             int diff = old - roundValue;
-            System.out.println("*********************************************"+diff);
+            System.out.println("************ backward ************************  "+diff);
 
             for (int i=0 ; i<diff ; i++)
             {
                 backwardAction();
             }
-        }*/
-
+        }
+*/
         System.out.println("Slider Value Changed (newValue: " + roundValue + "old:   "+ oldValue + ")");
       });
     }
