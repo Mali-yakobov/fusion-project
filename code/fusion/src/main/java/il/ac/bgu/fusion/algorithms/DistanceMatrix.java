@@ -10,6 +10,7 @@ import il.ac.bgu.fusion.objects.State;
 import il.ac.bgu.fusion.objects.Track;
 import org.apache.commons.math3.linear.Array2DRowRealMatrix;
 import org.apache.commons.math3.linear.RealMatrix;
+import org.apache.commons.math3.util.Pair;
 
 import java.util.List;
 
@@ -21,13 +22,19 @@ import static il.ac.bgu.fusion.util.LinearAlgebraUtils.calcDistanceBetweenEllips
  */
 
 public class DistanceMatrix {
-
-
+  private static final double THRESHOLD= 9.21;
   static int states = 10;
   static int existingTracks = 10;
 
   static double[][] staticModelDistanceMatrix = new double[existingTracks][states];
   static double[][] linearModelDistanceMatrix = new double[existingTracks][states];
+
+  private static List<State> uncorrelatedClusters;
+  private static List<Correlation> CorrelationList;
+  private static List<State> clusters;
+  private static List<Track> existedTracks;
+  //we need list of states/clusters and list of exist tracks
+
 
 
   public static distanceMatrix distanceMatrix(List<Track> trackList,List<State> stateList){
@@ -100,4 +107,97 @@ public class DistanceMatrix {
                           double[][] linearModelDistanceMatrix) {
     }
   }
+
+  private static class Correlation{
+    private Track track;
+    private State state;
+    private String model;
+
+    public Correlation(Track track, State state, String model) {
+      this.track = track;
+      this.state = state;
+      this.model = model;
+    }
+  }
+
+  private static void M2M(){
+    boolean haveMin=false;
+    double minValue=0;
+    String model="";
+   Pair<Integer,Integer> index=null;
+    double staticMin=findMinValue(staticModelDistanceMatrix).getFirst();
+    double linearMin=findMinValue(linearModelDistanceMatrix).getFirst();
+    if(staticMin-linearMin<=0) {
+      minValue = staticMin;
+      index=findMinValue(staticModelDistanceMatrix).getSecond();
+      model="static";
+    }
+    else {
+      minValue = linearMin;
+      index=findMinValue(linearModelDistanceMatrix).getSecond();
+      model="linear";
+    }
+    if (minValue < THRESHOLD)
+      haveMin=true;
+
+    while (haveMin){
+      //create new Correlation object
+      State s=clusters.get(index.getFirst());
+      Track t=existedTracks.get(index.getSecond());
+      Correlation newCorrelation=new Correlation(t,s,model);
+      CorrelationList.add(newCorrelation);
+      removeFromArray(index,staticModelDistanceMatrix);
+      removeFromArray(index,linearModelDistanceMatrix);
+      haveMin=false;
+      if(staticMin-linearMin<=0) {
+        minValue = staticMin;
+        index=findMinValue(staticModelDistanceMatrix).getSecond();
+      }
+      else {
+        minValue = linearMin;
+        index=findMinValue(linearModelDistanceMatrix).getSecond();
+      }
+      if (minValue < THRESHOLD)
+        haveMin=true;
+    }
+    addToUncorrelated(staticModelDistanceMatrix);
+
+  }
+
+  private static void addToUncorrelated(double[][] array){
+    for(int i=0; i<array.length; i++){
+      for (int j=0; j< array[i].length; j++){
+        if(array[i][j]!=0){
+          State s=clusters.get(i);
+          if(!uncorrelatedClusters.contains(s))
+            uncorrelatedClusters.add(s);
+        }
+
+      }
+    }
+  }
+
+  private static void removeFromArray(Pair<Integer,Integer> index, double[][] array){
+    int s=index.getFirst();
+    int t=index.getSecond();
+    for(int i=0; i<array.length; i++)
+      array[i][t] = 0;
+    for(int i=0; i<array[0].length; i++)
+      array[s][i] = 0;
+  }
+  private static Pair<Double, Pair<Integer, Integer>> findMinValue(double[][] array){
+    Pair<Integer,Integer> index=new Pair<Integer, Integer>(0,0);
+    double min=array[0][0];
+    for(int i=0; i<array.length; i++){
+      for (int j=0; j< array[i].length; j++){
+        if(array[i][j]<min) {
+          min = array[i][j];
+          index=new Pair<Integer, Integer>(i,j);
+        }
+      }
+    }
+   Pair<Double,Pair<Integer,Integer>> res=new Pair<Double, Pair<Integer, Integer>>(min,index);
+    return res;
+  }
+
 }
