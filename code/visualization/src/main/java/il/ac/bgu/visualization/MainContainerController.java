@@ -455,9 +455,9 @@ public class MainContainerController implements Initializable, MapComponentIniti
       org.jscience.geography.coordinates.LatLong centerPTemp= utmToLatLong(c, WGS84);
 
       LatLong centerP= new LatLong(centerPTemp.getCoordinates()[1], centerPTemp.getCoordinates()[0]);
-      MVCArray polylineArray = EllipseBuilder.buildEllipsePoints(centerP, 100, 100, 0,3);
+      MVCArray polylineArray = EllipseBuilder.buildEllipsePoints(centerP, 30, 30, 0,3);
 
-      PolylineOptions polylineOptions=new PolylineOptions().path(polylineArray).strokeColor("#BA55D3").clickable(true).strokeWeight(10);
+      PolylineOptions polylineOptions=new PolylineOptions().path(polylineArray).strokeColor("#BA55D3").clickable(true).strokeWeight(3);
       com.lynden.gmapsfx.shapes.Polyline polyline = new com.lynden.gmapsfx.shapes.Polyline(polylineOptions);
 
       map.addMapShape(polyline);
@@ -540,10 +540,37 @@ public class MainContainerController implements Initializable, MapComponentIniti
       slider.setShowTickLabels(false);
     else
       slider.setShowTickLabels(true);
-  }
 
+    slider.valueProperty().addListener((observable, oldValue, newValue) -> {
+        int old = oldValue.intValue();
+        int roundValue =(int) Math.round(slider.getValue());
+        slider.setValue(roundValue);
+/*
 
+        if (roundValue > old)
+        {
+            int diff = roundValue - old;
+            System.out.println("*********************************************"+diff);
 
+            for (int i=0 ; i<diff-1 ; i++)
+            {
+                forwardAction();
+        }}
+
+        if (roundValue < old)
+        {
+            int diff = old - roundValue;
+            System.out.println("*********************************************"+diff);
+
+            for (int i=0 ; i<diff ; i++)
+            {
+                backwardAction();
+            }
+        }*/
+
+        System.out.println("Slider Value Changed (newValue: " + roundValue + "old:   "+ oldValue + ")");
+      });
+    }
 
 
   /*
