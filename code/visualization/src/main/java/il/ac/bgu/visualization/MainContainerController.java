@@ -7,12 +7,8 @@ import com.lynden.gmapsfx.MapComponentInitializedListener;
 import com.lynden.gmapsfx.javascript.event.GMapMouseEvent;
 import com.lynden.gmapsfx.javascript.event.UIEventType;
 import com.lynden.gmapsfx.javascript.object.*;
-import com.lynden.gmapsfx.shapes.Polyline;
-import com.lynden.gmapsfx.shapes.PolylineOptions;
-import il.ac.bgu.fusion.objects.CovarianceEllipse;
-import il.ac.bgu.fusion.objects.PointInTime;
-import il.ac.bgu.fusion.objects.State;
-import il.ac.bgu.fusion.objects.Track;
+import com.lynden.gmapsfx.shapes.*;
+import il.ac.bgu.fusion.objects.*;
 import il.ac.bgu.fusion.util.JsonReaderWriter;
 import il.ac.bgu.visualization.objects.AddEllipseBox;
 import il.ac.bgu.visualization.objects.AddEllipseBox2;
@@ -35,12 +31,14 @@ import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import org.jscience.geography.coordinates.UTM;
 
+import javax.measure.unit.SI;
 import java.io.File;
 import java.net.URL;
 import java.util.*;
 
 import static il.ac.bgu.fusion.algorithms.InitialClustering.initialClustering;
 import static javax.measure.unit.NonSI.DEGREE_ANGLE;
+import static org.jscience.geography.coordinates.UTM.utmToLatLong;
 import static org.jscience.geography.coordinates.crs.ReferenceEllipsoid.WGS84;
 
 
@@ -52,7 +50,7 @@ public class MainContainerController implements Initializable, MapComponentIniti
 
   private ArrayList<PointInTime> pointInTimeArray = null;
   private int pointInTimeArrayIndex = -1;
-
+  private ArrayList<Sensor> sensors = null;
   private ArrayList<VizualEllipse> clickedEllipses = new ArrayList<VizualEllipse>();
   private HashMap<Long, String> colorByTrackIdTable = new HashMap<Long, String>();
   private ArrayList<VizualEllipse> fusEllipseList = new ArrayList<VizualEllipse>();
@@ -65,7 +63,7 @@ public class MainContainerController implements Initializable, MapComponentIniti
 
   final private double ellStrokeWidthUnClicked = 4.65;
   final private double ellStrokeWidthClicked = 6.15;
-
+  private boolean dbClick=false;
 
   @FXML
   private Button forwardButton;
@@ -117,6 +115,7 @@ public class MainContainerController implements Initializable, MapComponentIniti
     treeInit();
     tableInit();
     sliderInit(0); //random number
+
   }//initialize
 
   @Override
@@ -181,6 +180,10 @@ public class MainContainerController implements Initializable, MapComponentIniti
     }
     if (filePath != null) {
       try {
+
+        sensors = JsonReaderWriter.sensorToFile(filePath);
+        if(sensors != null)
+          showSensors(sensors);
         pointInTimeArray = JsonReaderWriter.jsonToObject(filePath);
         int numOfPoints = pointInTimeArray.size();
         sliderInit(numOfPoints); //initializes slider with number of points in time
@@ -340,9 +343,8 @@ public class MainContainerController implements Initializable, MapComponentIniti
       polylineInfoWindow.close();
     });
 
-    // double click:
-    map.addUIEventHandler(polyline, UIEventType.dblclick, jsObject -> {
-        map.setZoom(map.getZoom()-1);
+    //right click:
+    map.addUIEventHandler(polyline, UIEventType.rightclick, jsObject -> {
         if(ellipse.isFusionEllipse()) {
           for (VizualEllipse ellipseInRaw : ellipse.getRawList()) {
             if (!ellipseInRaw.isVisibleRaw()) {
@@ -445,6 +447,20 @@ public class MainContainerController implements Initializable, MapComponentIniti
       while (stateIterator.hasNext()) {
         showState(stateIterator.next(), colorByTrackIdTable.get(currTrack.getId()));
       }
+    }
+  }
+  public void showSensors(ArrayList<Sensor> sensors){
+    for(Sensor sensor : sensors){
+      org.jscience.geography.coordinates.UTM c= org.jscience.geography.coordinates.UTM.valueOf(36, 'N', sensor.getxCoordinate(), sensor.getyCoordinate(), SI.METRE);
+      org.jscience.geography.coordinates.LatLong centerPTemp= utmToLatLong(c, WGS84);
+
+      LatLong centerP= new LatLong(centerPTemp.getCoordinates()[1], centerPTemp.getCoordinates()[0]);
+      MVCArray polylineArray = EllipseBuilder.buildEllipsePoints(centerP, 100, 100, 0,3);
+
+      PolylineOptions polylineOptions=new PolylineOptions().path(polylineArray).strokeColor("#BA55D3").clickable(true).strokeWeight(10);
+      com.lynden.gmapsfx.shapes.Polyline polyline = new com.lynden.gmapsfx.shapes.Polyline(polylineOptions);
+
+      map.addMapShape(polyline);
     }
   }
 

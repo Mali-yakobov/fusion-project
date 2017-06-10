@@ -9,7 +9,12 @@ import java.util.ArrayList;
  * Created by Stas on 12/05/2017.
  */
 public class JsonCreator {
-  static Sensor sensor1=new Sensor(123, 800, 620, "");
+  static Sensor sensor1=new Sensor(123, 341533.78764316335, 3846911.8923788285, "");
+  static Sensor sensor2=new Sensor(124, 340851.1263149753, 3846577.3160242713, "");
+  static Sensor sensor3=new Sensor(125, 340558.6486263189, 3846905.003492296, "");
+
+
+
   // 1 1
   static CovarianceEllipse c1= new CovarianceEllipse(0, 0, 341338.64930353255, 3847283.031396312, 3920.944533000791, 2879.0554669992093, -2954.4232590366246, sensor1);
   static CovarianceEllipse c2= new CovarianceEllipse(0, 0, 341338.64930353255, 3847283.031396312, 3920.944533000791, 2879.0554669992093, 2954.4232590366246,sensor1);
@@ -34,6 +39,17 @@ public class JsonCreator {
   static CovarianceEllipse c51= new CovarianceEllipse(0, 0, 341140.218343724, 3847600.425207034, 3920.944533000791, 2879.0554669992093, -2954.4232590366246, sensor1);
   static CovarianceEllipse c52= new CovarianceEllipse(0, 0, 341140.218343724, 3847600.425207034, 3920.944533000791, 2879.0554669992093, 2954.4232590366246,sensor1);
   static CovarianceEllipse c53= new CovarianceEllipse(0, 0, 341140.218343724, 3847600.425207034, 6354.423259036625, 445.5767409633759, 520.9445330007915,sensor1);
+
+  public static ArrayList<Sensor> createSensorsFile(){
+    ArrayList<Sensor> sensors=new ArrayList<>();
+    sensors.add(sensor1);
+    sensors.add(sensor2);
+    sensors.add(sensor3);
+
+    String filename= "Sensors";
+    JsonReaderWriter.sensorToJson(sensors, filename);
+    return sensors;
+  }
 
 
   public static void createDummyScenario(){
@@ -180,6 +196,7 @@ public class JsonCreator {
     String filename= "rawOnlyScenario1";
     JsonReaderWriter.objectToJson(listPointInTime, filename);
   }
+
 
   public static void createJsonForThreadTesting1(){
     ArrayList<CovarianceEllipse> rawEllsForAlg =new ArrayList<CovarianceEllipse>();

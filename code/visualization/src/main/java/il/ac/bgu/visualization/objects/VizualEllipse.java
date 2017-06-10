@@ -57,9 +57,9 @@ public class VizualEllipse {
     org.jscience.geography.coordinates.LatLong centerPTemp= utmToLatLong(c, WGS84);
 
     LatLong centerP= new LatLong(centerPTemp.getCoordinates()[1], centerPTemp.getCoordinates()[0]);
-    MVCArray polyluneArray = EllipseBuilder.buildEllipsePoints(centerP, radiusX, radiusY, angle);
+    MVCArray polylineArray = EllipseBuilder.buildEllipsePoints(centerP, radiusX, radiusY, angle);
 
-    PolylineOptions polylineOptions=new PolylineOptions().path(polyluneArray).strokeColor(color).clickable(true).strokeWeight(strokeWeight);
+    PolylineOptions polylineOptions=new PolylineOptions().path(polylineArray).strokeColor(color).clickable(true).strokeWeight(strokeWeight);
     com.lynden.gmapsfx.shapes.Polyline polyline = new com.lynden.gmapsfx.shapes.Polyline(polylineOptions);
     setPolylineObject(polyline);
     this.ellipseColor=color;
@@ -161,7 +161,7 @@ public class VizualEllipse {
   public double getStroke() {
     double stroke=1;
     if(this.IsFusionEllipse)
-      stroke=10;
+      stroke=5;
     return stroke;
   }
 

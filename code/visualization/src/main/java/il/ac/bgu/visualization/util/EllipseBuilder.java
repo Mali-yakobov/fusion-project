@@ -56,4 +56,25 @@ public class EllipseBuilder {
 
     return res;
   }
+  public static final MVCArray buildEllipsePoints(LatLong center, double longRadius, double latRadius, double rotAngle,int points) {
+
+
+    MVCArray res = new MVCArray();
+
+    double longRadiusSquared = longRadius * longRadius;
+    double latRadiusSquared = latRadius * latRadius;
+
+    double radiiProduct = longRadius * latRadius;
+
+    double theta = 0d;
+    double angleIncrement = 360.0 / points;
+    for (int i = 0; (i < points + 1); i++) {
+      theta = i * angleIncrement;
+      double r = radiiProduct / (Math.sqrt(latRadiusSquared * Math.pow(Math.sin(Math.toRadians(theta)), 2)
+                                           + longRadiusSquared * Math.pow(Math.cos(Math.toRadians(theta)), 2)));
+      res.push(center.getDestinationPoint(theta - rotAngle, r));
+    }
+
+    return res;
+  }
 }

@@ -6,18 +6,19 @@ package il.ac.bgu.fusion.objects;
 public class Sensor {
 
     private long id;
-    private float xCoordinate;
-    private float yCoordinate;
+    private double xCoordinate;
+    private double yCoordinate;
     private String metadata;
 
-    public Sensor(){}//empty constructor
-
-    public Sensor(long id, float xCoordinate, float yCoordinate, String metadata) {
+    public Sensor(long id, double xCoordinate, double yCoordinate, String metadata) {
         this.id = id;
         this.xCoordinate = xCoordinate;
         this.yCoordinate = yCoordinate;
         this.metadata = metadata;
     }
+
+
+
 
     public long getId() {
         return id;
@@ -27,7 +28,7 @@ public class Sensor {
         this.id = id;
     }
 
-    public float getyCoordinate() {
+    public double getyCoordinate() {
         return yCoordinate;
     }
 
@@ -35,7 +36,7 @@ public class Sensor {
         this.yCoordinate = yCoordinate;
     }
 
-    public float getxCoordinate() {
+    public double getxCoordinate() {
         return xCoordinate;
     }
 
