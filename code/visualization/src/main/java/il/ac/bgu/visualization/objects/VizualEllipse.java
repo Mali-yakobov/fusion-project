@@ -31,16 +31,22 @@ public class VizualEllipse {
   private static final char hemisphere='N';
   private static final int zone=36;
   private boolean visible;
+  private boolean visibleRaw;
   private String ellipseColor;
   private double stroke;
   private LatLong latLong;
+  private boolean clicked;
 
 
   public VizualEllipse(){
     visible=false;
+    visibleRaw=false;
+    clicked=false;
   }
   public VizualEllipse(double radiusX, double radiusY) {
     visible=false;
+    visibleRaw=false;
+    clicked=false;
     setRadiusX(radiusX);
     setRadiusY(radiusY);
   }
@@ -55,7 +61,7 @@ public class VizualEllipse {
 
     PolylineOptions polylineOptions=new PolylineOptions().path(polyluneArray).strokeColor(color).clickable(true).strokeWeight(strokeWeight);
     com.lynden.gmapsfx.shapes.Polyline polyline = new com.lynden.gmapsfx.shapes.Polyline(polylineOptions);
-    this.polylineObject=polyline;
+    setPolylineObject(polyline);
     this.ellipseColor=color;
     this.stroke=strokeWeight;
     this.latLong=centerP;
@@ -153,6 +159,9 @@ public class VizualEllipse {
   }
 
   public double getStroke() {
+    double stroke=1;
+    if(this.IsFusionEllipse)
+      stroke=10;
     return stroke;
   }
 
@@ -166,5 +175,21 @@ public class VizualEllipse {
 
   public void setLatLong(LatLong latLong) {
     this.latLong = latLong;
+  }
+
+  public boolean isVisibleRaw() {
+    return visibleRaw;
+  }
+
+  public void setVisibleRaw(boolean visibleRaw) {
+    this.visibleRaw = visibleRaw;
+  }
+
+  public boolean isClicked() {
+    return clicked;
+  }
+
+  public void setClicked(boolean clicked) {
+    this.clicked = clicked;
   }
 }

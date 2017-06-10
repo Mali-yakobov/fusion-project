@@ -1,5 +1,6 @@
-.slider{
+.slider .thumb{
     -fx-fill-width: inherit;
+    -fx-fill:aqua;
 }
 /* for all buttons: */
 .button {
