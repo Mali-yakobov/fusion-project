@@ -22,6 +22,8 @@ import il.ac.bgu.visualization.util.EllipseRepresentationTranslation;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Point2D;
@@ -35,6 +37,8 @@ import javafx.stage.Popup;
 import org.jscience.geography.coordinates.UTM;
 
 import javax.measure.unit.SI;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import java.io.File;
 import java.net.URL;
 import java.util.*;
@@ -77,6 +81,10 @@ public class MainContainerController implements Initializable, MapComponentIniti
   @FXML
   private Slider slider;
   @FXML
+  private TextField textFieldTimeCount;
+  @FXML
+  private TextField textFieldTimeStamp;
+  @FXML
   protected GoogleMapView mapView;
   @FXML
   private ToggleButton showHideRawButton;
@@ -114,6 +122,7 @@ public class MainContainerController implements Initializable, MapComponentIniti
     forwardButton.getStyleClass().add("forward-button-class");
     backwardButton.getStyleClass().add("backward-button-class");
     resetButton.getStyleClass().add("reset-button-class");
+    textFieldTimeStamp.setDisable(true);
 
     treeInit();
     tableInit();
@@ -538,13 +547,15 @@ public class MainContainerController implements Initializable, MapComponentIniti
   private void sliderInit(int max) {
     slider.setMin(0);
     slider.setMax(max);
+    String numOfPoints = String.valueOf(max);
+    textFieldTimeCount.setText("0"+" / "+numOfPoints);
     slider.setShowTickMarks(true);
-    slider.setShowTickLabels(true);
+    slider.setShowTickLabels(false);
     slider.setValue(0);
     if (max == 0)
       slider.setShowTickLabels(false);
     else
-      slider.setShowTickLabels(true);
+      slider.setShowTickLabels(false);
 
 
     Label label = new Label();
@@ -574,10 +585,25 @@ public class MainContainerController implements Initializable, MapComponentIniti
     slider.setOnMouseEntered(e -> popup.show(slider, e.getScreenX(), e.getScreenY() + offset));
     slider.setOnMouseExited(e -> popup.hide());
 
+      // Listen for changes in the textField
+      textFieldTimeCount.textProperty().addListener((observable, oldValue, newValue) -> {
+          System.out.println("textfield changed from " + oldValue + " to " + newValue);
+          if(Integer.parseInt(newValue) <= max && Integer.parseInt(newValue) >=0 ){
+              textFieldTimeCount.setText(newValue+" / "+numOfPoints);
+              slider.setValue(Double.parseDouble(newValue));
+          }
+          else
+              textFieldTimeCount.setText(oldValue);
+      });
+
+
     slider.valueProperty().addListener((observable, oldValue, newValue) -> {
         int old = oldValue.intValue();
         int roundValue =(int) Math.round(slider.getValue());
         slider.setValue(roundValue);
+        String timeCount = String.valueOf(roundValue);
+        textFieldTimeCount.setText(timeCount+" / "+numOfPoints);
+
 
 /*
         if (roundValue > old)
