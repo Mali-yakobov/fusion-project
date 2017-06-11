@@ -126,7 +126,7 @@
                      </children></AnchorPane>
                   <AnchorPane maxHeight="-Infinity" prefHeight="50.0" prefWidth="608.0">
                      <children>
-                        <Slider fx:id="slider" blockIncrement="1.0" layoutX="300.0" layoutY="11.0" majorTickUnit="1.0" max="0.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" minorTickCount="1" prefHeight="25.0" prefWidth="1000.0" />
+                        <Slider fx:id="slider" blockIncrement="1.0" layoutX="300.0" layoutY="14.0" majorTickUnit="1.0" max="0.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" minorTickCount="1" prefHeight="25.0" prefWidth="600.0" />
                         <TextField fx:id="textFieldTimeCount" layoutX="170.0" layoutY="11.0" prefHeight="25.0" prefWidth="66.0" />
                         <TextField fx:id="textFieldTimeStamp" layoutX="239.0" layoutY="11.0" prefHeight="25.0" prefWidth="50.0" />
                      </children>
