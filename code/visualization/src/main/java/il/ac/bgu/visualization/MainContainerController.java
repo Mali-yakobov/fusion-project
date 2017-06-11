@@ -542,21 +542,16 @@ public class MainContainerController implements Initializable, MapComponentIniti
       slider.setShowTickLabels(true);
 
 
-    /*
+
     //hover slider option
 
     slider.hoverProperty().addListener((observable) -> {
 
-        Label label= new Label();
-      label.setText("Address Book: "
-                + person.getFirstName() + " "
-                + person.getLastName()
-        );
-      } else {
-        label.setText("Address Book");
-      }
-    });
-    */
+      System.out.println("hover");
+      // Label label= new Label();
+      //label.setText("hello");
+      });
+
 
     slider.valueProperty().addListener((observable, oldValue, newValue) -> {
         int old = oldValue.intValue();
