@@ -553,15 +553,19 @@ public class MainContainerController implements Initializable, MapComponentIniti
 
     double offset = 1 ;
 
+    /*
+       mousee hover option
+    */
     slider.setOnMouseMoved(e -> {
       NumberAxis axis = (NumberAxis) slider.lookup(".axis");
       Point2D locationInAxis = axis.sceneToLocal(e.getSceneX(), e.getSceneY());
       double mouseX = locationInAxis.getX() ;
       double value = axis.getValueForDisplay(mouseX).doubleValue() ;
+      int roundValue = (int) Math.round(value);
       if (value >= slider.getMin() && value <= slider.getMax()) {
-        label.setText(String.format("Value: %.1f", value));
+        label.setText("    Value: "+ roundValue);
       } else {
-        label.setText("Value: ---");
+        label.setText("    Value: ---");
       }
       popup.setAnchorX(e.getScreenX());
       popup.setAnchorY(e.getScreenY() + offset);
@@ -569,15 +573,6 @@ public class MainContainerController implements Initializable, MapComponentIniti
 
     slider.setOnMouseEntered(e -> popup.show(slider, e.getScreenX(), e.getScreenY() + offset));
     slider.setOnMouseExited(e -> popup.hide());
-    //hover slider option
-
-    slider.hoverProperty().addListener((observable) -> {
-
-      System.out.println("hover");
-      // Label label= new Label();
-      //label.setText("hello");
-      });
-
 
     slider.valueProperty().addListener((observable, oldValue, newValue) -> {
         int old = oldValue.intValue();
