@@ -24,11 +24,14 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Point2D;
+import javafx.scene.chart.NumberAxis;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
+import javafx.stage.Popup;
 import org.jscience.geography.coordinates.UTM;
 
 import javax.measure.unit.SI;
@@ -535,6 +538,8 @@ public class MainContainerController implements Initializable, MapComponentIniti
   private void sliderInit(int max) {
     slider.setMin(0);
     slider.setMax(max);
+    slider.setShowTickMarks(true);
+    slider.setShowTickLabels(true);
     slider.setValue(0);
     if (max == 0)
       slider.setShowTickLabels(false);
@@ -542,7 +547,28 @@ public class MainContainerController implements Initializable, MapComponentIniti
       slider.setShowTickLabels(true);
 
 
+    Label label = new Label();
+    Popup popup = new Popup();
+    popup.getContent().add(label);
 
+    double offset = 1 ;
+
+    slider.setOnMouseMoved(e -> {
+      NumberAxis axis = (NumberAxis) slider.lookup(".axis");
+      Point2D locationInAxis = axis.sceneToLocal(e.getSceneX(), e.getSceneY());
+      double mouseX = locationInAxis.getX() ;
+      double value = axis.getValueForDisplay(mouseX).doubleValue() ;
+      if (value >= slider.getMin() && value <= slider.getMax()) {
+        label.setText(String.format("Value: %.1f", value));
+      } else {
+        label.setText("Value: ---");
+      }
+      popup.setAnchorX(e.getScreenX());
+      popup.setAnchorY(e.getScreenY() + offset);
+    });
+
+    slider.setOnMouseEntered(e -> popup.show(slider, e.getScreenX(), e.getScreenY() + offset));
+    slider.setOnMouseExited(e -> popup.hide());
     //hover slider option
 
     slider.hoverProperty().addListener((observable) -> {
