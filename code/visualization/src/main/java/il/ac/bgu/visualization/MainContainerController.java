@@ -24,11 +24,13 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Point2D;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -39,6 +41,7 @@ import org.jscience.geography.coordinates.UTM;
 import javax.measure.unit.SI;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import java.awt.event.KeyEvent;
 import java.io.File;
 import java.net.URL;
 import java.util.*;
@@ -123,6 +126,7 @@ public class MainContainerController implements Initializable, MapComponentIniti
     backwardButton.getStyleClass().add("backward-button-class");
     resetButton.getStyleClass().add("reset-button-class");
     textFieldTimeStamp.setDisable(true);
+    textFieldTimeCount.setDisable(true);
 
     treeInit();
     tableInit();
@@ -135,10 +139,10 @@ public class MainContainerController implements Initializable, MapComponentIniti
     double centerLong = 34.760233;
     MapOptions options = new MapOptions();
     options.center(new LatLong(centerLat, centerLong))
-           .zoomControl(true)
-           .zoom(17)
-           .overviewMapControl(true)
-           .mapType(MapTypeIdEnum.ROADMAP);
+            .zoomControl(true)
+            .zoom(17)
+            .overviewMapControl(true)
+            .mapType(MapTypeIdEnum.ROADMAP);
     map = mapView.createMap(options);
 /*
     map.addMouseEventHandler(UIEventType.dblclick, (GMapMouseEvent event) -> {
@@ -210,8 +214,10 @@ public class MainContainerController implements Initializable, MapComponentIniti
   }
 
   public void forwardAction() {
-    //slider.increment();
     pointInTimeArrayIndex++;
+    slider.setValue(pointInTimeArrayIndex+1);
+    textFieldTimeCount.setText((pointInTimeArrayIndex+1)+" / "+pointInTimeArray.size());
+    textFieldTimeStamp.setText(String.valueOf(pointInTimeArray.get(pointInTimeArrayIndex).getTimeStamp()));
     PointInTime pointInTime = pointInTimeArray.get(pointInTimeArrayIndex);
     clearScreen();
     showPointInTime(pointInTime);
@@ -224,13 +230,17 @@ public class MainContainerController implements Initializable, MapComponentIniti
   }
 
   public void backwardAction() {
-   // slider.decrement();
     pointInTimeArrayIndex--;
+    slider.setValue(pointInTimeArrayIndex+1);
     clearScreen();
     if (pointInTimeArrayIndex == -1) {
       backwardButton.setDisable(true);
       resetButton.setDisable(true);
+      textFieldTimeStamp.clear();
     } else {
+
+      textFieldTimeCount.setText((pointInTimeArrayIndex+1) +" / "+pointInTimeArray.size());
+      textFieldTimeStamp.setText(String.valueOf(pointInTimeArray.get(pointInTimeArrayIndex).getTimeStamp()));
       PointInTime pointInTime = pointInTimeArray.get(pointInTimeArrayIndex);
       showPointInTime(pointInTime);
       if (pointInTimeArrayIndex == pointInTimeArray.size() - 2) {
@@ -306,16 +316,13 @@ public class MainContainerController implements Initializable, MapComponentIniti
 
     if (clusters.size() < clickedEllipsesCov.size()){ // if some actual clustering happened
       //for(VizualEllipse clickedEllipse: clickedEllipses)
-        //clickedEllipse.setVisible(false);
+      //clickedEllipse.setVisible(false);
       clickedEllipses.clear();
       String color= colorGenerator();
       for(State cluster: clusters)
         showState(cluster, color);///change
     }
   }
-
-
-
 
   /*
     Misc functions:
@@ -333,18 +340,18 @@ public class MainContainerController implements Initializable, MapComponentIniti
       else
         newStroke=ellipse.getStroke()*2;
 
-        map.removeMapShape(polyline);
-        ellipse.ellipseToDraw(ellipse.getEllipseColor(), newStroke);
-        showEllipse(ellipse, ellipse.getEllipseColor(), newStroke);
-        ellipseSetOnClick(ellipse);///check
-        ellipse.setClicked(!ellipse.isClicked());
+      map.removeMapShape(polyline);
+      ellipse.ellipseToDraw(ellipse.getEllipseColor(), newStroke);
+      showEllipse(ellipse, ellipse.getEllipseColor(), newStroke);
+      ellipseSetOnClick(ellipse);///check
+      ellipse.setClicked(!ellipse.isClicked());
     });
 
     // hover:
     InfoWindowOptions infoWindowOptions = new InfoWindowOptions();
     infoWindowOptions.content("<h2>MetaData</h2>"
-                              + "Current Location:"+ellipse.getLatLong() +"<br>"
-                              + "*********" );
+            + "Current Location:"+ellipse.getLatLong() +"<br>"
+            + "*********" );
     InfoWindow polylineInfoWindow = new InfoWindow(infoWindowOptions);
     polylineInfoWindow.setPosition(ellipse.getLatLong());
     map.addUIEventHandler(polyline, UIEventType.mouseover, jsObject -> {
@@ -356,19 +363,19 @@ public class MainContainerController implements Initializable, MapComponentIniti
 
     //right click:
     map.addUIEventHandler(polyline, UIEventType.rightclick, jsObject -> {
-        if(ellipse.isFusionEllipse()) {
-          for (VizualEllipse ellipseInRaw : ellipse.getRawList()) {
-            if (!ellipseInRaw.isVisibleRaw()) {
+      if(ellipse.isFusionEllipse()) {
+        for (VizualEllipse ellipseInRaw : ellipse.getRawList()) {
+          if (!ellipseInRaw.isVisibleRaw()) {
 
-              map.addMapShape(ellipseInRaw.getPolylineObject());
-              ellipseInRaw.setVisibleRaw(true);
-            } else {
-              map.removeMapShape(ellipseInRaw.getPolylineObject());
-              ellipseInRaw.setVisibleRaw(false);
-            }
+            map.addMapShape(ellipseInRaw.getPolylineObject());
+            ellipseInRaw.setVisibleRaw(true);
+          } else {
+            map.removeMapShape(ellipseInRaw.getPolylineObject());
+            ellipseInRaw.setVisibleRaw(false);
           }
         }
-      });
+      }
+    });
 
 
     /*ellipse.setOnMousePressed(event -> {
@@ -453,8 +460,8 @@ public class MainContainerController implements Initializable, MapComponentIniti
     while (trackIterator.hasNext()) {
       Track currTrack = trackIterator.next(); //colorByTrackIdTable
       Iterator<State> stateIterator = currTrack.getStateList().iterator();
-            if (!colorByTrackIdTable.containsKey(currTrack.getId()))
-                colorByTrackIdTable.put(currTrack.getId(), colorGenerator());
+      if (!colorByTrackIdTable.containsKey(currTrack.getId()))
+        colorByTrackIdTable.put(currTrack.getId(), colorGenerator());
       while (stateIterator.hasNext()) {
         showState(stateIterator.next(), colorByTrackIdTable.get(currTrack.getId()));
       }
@@ -488,7 +495,7 @@ public class MainContainerController implements Initializable, MapComponentIniti
     while (covEllItr.hasNext()) {
       CovarianceEllipse tempCovEllipse = covEllItr.next();
       VizualEllipse tempEllipse = EllipseRepresentationTranslation.fromCovarianceToVizual(tempCovEllipse);
-     tempEllipse.ellipseToDraw(color,tempEllipse.getStroke());
+      tempEllipse.ellipseToDraw(color,tempEllipse.getStroke());
       //showEllipse(tempEllipse, color,tempEllipse.getStroke());
       //ellipseSetOnClick(tempEllipse);
 
@@ -525,9 +532,9 @@ public class MainContainerController implements Initializable, MapComponentIniti
 
   public static String colorToRGBCode(Color color){
     return String.format( "#%02X%02X%02X",
-                          (int)(color.getRed() * 255),
-                          (int)(color.getGreen() * 255),
-                          (int)(color.getBlue() * 255));
+            (int)(color.getRed() * 255),
+            (int)(color.getGreen() * 255),
+            (int)(color.getBlue() * 255));
   }
 
   public String colorGenerator() {
@@ -540,14 +547,15 @@ public class MainContainerController implements Initializable, MapComponentIniti
   }
 
   /**
-  Slider initialization:
-  initializes the slider with the current number of points in time.
-  If param max is zero then initialize to empty slider
+   Slider initialization:
+   initializes the slider with the current number of points in time.
+   If param max is zero then initialize to empty slider
    */
   private void sliderInit(int max) {
     slider.setMin(0);
     slider.setMax(max);
     String numOfPoints = String.valueOf(max);
+    textFieldTimeCount.setDisable(false);
     textFieldTimeCount.setText("0"+" / "+numOfPoints);
     slider.setShowTickMarks(true);
     slider.setShowTickLabels(false);
@@ -557,15 +565,13 @@ public class MainContainerController implements Initializable, MapComponentIniti
     else
       slider.setShowTickLabels(false);
 
-
     Label label = new Label();
     Popup popup = new Popup();
     popup.getContent().add(label);
-
     double offset = 1 ;
 
     /*
-       mousee hover option
+       mouse hover option
     */
     slider.setOnMouseMoved(e -> {
       NumberAxis axis = (NumberAxis) slider.lookup(".axis");
@@ -574,9 +580,9 @@ public class MainContainerController implements Initializable, MapComponentIniti
       double value = axis.getValueForDisplay(mouseX).doubleValue() ;
       int roundValue = (int) Math.round(value);
       if (value >= slider.getMin() && value <= slider.getMax()) {
-        label.setText("    Value: "+ roundValue);
+        label.setText("    TimeStamp: "+ pointInTimeArray.get(roundValue-1).getTimeStamp());
       } else {
-        label.setText("    Value: ---");
+        label.setText("    TimeStamp: ---");
       }
       popup.setAnchorX(e.getScreenX());
       popup.setAnchorY(e.getScreenY() + offset);
@@ -585,52 +591,57 @@ public class MainContainerController implements Initializable, MapComponentIniti
     slider.setOnMouseEntered(e -> popup.show(slider, e.getScreenX(), e.getScreenY() + offset));
     slider.setOnMouseExited(e -> popup.hide());
 
-      // Listen for changes in the textField
-      textFieldTimeCount.textProperty().addListener((observable, oldValue, newValue) -> {
-          System.out.println("textfield changed from " + oldValue + " to " + newValue);
-          if(Integer.parseInt(newValue) <= max && Integer.parseInt(newValue) >=0 ){
-              textFieldTimeCount.setText(newValue+" / "+numOfPoints);
-              slider.setValue(Double.parseDouble(newValue));
-          }
-          else
-              textFieldTimeCount.setText(oldValue);
-      });
+    /*
+       change in the textField option
+    */
+    textFieldTimeCount.setOnKeyPressed(event -> {
+      //the user changed the text and pressed ENTER
+      if(event.getCode() == KeyCode.ENTER){
+        String enteredText = textFieldTimeCount.getText();
+        //check if the entered text is legal (in bounds)
+        if(Integer.parseInt(enteredText) <= max && Integer.parseInt(enteredText) >=0 ) {
+          int currentPoint = Integer.parseInt(enteredText);
+          textFieldTimeCount.setText(enteredText+" / "+numOfPoints);
+          forwardOrBackward(currentPoint,(pointInTimeArrayIndex+1));
+        }
+      }
+    });
 
+    /*
+       change the slider point by mouse click option
+    */
+    slider.setOnMouseClicked(event -> {
+      int currentPoint = ((int) slider.getValue());
+      if(currentPoint <= max && currentPoint >=0 )
+        forwardOrBackward(currentPoint,(pointInTimeArrayIndex+1));
+    });
 
     slider.valueProperty().addListener((observable, oldValue, newValue) -> {
-        int old = oldValue.intValue();
-        int roundValue =(int) Math.round(slider.getValue());
-        slider.setValue(roundValue);
-        String timeCount = String.valueOf(roundValue);
-        textFieldTimeCount.setText(timeCount+" / "+numOfPoints);
+      int roundValue =(int) Math.round(slider.getValue());
+      slider.setValue(roundValue);
+      String timeCount = String.valueOf(roundValue);
+      textFieldTimeCount.setText(timeCount+" / "+numOfPoints);
+      //System.out.println("Slider Value Changed (newValue: " + roundValue + "old:   "+ oldValue + ")");
+    });
+  }
 
-
-/*
-        if (roundValue > old)
-        {
-            int diff = roundValue - old;
-            System.out.println("******** forward **********************  "+diff);
-
-            for (int i=0 ; i<diff ; i++)
-            {
-                forwardAction();
-        }}
-
-        if (roundValue < old)
-        {
-            int diff = old - roundValue;
-            System.out.println("************ backward ************************  "+diff);
-
-            for (int i=0 ; i<diff ; i++)
-            {
-                backwardAction();
-            }
-        }
-*/
-        System.out.println("Slider Value Changed (newValue: " + roundValue + "old:   "+ oldValue + ")");
-      });
+  /*
+     check if we need to go backward of forward
+   */
+  private void forwardOrBackward(int currentPoint, int lastPoint){
+    if (currentPoint > lastPoint) {
+      int diff = currentPoint - lastPoint;
+      for (int i = 0; i < diff; i++) {
+        forwardAction();
+      }
     }
-
+    else if (currentPoint < lastPoint) {
+      int diff = lastPoint - currentPoint;
+      for (int i=0 ; i<diff ; i++) {
+        backwardAction();
+      }
+    }
+  }
 
   /*
     Table related code start
@@ -728,7 +739,7 @@ public class MainContainerController implements Initializable, MapComponentIniti
 
     metadataRoot.setValue("Ellipse Metadata:");//111
     metadataRoot.getChildren().setAll(new TreeItem(ellipseColor), new TreeItem(ellipseRadX), new TreeItem(ellipseRadY),
-                                      new TreeItem(ellipseAngle));
+            new TreeItem(ellipseAngle));
   }
 
   private void generateDataForTable(Object item){
