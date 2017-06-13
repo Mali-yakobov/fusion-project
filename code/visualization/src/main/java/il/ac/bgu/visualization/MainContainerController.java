@@ -196,9 +196,7 @@ public class MainContainerController implements Initializable, MapComponentIniti
     if (filePath != null) {
       try {
 
-        sensors = JsonReaderWriter.sensorToFile(filePath);
-        if(sensors != null)
-          showSensors(sensors);
+
         pointInTimeArray = JsonReaderWriter.jsonToObject(filePath);
         int numOfPoints = pointInTimeArray.size();
         sliderInit(numOfPoints); //initializes slider with number of points in time
@@ -212,7 +210,28 @@ public class MainContainerController implements Initializable, MapComponentIniti
       }
     }
   }
+  public void loadSensorsFileAction() {
+    String filePath = null;
+    FileChooser fileChooser = new FileChooser();
+    fileChooser.setTitle("Select Json File");
+    fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("json", "*.json"));
+    File file = fileChooser.showOpenDialog(mapView.getScene().getWindow());
 
+    if (file != null) {
+      filePath = file.getAbsolutePath();
+    }
+    if (filePath != null) {
+      try {
+
+        sensors = JsonReaderWriter.sensorToFile(filePath);
+        if(sensors != null)
+          showSensors(sensors);
+
+      } catch (JsonSyntaxException e) {
+        AlertWindow.display("Json Error", e.getMessage());
+      }
+    }
+  }
   public void forwardAction(int forward) {
     pointInTimeArrayIndex+=forward;
     slider.setValue(pointInTimeArrayIndex+1);
@@ -502,8 +521,10 @@ public class MainContainerController implements Initializable, MapComponentIniti
       CovarianceEllipse tempCovEllipse = covEllItr.next();
       VizualEllipse tempEllipse = EllipseRepresentationTranslation.fromCovarianceToVizual(tempCovEllipse);
       tempEllipse.ellipseToDraw(color,tempEllipse.getStroke());
-      //showEllipse(tempEllipse, color,tempEllipse.getStroke());
-      //ellipseSetOnClick(tempEllipse);
+      if(showHideRawButton.isSelected()){
+        showEllipse(tempEllipse, color,tempEllipse.getStroke());
+        ellipseSetOnClick(tempEllipse);
+      }
 
       if (tempFusEllipse != null){
         tempFusEllipse.ellipseToDraw(color,tempFusEllipse.getStroke());
