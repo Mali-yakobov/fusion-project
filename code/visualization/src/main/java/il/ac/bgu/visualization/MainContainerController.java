@@ -213,8 +213,8 @@ public class MainContainerController implements Initializable, MapComponentIniti
     }
   }
 
-  public void forwardAction() {
-    pointInTimeArrayIndex++;
+  public void forwardAction(int forward) {
+    pointInTimeArrayIndex+=forward;
     slider.setValue(pointInTimeArrayIndex+1);
     textFieldTimeCount.setText((pointInTimeArrayIndex+1)+" / "+pointInTimeArray.size());
     textFieldTimeStamp.setText(String.valueOf(pointInTimeArray.get(pointInTimeArrayIndex).getTimeStamp()));
@@ -229,8 +229,8 @@ public class MainContainerController implements Initializable, MapComponentIniti
     }
   }
 
-  public void backwardAction() {
-    pointInTimeArrayIndex--;
+  public void backwardAction(int backward) {
+    pointInTimeArrayIndex-=backward;
     slider.setValue(pointInTimeArrayIndex+1);
     clearScreen();
     if (pointInTimeArrayIndex == -1) {
@@ -247,6 +247,12 @@ public class MainContainerController implements Initializable, MapComponentIniti
         forwardButton.setDisable(false);
       }
     }
+  }
+  public void forwardAction() {
+    forwardAction(1);
+  }
+  public void backwardAction() {
+    backwardAction(1);
   }
 
   public void addEllipseAction() {
@@ -621,7 +627,6 @@ public class MainContainerController implements Initializable, MapComponentIniti
       slider.setValue(roundValue);
       String timeCount = String.valueOf(roundValue);
       textFieldTimeCount.setText(timeCount+" / "+numOfPoints);
-      //System.out.println("Slider Value Changed (newValue: " + roundValue + "old:   "+ oldValue + ")");
     });
   }
 
@@ -631,15 +636,11 @@ public class MainContainerController implements Initializable, MapComponentIniti
   private void forwardOrBackward(int currentPoint, int lastPoint){
     if (currentPoint > lastPoint) {
       int diff = currentPoint - lastPoint;
-      for (int i = 0; i < diff; i++) {
-        forwardAction();
-      }
+      forwardAction(diff);
     }
     else if (currentPoint < lastPoint) {
       int diff = lastPoint - currentPoint;
-      for (int i=0 ; i<diff ; i++) {
-        backwardAction();
-      }
+      backwardAction(diff);
     }
   }
 
