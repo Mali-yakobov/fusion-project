@@ -473,6 +473,9 @@ public class MainContainerController implements Initializable, MapComponentIniti
     for (com.lynden.gmapsfx.shapes.Polyline polyline : polylineArray){
       map.removeMapShape(polyline);
     }
+    for (VizualEllipse fusEllipse : fusEllipseList) {
+      fusEllipse.setVisibleRaw(false);
+    }
     clickedEllipses.clear();
     dataTable.setVisible(false);
   }
