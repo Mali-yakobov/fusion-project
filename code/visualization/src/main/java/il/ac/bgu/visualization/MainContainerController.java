@@ -221,10 +221,10 @@ public class MainContainerController implements Initializable, MapComponentIniti
     PointInTime pointInTime = pointInTimeArray.get(pointInTimeArrayIndex);
     clearScreen();
     showPointInTime(pointInTime);
-    if (pointInTimeArrayIndex == 0) {
+    if (pointInTimeArrayIndex >= 0) {
       backwardButton.setDisable(false);
       resetButton.setDisable(false);
-    } else if (pointInTimeArrayIndex == pointInTimeArray.size() - 1) {
+    } if (pointInTimeArrayIndex == pointInTimeArray.size() - 1) {
       forwardButton.setDisable(true);
     }
   }
@@ -248,9 +248,7 @@ public class MainContainerController implements Initializable, MapComponentIniti
       }
     }
   }
-  public void forwardAction() {
-    forwardAction(1);
-  }
+  public void forwardAction() { forwardAction(1); }
   public void backwardAction() {
     backwardAction(1);
   }
