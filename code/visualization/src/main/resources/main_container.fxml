@@ -41,6 +41,14 @@
             <SeparatorMenuItem mnemonicParsing="false" />
             <MenuItem disable="true" mnemonicParsing="false" text="Preferences…" />
             <SeparatorMenuItem mnemonicParsing="false" />
+                  <Menu mnemonicParsing="false" text="Load">
+                    <items>
+                        <MenuItem mnemonicParsing="false" onAction="#loadFileAction" text="Load Points" />
+                        <SeparatorMenuItem mnemonicParsing="false" />
+                        <MenuItem mnemonicParsing="false" onAction="#loadSensorsFileAction" text="Load Sensors" />
+                    </items>
+                  </Menu>
+                  <SeparatorMenuItem mnemonicParsing="false" />
             <MenuItem mnemonicParsing="false" onAction="#closeAction" text="Quit" />
           </items>
         </Menu>
@@ -78,7 +86,6 @@
     </MenuBar>
     <ToolBar fx:id="toolBar" prefHeight="20.0" prefWidth="900.0">
       <items>
-        <Button fx:id="loadFileButton" mnemonicParsing="false" onAction="#loadFileAction" text="Load" />
         <Button fx:id="addEllipseButton" mnemonicParsing="false" onAction="#addEllipseAction" text="Add Ellipse" />
         <Button fx:id="clearButton" mnemonicParsing="false" onAction="#clearAction" text="Clear" />
         <Separator orientation="VERTICAL" />
