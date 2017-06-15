@@ -264,6 +264,7 @@ public class MainContainerController implements Initializable, MapComponentIniti
     resetButton.setDisable(true);
     colorByTrackIdTable.clear();
     treeItems.clear();
+
     sliderInit(0);
   }
 
@@ -273,6 +274,8 @@ public class MainContainerController implements Initializable, MapComponentIniti
     forwardButton.setDisable(false);
     backwardButton.setDisable(true);
     resetButton.setDisable(true);
+    int numOfPoints = pointInTimeArray.size();
+    sliderInit(numOfPoints); //initializes slider with number of points in time
   }
 
   public void closeAction() {
@@ -584,9 +587,11 @@ public class MainContainerController implements Initializable, MapComponentIniti
       textFieldTimeStamp.setText(String.valueOf(pointInTimeArray.get(pointInTimeArrayIndex).getTimeStamp()));
       PointInTime pointInTime = pointInTimeArray.get(pointInTimeArrayIndex);
       showPointInTime(pointInTime);
-      if (pointInTimeArrayIndex == pointInTimeArray.size() - 2) {
-        forwardButton.setDisable(false);
-      }
+      forwardButton.setDisable(false);
+
+     // if (pointInTimeArrayIndex == pointInTimeArray.size() - 2) {
+      //  forwardButton.setDisable(false);
+     // }
     }
   }
 
@@ -601,6 +606,7 @@ public class MainContainerController implements Initializable, MapComponentIniti
     String numOfPoints = String.valueOf(max);
     textFieldTimeCount.setDisable(false);
     textFieldTimeCount.setText("0"+" / "+numOfPoints);
+    textFieldTimeStamp.clear();
     slider.setShowTickMarks(true);
     slider.setShowTickLabels(false);
     slider.setValue(0);
@@ -623,7 +629,7 @@ public class MainContainerController implements Initializable, MapComponentIniti
       double mouseX = locationInAxis.getX() ;
       double value = axis.getValueForDisplay(mouseX).doubleValue() ;
       int roundValue = (int) Math.round(value);
-      if (value >= slider.getMin() && value <= slider.getMax()) {
+      if (value > slider.getMin() && roundValue>slider.getMin() && value <= slider.getMax()) {
         label.setText("    TimeStamp: "+ pointInTimeArray.get(roundValue-1).getTimeStamp());
       } else {
         label.setText("    TimeStamp: ---");
