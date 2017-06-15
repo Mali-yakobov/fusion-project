@@ -342,10 +342,12 @@ public class MainContainerController implements Initializable, MapComponentIniti
     });
 
     // hover:
+    CovarianceEllipse covarianceEllipse=EllipseRepresentationTranslation.fromVizualToCovariance(ellipse);
     InfoWindowOptions infoWindowOptions = new InfoWindowOptions();
     infoWindowOptions.content("<h2>MetaData</h2>"
             + "Current Location:"+ellipse.getLatLong() +"<br>"
-            + "*********" );
+                              + "Ellipse ID: "+covarianceEllipse.getId() +"<br>"
+                              + "Time Stamp: "+covarianceEllipse.getTimeStamp() +"<br>");
     InfoWindow polylineInfoWindow = new InfoWindow(infoWindowOptions);
     polylineInfoWindow.setPosition(ellipse.getLatLong());
     map.addUIEventHandler(polyline, UIEventType.mouseover, jsObject -> {
