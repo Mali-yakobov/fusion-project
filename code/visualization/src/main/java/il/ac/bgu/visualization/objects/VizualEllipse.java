@@ -63,7 +63,7 @@ public class VizualEllipse {
     com.lynden.gmapsfx.shapes.Polyline polyline = new com.lynden.gmapsfx.shapes.Polyline(polylineOptions);
     setPolylineObject(polyline);
     this.ellipseColor=color;
-    this.stroke=strokeWeight;
+    //this.stroke=strokeWeight;
     this.latLong=centerP;
     return polyline;
   }

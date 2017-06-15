@@ -314,18 +314,19 @@ public class MainContainerController implements Initializable, MapComponentIniti
   }
 
   public void showHideRawAction() {
-    boolean show=showHideRawButton.isSelected();
 
     for (VizualEllipse fusEllipse : fusEllipseList) {
-      for (VizualEllipse rawEllipse : fusEllipse.getRawList()) {
-        if (rawEllipse.isVisibleRaw() && !show) {
+      if (fusEllipse.isVisibleRaw() && !showHideRawButton.isSelected()) {//hide raw ellipse
+        fusEllipse.setVisibleRaw(false);
+        for (VizualEllipse rawEllipse : fusEllipse.getRawList()) {
           map.removeMapShape(rawEllipse.getPolylineObject());
-          rawEllipse.setVisibleRaw(false);
           polylineArray.remove(rawEllipse.getPolylineObject());
-        } else if(!rawEllipse.isVisibleRaw() && show){
+        }
+      } else if (!fusEllipse.isVisibleRaw() && showHideRawButton.isSelected()) {//show raw ellipse
+        fusEllipse.setVisibleRaw(true);
+        for (VizualEllipse rawEllipse : fusEllipse.getRawList()) {
           showEllipse(rawEllipse, rawEllipse.getEllipseColor(), rawEllipse.getStroke());
           ellipseSetOnClick(rawEllipse);
-          rawEllipse.setVisibleRaw(true);
         }
       }
     }
@@ -357,6 +358,7 @@ public class MainContainerController implements Initializable, MapComponentIniti
     // single left click:
     map.addUIEventHandler(polyline, UIEventType.click, jsObject -> {
       generateDataForTable(EllipseRepresentationTranslation.fromVizualToCovariance(ellipse));
+
       double newStroke=0;
       if(ellipse.isClicked())
         newStroke=ellipse.getStroke()/2;
@@ -387,15 +389,15 @@ public class MainContainerController implements Initializable, MapComponentIniti
     //right click:
     map.addUIEventHandler(polyline, UIEventType.rightclick, jsObject -> {
       if(ellipse.isFusionEllipse()) {
-        for (VizualEllipse ellipseInRaw : ellipse.getRawList()) {
-          if (!ellipseInRaw.isVisibleRaw()) {
-
+        if (!ellipse.isVisibleRaw()) {
+          for (VizualEllipse ellipseInRaw : ellipse.getRawList())
             map.addMapShape(ellipseInRaw.getPolylineObject());
-            ellipseInRaw.setVisibleRaw(true);
-          } else {
+          ellipse.setVisibleRaw(true);
+        }
+        else {
+          for (VizualEllipse ellipseInRaw : ellipse.getRawList())
             map.removeMapShape(ellipseInRaw.getPolylineObject());
-            ellipseInRaw.setVisibleRaw(false);
-          }
+          ellipse.setVisibleRaw(false);
         }
       }
     });
@@ -471,9 +473,11 @@ public class MainContainerController implements Initializable, MapComponentIniti
     for (com.lynden.gmapsfx.shapes.Polyline polyline : polylineArray){
       map.removeMapShape(polyline);
     }
+    /*
     for (VizualEllipse fusEllipse : fusEllipseList) {
       fusEllipse.setVisibleRaw(false);
-    }
+    }*/
+    fusEllipseList.clear();
     clickedEllipses.clear();
     dataTable.setVisible(false);
   }
@@ -523,6 +527,7 @@ public class MainContainerController implements Initializable, MapComponentIniti
       VizualEllipse tempEllipse = EllipseRepresentationTranslation.fromCovarianceToVizual(tempCovEllipse);
       tempEllipse.ellipseToDraw(color,tempEllipse.getStroke());
       if(showHideRawButton.isSelected()){
+        tempFusEllipse.setVisibleRaw(true);
         showEllipse(tempEllipse, color,tempEllipse.getStroke());
         ellipseSetOnClick(tempEllipse);
       }
@@ -537,7 +542,7 @@ public class MainContainerController implements Initializable, MapComponentIniti
   }
 
   public void showEllipse(VizualEllipse ellipse, String color, double stroke) {
-    ellipse.setVisible(true);
+    //ellipse.setVisible(true);
     com.lynden.gmapsfx.shapes.Polyline polyline= ellipse.getPolylineObject();
     map.addMapShape(polyline);
     polylineArray.add(polyline);
