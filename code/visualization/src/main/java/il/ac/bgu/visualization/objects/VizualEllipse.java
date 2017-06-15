@@ -32,10 +32,18 @@ public class VizualEllipse {
   private static final int zone=36;
   private boolean visible;
   private boolean visibleRaw;
-  private String ellipseColor;
-  private double stroke;
   private LatLong latLong;
   private boolean clicked;
+
+  public String getColor() {
+    return color;
+  }
+
+  public void setColor(String color) {
+    this.color = color;
+  }
+
+  private String color;
 
 
   public VizualEllipse(){
@@ -53,17 +61,20 @@ public class VizualEllipse {
 
 
   public com.lynden.gmapsfx.shapes.Polyline ellipseToDraw(String color, double strokeWeight){
+    this.color= color;
     org.jscience.geography.coordinates.UTM c= org.jscience.geography.coordinates.UTM.valueOf(zone, hemisphere, centreX, centreY, SI.METRE);
     org.jscience.geography.coordinates.LatLong centerPTemp= utmToLatLong(c, WGS84);
 
     LatLong centerP= new LatLong(centerPTemp.getCoordinates()[1], centerPTemp.getCoordinates()[0]);
     MVCArray polylineArray = EllipseBuilder.buildEllipsePoints(centerP, radiusX, radiusY, angle);
 
-    PolylineOptions polylineOptions=new PolylineOptions().path(polylineArray).strokeColor(color).clickable(true).strokeWeight(strokeWeight);
+    double opacity= 0.7;
+    if (this.isFusionEllipse())
+      opacity= 1;
+
+    PolylineOptions polylineOptions= new PolylineOptions().path(polylineArray).strokeColor(color).clickable(true).strokeWeight(strokeWeight).strokeOpacity(opacity);
     com.lynden.gmapsfx.shapes.Polyline polyline = new com.lynden.gmapsfx.shapes.Polyline(polylineOptions);
     setPolylineObject(polyline);
-    this.ellipseColor=color;
-    //this.stroke=strokeWeight;
     this.latLong=centerP;
     return polyline;
   }
@@ -150,24 +161,8 @@ public class VizualEllipse {
     this.polylineObject = polylineObject;
   }
 
-  public String getEllipseColor() {
-    return ellipseColor;
-  }
 
-  public void setEllipseColor(String ellipseColor) {
-    this.ellipseColor = ellipseColor;
-  }
 
-  public double getStroke() {
-    double stroke=1;
-    if(this.IsFusionEllipse)
-      stroke=5;
-    return stroke;
-  }
-
-  public void setStroke(double stroke) {
-    this.stroke = stroke;
-  }
 
   public LatLong getLatLong() {
     return latLong;
