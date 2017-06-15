@@ -232,44 +232,10 @@ public class MainContainerController implements Initializable, MapComponentIniti
       }
     }
   }
-  public void forwardAction(int forward) {
-    pointInTimeArrayIndex+=forward;
-    slider.setValue(pointInTimeArrayIndex+1);
-    textFieldTimeCount.setText((pointInTimeArrayIndex+1)+" / "+pointInTimeArray.size());
-    textFieldTimeStamp.setText(String.valueOf(pointInTimeArray.get(pointInTimeArrayIndex).getTimeStamp()));
-    PointInTime pointInTime = pointInTimeArray.get(pointInTimeArrayIndex);
-    clearScreen();
-    showPointInTime(pointInTime);
-    if (pointInTimeArrayIndex >= 0) {
-      backwardButton.setDisable(false);
-      resetButton.setDisable(false);
-    } if (pointInTimeArrayIndex == pointInTimeArray.size() - 1) {
-      forwardButton.setDisable(true);
-    }
-  }
 
-  public void backwardAction(int backward) {
-    pointInTimeArrayIndex-=backward;
-    slider.setValue(pointInTimeArrayIndex+1);
-    clearScreen();
-    if (pointInTimeArrayIndex == -1) {
-      backwardButton.setDisable(true);
-      resetButton.setDisable(true);
-      textFieldTimeStamp.clear();
-    } else {
-
-      textFieldTimeCount.setText((pointInTimeArrayIndex+1) +" / "+pointInTimeArray.size());
-      textFieldTimeStamp.setText(String.valueOf(pointInTimeArray.get(pointInTimeArrayIndex).getTimeStamp()));
-      PointInTime pointInTime = pointInTimeArray.get(pointInTimeArrayIndex);
-      showPointInTime(pointInTime);
-      if (pointInTimeArrayIndex == pointInTimeArray.size() - 2) {
-        forwardButton.setDisable(false);
-      }
-    }
-  }
-  public void forwardAction() { forwardAction(1); }
+  public void forwardAction() { goForward(1); }
   public void backwardAction() {
-    backwardAction(1);
+    goBackward(1);
   }
 
   public void addEllipseAction() {
@@ -348,7 +314,7 @@ public class MainContainerController implements Initializable, MapComponentIniti
   }
 
   /*
-    Misc functions:
+    *************Misc functions************
    */
 
   public void ellipseSetOnClick(VizualEllipse ellipse) {
@@ -574,6 +540,51 @@ public class MainContainerController implements Initializable, MapComponentIniti
     return colorToRGBCode(color);
   }
 
+
+  /*
+      update the point in time state and the arrows
+   */
+  public void goForward(int forward) {
+    pointInTimeArrayIndex+=forward;
+    slider.setValue(pointInTimeArrayIndex+1);
+    textFieldTimeCount.setText((pointInTimeArrayIndex+1)+" / "+pointInTimeArray.size());
+    textFieldTimeStamp.setText(String.valueOf(pointInTimeArray.get(pointInTimeArrayIndex).getTimeStamp()));
+    PointInTime pointInTime = pointInTimeArray.get(pointInTimeArrayIndex);
+    clearScreen();
+    showPointInTime(pointInTime);
+    if (pointInTimeArrayIndex >= 0) {
+      backwardButton.setDisable(false);
+      resetButton.setDisable(false);
+    } if (pointInTimeArrayIndex == pointInTimeArray.size() - 1) {
+      forwardButton.setDisable(true);
+    }
+  }
+
+
+  /*
+      update the point in time state and the arrows
+   */
+  public void goBackward(int backward) {
+    pointInTimeArrayIndex-=backward;
+    slider.setValue(pointInTimeArrayIndex+1);
+    clearScreen();
+    if (pointInTimeArrayIndex == -1) {
+      forwardButton.setDisable(false);
+      backwardButton.setDisable(true);
+      resetButton.setDisable(true);
+      textFieldTimeStamp.clear();
+    } else {
+
+      textFieldTimeCount.setText((pointInTimeArrayIndex+1) +" / "+pointInTimeArray.size());
+      textFieldTimeStamp.setText(String.valueOf(pointInTimeArray.get(pointInTimeArrayIndex).getTimeStamp()));
+      PointInTime pointInTime = pointInTimeArray.get(pointInTimeArrayIndex);
+      showPointInTime(pointInTime);
+      if (pointInTimeArrayIndex == pointInTimeArray.size() - 2) {
+        forwardButton.setDisable(false);
+      }
+    }
+  }
+
   /**
    Slider initialization:
    initializes the slider with the current number of points in time.
@@ -658,13 +669,16 @@ public class MainContainerController implements Initializable, MapComponentIniti
   private void forwardOrBackward(int currentPoint, int lastPoint){
     if (currentPoint > lastPoint) {
       int diff = currentPoint - lastPoint;
-      forwardAction(diff);
+      goForward(diff);
     }
     else if (currentPoint < lastPoint) {
       int diff = lastPoint - currentPoint;
-      backwardAction(diff);
+      goBackward(diff);
     }
   }
+
+
+
 
   /*
     Table related code start
