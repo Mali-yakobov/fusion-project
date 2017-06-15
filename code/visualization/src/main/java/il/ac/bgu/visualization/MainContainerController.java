@@ -36,6 +36,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Popup;
+import javafx.util.Callback;
 import org.jscience.geography.coordinates.UTM;
 
 import javax.measure.unit.SI;
@@ -809,7 +810,7 @@ public class MainContainerController implements Initializable, MapComponentIniti
    */
   private void treeInit() {
     //init root (for tree):
-   /* root = new TreeItem<>(new TreeItemContainer());
+    root = new TreeItem<>(new TreeItemContainer());
     root.setExpanded(true);
 
     //init tree:
@@ -844,9 +845,9 @@ public class MainContainerController implements Initializable, MapComponentIniti
           }
         }//new ChangeListener(){
     );//addListener(
-*/
+
     treeItems = FXCollections.observableList(new ArrayList<HierarchyData>()); //init data source for tree
-    //tree.setItems(treeItems);                                                //bind tree with data source (items)
+    tree.setItems(treeItems);                                                //bind tree with data source (items)
 
   }//treeInit
 
@@ -864,6 +865,7 @@ public class MainContainerController implements Initializable, MapComponentIniti
       MenuItem defaultTreeContextMenuHideItem = new MenuItem("Hide");
       defaultTreeContextMenuHideItem.setDisable(true);
       defaultTreeContextMenu.getItems().addAll(defaultTreeContextMenuShowItem, defaultTreeContextMenuHideItem);
+
       //set actions for default context menu:
       defaultTreeContextMenuShowItem.setOnAction(e -> {
         defaultTreeContextMenuShowItem.setDisable(true);
