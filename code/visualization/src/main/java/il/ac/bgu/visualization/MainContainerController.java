@@ -847,11 +847,11 @@ public class MainContainerController implements Initializable, MapComponentIniti
    * On-create settings of the tree cells are here
    */
   private final class NameIconAddCell extends TreeCell<HierarchyData> {
-    private ContextMenu defaultTreeContextMenu = new ContextMenu();
+    //private ContextMenu defaultTreeContextMenu = new ContextMenu();
 
     public NameIconAddCell() {
       //make default context menu for tree nodes:
-      MenuItem defaultTreeContextMenuShowItem = new MenuItem("Show");
+      /*MenuItem defaultTreeContextMenuShowItem = new MenuItem("Show");
       MenuItem defaultTreeContextMenuHideItem = new MenuItem("Hide");
       defaultTreeContextMenuHideItem.setDisable(true);
       defaultTreeContextMenu.getItems().addAll(defaultTreeContextMenuShowItem, defaultTreeContextMenuHideItem);
@@ -866,7 +866,7 @@ public class MainContainerController implements Initializable, MapComponentIniti
         defaultTreeContextMenuShowItem.setDisable(false);
         defaultTreeContextMenuHideItem.setDisable(true);
         recursiveHideItemContainer(selectedItemContainer);
-      });
+      });*/
     }//NameIconAddCell
 
     @Override
@@ -880,7 +880,7 @@ public class MainContainerController implements Initializable, MapComponentIniti
       } else { //cell is filled, specific settings depends on the class of the item represented by the cell:
         //setGraphic(getItem().getNode());   //if we use CSS, not needed
         setText(getItem().toString());
-        setContextMenu(defaultTreeContextMenu);
+        //setContextMenu(defaultTreeContextMenu);
 
         TreeItemContainer itemTmp = (TreeItemContainer) item;
         Object containedItem = itemTmp.getContainedItem();
