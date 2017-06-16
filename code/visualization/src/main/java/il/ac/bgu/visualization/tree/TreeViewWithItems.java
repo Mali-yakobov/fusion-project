@@ -193,7 +193,7 @@ public class TreeViewWithItems<T extends HierarchyData<T>> extends TreeView<T> {
      * @return The tree item.
      */
     private TreeItem<T> addRecursively(T value) {
- 
+
         TreeItem<T> treeItem = new TreeItem<T>();
         treeItem.setValue(value);
        // treeItem.setExpanded(true);

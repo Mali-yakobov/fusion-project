@@ -30,6 +30,7 @@ import javafx.fxml.Initializable;
 import javafx.geometry.Point2D;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.CheckBoxTreeCell;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
@@ -111,7 +112,7 @@ public class MainContainerController implements Initializable, MapComponentIniti
   /* Tree related declarations start  */
   @FXML
   private AnchorPane treeArea;                      //get place for tree from fxml
-  private TreeItem<HierarchyData> root;             //root for tree
+  private CheckBoxTreeItem<HierarchyData> root;             //root for tree
   private TreeViewWithItems tree;                   //tree
   private ObservableList<HierarchyData> treeItems;  //data source for tree
   private ContextMenu treeMenu;                     //context menu for tree (empty space)
@@ -689,11 +690,11 @@ public class MainContainerController implements Initializable, MapComponentIniti
     metadataRoot = new TreeItem<>("Metadata:");
     metadataRoot.setExpanded(true);
 
-    TreeItem<String> root = new TreeItem<>("Root");
-    root.setExpanded(true);
-    root.getChildren().setAll(dataRoot, metadataRoot);
+    TreeItem<String> tRoot = new TreeItem<>("Root");
+    tRoot.setExpanded(true);
+    tRoot.getChildren().setAll(dataRoot, metadataRoot);
 
-    dataTable.setRoot(root);
+    dataTable.setRoot(tRoot);
     tableHideHeader(dataTable);
 
     dataTableNameCol.setCellValueFactory((TreeTableColumn.CellDataFeatures<Map, String> p) -> {
@@ -800,7 +801,7 @@ public class MainContainerController implements Initializable, MapComponentIniti
    */
   private void treeInit() {
     //init root (for tree):
-    root = new TreeItem<>(new TreeItemContainer());
+    root = new CheckBoxTreeItem<>(new TreeItemContainer());
     root.setExpanded(true);
 
     //init tree:
@@ -814,9 +815,9 @@ public class MainContainerController implements Initializable, MapComponentIniti
     treeArea.getChildren().add(tree);
 
     //set cell factory for tree
-    this.tree.setCellFactory(new Callback<TreeView<HierarchyData>, TreeCell<HierarchyData>>() {
+    this.tree.setCellFactory(new Callback<TreeView<HierarchyData>, CheckBoxTreeCell<HierarchyData>>() {
       @Override
-      public TreeCell<HierarchyData> call(TreeView<HierarchyData> p) {
+      public CheckBoxTreeCell<HierarchyData> call(TreeView<HierarchyData> p) {
         return new NameIconAddCell();
       }
     });
@@ -824,7 +825,12 @@ public class MainContainerController implements Initializable, MapComponentIniti
     //set actions for selecting a node on tree
     this.tree.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
           if (newValue != null) {
-            TreeItem<HierarchyData> selectedTreeNode = (TreeItem<HierarchyData>) newValue;
+
+            TreeItem<HierarchyData> tempSelectedTreeNode = (TreeItem<HierarchyData>) newValue;
+            CheckBoxTreeItem<HierarchyData> selectedTreeNode = new CheckBoxTreeItem<HierarchyData>(tempSelectedTreeNode.getValue());
+
+
+            //CheckBoxTreeItem<HierarchyData> selectedTreeNode = (CheckBoxTreeItem<HierarchyData>) newValue;
             TreeItemContainer newItemContainer = (TreeItemContainer) selectedTreeNode.getValue();
             selectedItemContainer = newItemContainer;
             Object newItem= newItemContainer.getContainedItem();
@@ -846,7 +852,7 @@ public class MainContainerController implements Initializable, MapComponentIniti
    *
    * On-create settings of the tree cells are here
    */
-  private final class NameIconAddCell extends TreeCell<HierarchyData> {
+  private final class NameIconAddCell extends CheckBoxTreeCell<HierarchyData> {
     //private ContextMenu defaultTreeContextMenu = new ContextMenu();
 
     public NameIconAddCell() {
@@ -878,7 +884,7 @@ public class MainContainerController implements Initializable, MapComponentIniti
         setContextMenu(null);
         //setGraphic(null);
       } else { //cell is filled, specific settings depends on the class of the item represented by the cell:
-        //setGraphic(getItem().getNode());   //if we use CSS, not needed
+        //setGraphic(getItem().getNode());   //if we use CSS, not neededg
         setText(getItem().toString());
         //setContextMenu(defaultTreeContextMenu);
 
