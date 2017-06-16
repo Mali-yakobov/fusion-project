@@ -594,6 +594,8 @@ public class MainContainerController implements Initializable, MapComponentIniti
     slider.setMax(max);
     String numOfPoints = String.valueOf(max);
     textFieldTimeCount.setDisable(false);
+    textFieldTimeStamp.setDisable(false);
+    textFieldTimeStamp.setEditable(false);
     textFieldTimeCount.setText("0"+" / "+numOfPoints);
     textFieldTimeStamp.clear();
     slider.setShowTickMarks(true);
@@ -621,7 +623,7 @@ public class MainContainerController implements Initializable, MapComponentIniti
       if (value > slider.getMin() && roundValue>slider.getMin() && value <= slider.getMax()) {
         label.setText("    TimeStamp: "+ pointInTimeArray.get(roundValue-1).getTimeStamp());
       } else {
-        label.setText("    TimeStamp: ---");
+        label.setText("");
       }
       popup.setAnchorX(e.getScreenX());
       popup.setAnchorY(e.getScreenY() + offset);
