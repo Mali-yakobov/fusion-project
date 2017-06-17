@@ -12,6 +12,7 @@ import org.apache.commons.math3.linear.Array2DRowRealMatrix;
 import org.apache.commons.math3.linear.RealMatrix;
 import org.apache.commons.math3.util.Pair;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static il.ac.bgu.fusion.util.LinearAlgebraUtils.calcDistanceBetweenEllipses;
@@ -33,10 +34,52 @@ public class DistanceMatrix {
   private static List<Correlation> CorrelationList;
   private static List<State> clusters;
   private static List<Track> existedTracks;
-  //we need list of states/clusters and list of exist tracks
+
+  private static class distanceMatrix {
+    public distanceMatrix(double[][] staticModelDistanceMatrix,
+                          double[][] linearModelDistanceMatrix) {
+    }
+  }
+
+  private static class Correlation{
+    private Track track;
+    private State state;
+    private String model;
+
+    public Correlation(Track track, State state, String model) {
+      this.track = track;
+      this.state = state;
+      this.model = model;
+    }
+  }
+
+  /////// Update:  //////////////
+  public static void update(List<Correlation> correlations){
+    for(Correlation correlationObject : correlations){
+      if(correlationObject.model=="static"){
+        ArrayList<State> stateArrayList=correlationObject.track.getStateList();
+        stateArrayList.add(correlationObject.state);
+        correlationObject.track.setStateList(stateArrayList);
+      }
+      else{//merge with the extrapolatedEllipse and then shirshur??
 
 
+      }
 
+    }
+  }
+  public static void createNewTracks(List<State> uncorrelatedClusters){
+    for(State state : uncorrelatedClusters){
+      Track track=new Track();
+      ArrayList<State> stateArrayList=new ArrayList<>();
+      stateArrayList.add(state);
+      track.setStateList(stateArrayList);
+      //add the new Track to the existing track list
+    }
+  }
+////////////////// end of Update
+
+  ////////////////////// distanceMatrix
   public static distanceMatrix distanceMatrix(List<Track> trackList,List<State> stateList){
     int i=0;
     int j=0;
@@ -81,11 +124,6 @@ public class DistanceMatrix {
 
     RealMatrix extrapolation4d = phiMatrix.multiply(state4dMatrix); //extrapolation4d is now {x, vx, y, vy}
 
-/*
-    double[][] matrixData = { {state.getFusionEllipse().getSx2(), state.getFusionEllipse().getSxy()},
-                              {state.getFusionEllipse().getSxy(), state.getFusionEllipse().getSy2()} };
-    Array2DRowRealMatrix stateCovarianceMatrix = new Array2DRowRealMatrix(matrixData);
-*/
     RealMatrix newCovarianceMatrix = phiMatrix.multiply(extrapolation4d).multiply(phiMatrix.transpose());
 
         /*
@@ -101,25 +139,9 @@ public class DistanceMatrix {
     //return new CovarianceEllipse(extrapolation4d, newCovarianceMatrix);
     return returnedEllipse;
   }
+////////////////// end of distanceMatrix
 
-  private static class distanceMatrix {
-    public distanceMatrix(double[][] staticModelDistanceMatrix,
-                          double[][] linearModelDistanceMatrix) {
-    }
-  }
-
-  private static class Correlation{
-    private Track track;
-    private State state;
-    private String model;
-
-    public Correlation(Track track, State state, String model) {
-      this.track = track;
-      this.state = state;
-      this.model = model;
-    }
-  }
-
+////////////////    M2M
   private static void M2M(){
     boolean haveMin=false;
     double minValue=0;
@@ -199,5 +221,5 @@ public class DistanceMatrix {
    Pair<Double,Pair<Integer,Integer>> res=new Pair<Double, Pair<Integer, Integer>>(min,index);
     return res;
   }
-
+///////////// end of M2M
 }
