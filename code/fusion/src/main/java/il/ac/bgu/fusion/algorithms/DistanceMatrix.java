@@ -12,6 +12,7 @@ import org.apache.commons.math3.linear.Array2DRowRealMatrix;
 import org.apache.commons.math3.linear.RealMatrix;
 import org.apache.commons.math3.util.Pair;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static il.ac.bgu.fusion.util.LinearAlgebraUtils.calcDistanceBetweenEllipses;
@@ -35,7 +36,29 @@ public class DistanceMatrix {
   private static List<Track> existedTracks;
   //we need list of states/clusters and list of exist tracks
 
+  public static void update(List<Correlation> correlations){
+    for(Correlation correlationObject : correlations){
+      if(correlationObject.model=="static"){
+        ArrayList<State> stateArrayList=correlationObject.track.getStateList();
+        stateArrayList.add(correlationObject.state);
+        correlationObject.track.setStateList(stateArrayList);
+      }
+      else{//merge with the extrapolatedEllipse and then shirshur??
+        
 
+      }
+
+    }
+  }
+  public static void createNewTracks(List<State> uncorrelatedClusters){
+    for(State state : uncorrelatedClusters){
+      Track track=new Track();
+      ArrayList<State> stateArrayList=new ArrayList<>();
+      stateArrayList.add(state);
+      track.setStateList(stateArrayList);
+      //add the new Track to the existing track list
+    }
+  }
 
   public static distanceMatrix distanceMatrix(List<Track> trackList,List<State> stateList){
     int i=0;
