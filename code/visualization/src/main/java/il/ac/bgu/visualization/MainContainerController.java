@@ -487,8 +487,10 @@ public class MainContainerController implements Initializable, MapComponentIniti
 
   public void showEllipse(VizualEllipse ellipse) {
     com.lynden.gmapsfx.shapes.Polyline polyline= ellipse.getPolylineObject();
-    map.addMapShape(polyline);
-    polylineArray.add(polyline);
+    if(ellipse.isVisible()) {
+      map.addMapShape(polyline);
+      polylineArray.add(polyline);
+    }
     //clickedEllipses.add(ellipse); // TEMPORARY
   }
 

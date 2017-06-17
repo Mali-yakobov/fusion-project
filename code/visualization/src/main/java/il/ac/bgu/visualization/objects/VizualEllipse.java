@@ -47,12 +47,12 @@ public class VizualEllipse {
 
 
   public VizualEllipse(){
-    visible=false;
+    visible=true;
     visibleRaw=false;
     clicked=false;
   }
   public VizualEllipse(double radiusX, double radiusY) {
-    visible=false;
+    visible=true;
     visibleRaw=false;
     clicked=false;
     setRadiusX(radiusX);

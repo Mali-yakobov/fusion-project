@@ -5,7 +5,7 @@ import com.lynden.gmapsfx.javascript.object.MVCArray;
 
 public class EllipseBuilder {
 
-  private static final int DEFAULT_ELLIPSE_POINTS = 200;
+  private static final int DEFAULT_ELLIPSE_POINTS = 100;
 
   /**
    * Generates the points for an ellipse based on two radii from a center point.

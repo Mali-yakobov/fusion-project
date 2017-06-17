@@ -12,7 +12,7 @@ public class JsonCreator {
   static Sensor sensor1=new Sensor(123, 341533.78764316335, 3846911.8923788285, "");
   static Sensor sensor2=new Sensor(124, 340851.1263149753, 3846577.3160242713, "");
   static Sensor sensor3=new Sensor(125, 340558.6486263189, 3846905.003492296, "");
-  static Sensor sensor4=new Sensor(126, 341140.218343724, 3847600.425907034, "");
+  static Sensor sensor4=new Sensor(126, 341140.418343724, 3847600.425907034, "");
 
 
   // 1 1
