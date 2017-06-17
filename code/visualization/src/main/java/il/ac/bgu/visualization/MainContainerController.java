@@ -336,10 +336,11 @@ public class MainContainerController implements Initializable, MapComponentIniti
     // hover:
     CovarianceEllipse covarianceEllipse=EllipseRepresentationTranslation.fromVizualToCovariance(ellipse);
     InfoWindowOptions infoWindowOptions = new InfoWindowOptions();
-    infoWindowOptions.content("<h2>MetaData</h2>"
-            + "Current Location:"+ellipse.getLatLong() +"<br>"
-                              + "Ellipse ID: "+covarianceEllipse.getId() +"<br>"
-                              + "Time Stamp: "+covarianceEllipse.getTimeStamp() +"<br>");
+
+    infoWindowOptions.content( "<b>Current Location:</b>"+ellipse.getLatLong() +"<br>"
+                              + "<b>Ellipse ID: </b>"+((double) covarianceEllipse.getId())+"<br>"
+                              + "<b>Time Stamp: </b>"+covarianceEllipse.getTimeStamp() +"<br>");
+
     InfoWindow polylineInfoWindow = new InfoWindow(infoWindowOptions);
     polylineInfoWindow.setPosition(ellipse.getLatLong());
     map.addUIEventHandler(polyline, UIEventType.mouseover, jsObject -> {
@@ -351,17 +352,24 @@ public class MainContainerController implements Initializable, MapComponentIniti
 
     //right click:
     map.addUIEventHandler(polyline, UIEventType.rightclick, jsObject -> {
-      if(ellipse.isFusionEllipse()) {
-        if (!ellipse.isVisibleRaw()) {
-          for (VizualEllipse ellipseInRaw : ellipse.getRawList())
-            map.addMapShape(ellipseInRaw.getPolylineObject());
-          ellipse.setVisibleRaw(true);
-        }
-        else {
-          for (VizualEllipse ellipseInRaw : ellipse.getRawList())
-            map.removeMapShape(ellipseInRaw.getPolylineObject());
-          ellipse.setVisibleRaw(false);
-        }
+      if(fusEllipseList.contains(ellipse)) {
+        int index=fusEllipseList.indexOf(ellipse);
+        VizualEllipse fusEllipse=fusEllipseList.get(index);
+            if (!fusEllipse.isVisibleRaw()) {
+              fusEllipse.setVisibleRaw(true);
+              for (VizualEllipse rawEllipse : fusEllipse.getRawList()) {
+                showEllipse(rawEllipse);
+                ellipseSetOnClick(rawEllipse);
+              }
+            }
+            else {
+              fusEllipse.setVisibleRaw(false);
+              for (VizualEllipse rawEllipse : fusEllipse.getRawList()) {
+                map.removeMapShape(rawEllipse.getPolylineObject());
+                polylineArray.remove(rawEllipse.getPolylineObject());
+              }
+            }
+        fusEllipseList.set(index,fusEllipse);
       }
     });
 

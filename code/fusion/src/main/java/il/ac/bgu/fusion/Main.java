@@ -17,7 +17,7 @@ public class Main {
   public static void main(String ... args)throws IOException{
     System.out.print(   JsonCreator.createSensorsFile());
 
-    //JsonCreator.createDummyScenario();
+    JsonCreator.createDummyScenario();
     //JsonCreator.createRawOnlyScenario1();
 
      // Running the threads:
