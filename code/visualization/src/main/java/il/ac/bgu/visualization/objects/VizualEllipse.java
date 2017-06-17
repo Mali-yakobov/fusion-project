@@ -23,6 +23,8 @@ public class VizualEllipse {
   private double radiusX;
   private double radiusY;
   private double angle;
+  private long timeStamp;
+  private long id;
 
   private boolean IsFusionEllipse;
   private ArrayList<VizualEllipse> rawList = null;
@@ -186,5 +188,21 @@ public class VizualEllipse {
 
   public void setClicked(boolean clicked) {
     this.clicked = clicked;
+  }
+
+  public long getTimeStamp() {
+    return timeStamp;
+  }
+
+  public void setTimeStamp(long timeStamp) {
+    this.timeStamp = timeStamp;
+  }
+
+  public long getId() {
+    return id;
+  }
+
+  public void setId(long id) {
+    this.id = id;
   }
 }

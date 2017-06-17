@@ -42,6 +42,8 @@ public class EllipseRepresentationTranslation {
         ans.setCentreY(covElipse.getCentreY());
         ans.setAngle(Math.toDegrees(theta));
         ans.setFusionEllipse(covElipse.getIsFusionEllipse());
+        ans.setTimeStamp(covElipse.getTimeStamp());
+        ans.setId(covElipse.getId());
 
         return ans;
     }
@@ -67,6 +69,9 @@ public class EllipseRepresentationTranslation {
         ans.setSy2(covMatrix.getEntry(1, 1));
         ans.setSxy(covMatrix.getEntry(0, 1));
         ans.setIsFusionEllipse(vizElipse.isFusionEllipse());
+        ans.setTimeStamp(vizElipse.getTimeStamp());
+        ans.setId(vizElipse.getId());
+
         return ans;
     }
 

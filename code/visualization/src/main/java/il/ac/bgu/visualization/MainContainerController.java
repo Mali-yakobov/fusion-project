@@ -334,12 +334,12 @@ public class MainContainerController implements Initializable, MapComponentIniti
     });
 
     // hover:
-    CovarianceEllipse covarianceEllipse=EllipseRepresentationTranslation.fromVizualToCovariance(ellipse);
+    //CovarianceEllipse covarianceEllipse=EllipseRepresentationTranslation.fromVizualToCovariance(ellipse);
     InfoWindowOptions infoWindowOptions = new InfoWindowOptions();
 
-    infoWindowOptions.content( "<b>Current Location:</b>"+ellipse.getLatLong() +"<br>"
-                              + "<b>Ellipse ID: </b>"+((double) covarianceEllipse.getId())+"<br>"
-                              + "<b>Time Stamp: </b>"+covarianceEllipse.getTimeStamp() +"<br>");
+    infoWindowOptions.content( "<b>Current Location: </b>"+ellipse.getLatLong() +"<br>"
+                              + "<b>Ellipse ID: </b>"+ellipse.getId()+"<br>"
+                              + "<b>Time Stamp: </b>"+ellipse.getTimeStamp() +"<br>");
 
     InfoWindow polylineInfoWindow = new InfoWindow(infoWindowOptions);
     polylineInfoWindow.setPosition(ellipse.getLatLong());
