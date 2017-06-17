@@ -11,7 +11,6 @@ import com.lynden.gmapsfx.shapes.*;
 import il.ac.bgu.fusion.objects.*;
 import il.ac.bgu.fusion.util.JsonReaderWriter;
 import il.ac.bgu.visualization.objects.AddEllipseBox;
-import il.ac.bgu.visualization.objects.AddEllipseBox2;
 import il.ac.bgu.visualization.objects.AlertWindow;
 import il.ac.bgu.visualization.objects.VizualEllipse;
 import il.ac.bgu.visualization.tree.HierarchyData;
@@ -22,9 +21,6 @@ import il.ac.bgu.visualization.util.EllipseRepresentationTranslation;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Point2D;
@@ -41,13 +37,11 @@ import javafx.util.Callback;
 import org.jscience.geography.coordinates.UTM;
 
 import javax.measure.unit.SI;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-import java.awt.event.KeyEvent;
 import java.io.File;
 import java.net.URL;
 import java.util.*;
 
+import static com.sun.org.apache.bcel.internal.generic.InstructionConstants.bla;
 import static il.ac.bgu.fusion.algorithms.InitialClustering.initialClustering;
 import static javax.measure.unit.NonSI.DEGREE_ANGLE;
 import static org.jscience.geography.coordinates.UTM.utmToLatLong;
@@ -111,12 +105,13 @@ public class MainContainerController implements Initializable, MapComponentIniti
 
   /* Tree related declarations start  */
   @FXML
-  private AnchorPane treeArea;                      //get place for tree from fxml
-  private CheckBoxTreeItem<HierarchyData> root;             //root for tree
-  private TreeViewWithItems tree;                   //tree
-  private ObservableList<HierarchyData> treeItems;  //data source for tree
-  private ContextMenu treeMenu;                     //context menu for tree (empty space)
-  private TreeItemContainer selectedItemContainer;  //currently selected tree item container
+  private AnchorPane treeArea;                           //get place for tree from fxml
+  private CheckBoxTreeItem<HierarchyData> root;          //root for tree
+  private ObservableList<HierarchyData> cloneTreeItems;  //a copy of the current root, for "checkbox memory"
+  private TreeViewWithItems tree;                        //tree
+  private ObservableList<HierarchyData> treeItems;       //data source for tree
+  private ContextMenu treeMenu;                          //context menu for tree (empty space)
+  private TreeItemContainer selectedItemContainer;       //currently selected tree item container
   /* Tree related declarations end  */
 
 
@@ -167,13 +162,13 @@ public class MainContainerController implements Initializable, MapComponentIniti
 
       // get ellipse from user (display LatLong coordinates), then set UTM coordinates:
       VizualEllipse newEllipse = AddEllipseBox.display(lLong.getLatitude(), lLong.getLongitude());
+      newEllipse.setFusionEllipse(true);
       newEllipse.setCentreX(utm.getCoordinates()[0]);
       newEllipse.setCentreY(utm.getCoordinates()[1]);
 
-      // get polyline from ellipse and draw it:
-      Polyline polyl = newEllipse.ellipseToDraw(colorGenerator() ,2);
-      map.addMapShape(polyl);
-      polylineArray.add(polyl);
+      // draw new ellipse:
+      newEllipse.ellipseToDraw(colorGenerator() ,fusEllStrokeWidthUnClicked);
+      showEllipse(newEllipse);
 
       // add onClick handlers:
       ellipseSetOnClick(newEllipse);
@@ -246,7 +241,6 @@ public class MainContainerController implements Initializable, MapComponentIniti
     newEllipse.ellipseToDraw(newColor, fusEllStrokeWidthUnClicked);
     showEllipse(newEllipse);
     ellipseSetOnClick(newEllipse);
-
   }
 
   public void addEllipseOnClickAction(double x, double y) {
@@ -281,7 +275,6 @@ public class MainContainerController implements Initializable, MapComponentIniti
   }
 
   public void showHideRawAction() {
-
     for (VizualEllipse fusEllipse : fusEllipseList) {
       if (fusEllipse.isVisibleRaw() && !showHideRawButton.isSelected()) {//hide raw ellipse
         fusEllipse.setVisibleRaw(false);
@@ -317,7 +310,7 @@ public class MainContainerController implements Initializable, MapComponentIniti
 
 
   /*
-    *************Misc functions************
+    Misc functions
    */
 
   public void ellipseSetOnClick(VizualEllipse ellipse) {
@@ -338,7 +331,7 @@ public class MainContainerController implements Initializable, MapComponentIniti
     InfoWindowOptions infoWindowOptions = new InfoWindowOptions();
 
     infoWindowOptions.content( "<b>lat: </b>"+ellipse.getLatLong().getLatitude()+"<br>"+"<b>long: </b>"+ellipse.getLatLong().getLongitude()  +"<br>"
-                              + "<b>Ellipse ID: </b>"+ellipse.getId()+"<br>"
+                              + "<b>ID: </b>"+ellipse.getId()+"<br>"
                               + "<b>Time Stamp: </b>"+ellipse.getTimeStamp() +"<br>");
 
     InfoWindow polylineInfoWindow = new InfoWindow(infoWindowOptions);
@@ -412,7 +405,7 @@ public class MainContainerController implements Initializable, MapComponentIniti
   public void ellipseSetClicked(VizualEllipse ellipse) {
     map.removeMapShape(ellipse.getPolylineObject());
 
-    double newStrokeWidth= rawEllStrokeWidthClicked;
+   double newStrokeWidth= rawEllStrokeWidthClicked;
     if (ellipse.isFusionEllipse())
       newStrokeWidth= fusEllStrokeWidthClicked;
 
@@ -457,11 +450,16 @@ public class MainContainerController implements Initializable, MapComponentIniti
   public void showState(State state, String color) {
     CovarianceEllipse fusEll = state.getFusionEllipse();
     VizualEllipse tempFusEllipse= null;
+
     if (fusEll != null) {
       tempFusEllipse = EllipseRepresentationTranslation.fromCovarianceToVizual(fusEll);
-      tempFusEllipse.setFusionEllipse(true);
       fusEllipseList.add(tempFusEllipse);
+      tempFusEllipse.ellipseToDraw(color, fusEllStrokeWidthUnClicked);
+      cov2vis.put(fusEll, tempFusEllipse);
+      showEllipse(tempFusEllipse);
+      ellipseSetOnClick(tempFusEllipse);
     }
+
     List<CovarianceEllipse> CovarianceEllipseArray = state.getEllipseList();
     Iterator<CovarianceEllipse> covEllItr = CovarianceEllipseArray.iterator();
     while (covEllItr.hasNext()) {
@@ -470,26 +468,23 @@ public class MainContainerController implements Initializable, MapComponentIniti
       tempEllipse.ellipseToDraw(color, rawEllStrokeWidthUnClicked);
       cov2vis.put(tempCovEllipse, tempEllipse);
       if(showHideRawButton.isSelected()){
-        tempFusEllipse.setVisibleRaw(true);
         showEllipse(tempEllipse);
         ellipseSetOnClick(tempEllipse);
       }
-
-      if (tempFusEllipse != null){
-        tempFusEllipse.ellipseToDraw(color, fusEllStrokeWidthUnClicked);
+      if (tempFusEllipse != null) {
         tempFusEllipse.addToRaw(tempEllipse);
-        cov2vis.put(fusEll, tempFusEllipse);
-        showEllipse(tempFusEllipse);
-        ellipseSetOnClick(tempFusEllipse);
+        if (showHideRawButton.isSelected())
+          tempFusEllipse.setVisibleRaw(true);
       }
     }
   }
 
   public void showEllipse(VizualEllipse ellipse) {
-    com.lynden.gmapsfx.shapes.Polyline polyline= ellipse.getPolylineObject();
+    Polyline polyline= ellipse.getPolylineObject();
     if(ellipse.isVisible()) {
-      map.addMapShape(polyline);
-      polylineArray.add(polyline);
+      if (ellipse.isFusionEllipse() || showHideRawButton.isSelected())
+        map.addMapShape(polyline);
+        polylineArray.add(polyline);
     }
     //clickedEllipses.add(ellipse); // TEMPORARY
   }
@@ -556,7 +551,10 @@ public class MainContainerController implements Initializable, MapComponentIniti
 
     // for tree:
     HierarchyData currPoint= treeItems.get(pointInTimeArrayIndex);
-    tree.setItems(currPoint.getChildren());
+    ObservableList newTreeItems = currPoint.getChildren();
+    ObservableList oldTreeItems= tree.getItems();
+    tree.setItems(newTreeItems);
+    initialTreeSelect(root, oldTreeItems);
   }
 
 
@@ -590,8 +588,12 @@ public class MainContainerController implements Initializable, MapComponentIniti
       tree.setItems(null);
     else {
       HierarchyData currPoint= treeItems.get(pointInTimeArrayIndex);
-      tree.setItems(currPoint.getChildren());
+      ObservableList newTreeItems = currPoint.getChildren();
+      ObservableList oldTreeItems= tree.getItems();
+      tree.setItems(newTreeItems);
+      initialTreeSelect(root, oldTreeItems);
     }
+
   }
 
   /**
@@ -611,10 +613,11 @@ public class MainContainerController implements Initializable, MapComponentIniti
     slider.setShowTickMarks(true);
     slider.setShowTickLabels(false);
     slider.setValue(0);
+
     if (max == 0)
       slider.setShowTickLabels(false);
     else
-      slider.setShowTickLabels(false);
+      slider.setShowTickLabels(true);
 
     Label label = new Label();
     Popup popup = new Popup();
@@ -707,7 +710,7 @@ public class MainContainerController implements Initializable, MapComponentIniti
     tRoot.getChildren().setAll(dataRoot, metadataRoot);
 
     dataTable.setRoot(tRoot);
-    tableHideHeader(dataTable);
+    //tableHideHeader(dataTable);
 
     dataTableNameCol.setCellValueFactory((TreeTableColumn.CellDataFeatures<Map, String> p) -> {
       TreeItem treeItem = p.getValue();
@@ -745,7 +748,6 @@ public class MainContainerController implements Initializable, MapComponentIniti
       }
     });
   }
-
 
   private void generateEllipseDataForTable(CovarianceEllipse ellipse) {
     // Data Part:
@@ -839,11 +841,7 @@ public class MainContainerController implements Initializable, MapComponentIniti
           if (newValue != null) {
 
             TreeItem<HierarchyData> tempSelectedTreeNode = (TreeItem<HierarchyData>) newValue;
-            CheckBoxTreeItem<HierarchyData> selectedTreeNode = new CheckBoxTreeItem<HierarchyData>(tempSelectedTreeNode.getValue());
-
-
-            //CheckBoxTreeItem<HierarchyData> selectedTreeNode = (CheckBoxTreeItem<HierarchyData>) newValue;
-            TreeItemContainer newItemContainer = (TreeItemContainer) selectedTreeNode.getValue();
+            TreeItemContainer newItemContainer = (TreeItemContainer) tempSelectedTreeNode.getValue();
             selectedItemContainer = newItemContainer;
             Object newItem= newItemContainer.getContainedItem();
 
@@ -855,7 +853,7 @@ public class MainContainerController implements Initializable, MapComponentIniti
     );//addListener(
 
     treeItems = FXCollections.observableList(new ArrayList<HierarchyData>()); //init data source for tree
-    //tree.setItems(treeItems);                                                //bind tree with data source (items)
+    cloneTreeItems = FXCollections.observableList(new ArrayList<HierarchyData>());
 
   }//treeInit
 
@@ -865,13 +863,13 @@ public class MainContainerController implements Initializable, MapComponentIniti
    * On-create settings of the tree cells are here
    */
   private final class NameIconAddCell extends CheckBoxTreeCell<HierarchyData> {
-    //private ContextMenu defaultTreeContextMenu = new ContextMenu();
+    private ContextMenu defaultTreeContextMenu = new ContextMenu();
 
     public NameIconAddCell() {
       //make default context menu for tree nodes:
-      /*MenuItem defaultTreeContextMenuShowItem = new MenuItem("Show");
+      MenuItem defaultTreeContextMenuShowItem = new MenuItem("Show");
       MenuItem defaultTreeContextMenuHideItem = new MenuItem("Hide");
-      defaultTreeContextMenuHideItem.setDisable(true);
+      defaultTreeContextMenuShowItem.setDisable(true);
       defaultTreeContextMenu.getItems().addAll(defaultTreeContextMenuShowItem, defaultTreeContextMenuHideItem);
 
       //set actions for default context menu:
@@ -884,7 +882,7 @@ public class MainContainerController implements Initializable, MapComponentIniti
         defaultTreeContextMenuShowItem.setDisable(false);
         defaultTreeContextMenuHideItem.setDisable(true);
         recursiveHideItemContainer(selectedItemContainer);
-      });*/
+      });
     }//NameIconAddCell
 
     @Override
@@ -900,7 +898,7 @@ public class MainContainerController implements Initializable, MapComponentIniti
         setText(getItem().toString());
         //setContextMenu(defaultTreeContextMenu);
 
-        TreeItemContainer itemTmp = (TreeItemContainer) item;
+        /*TreeItemContainer itemTmp = (TreeItemContainer) item;
         Object containedItem = itemTmp.getContainedItem();
         if (containedItem instanceof CovarianceEllipse) {
           CovarianceEllipse ell = (CovarianceEllipse) containedItem;
@@ -917,7 +915,7 @@ public class MainContainerController implements Initializable, MapComponentIniti
           setId("point-cell");
         } else {
           setId("def-cell");
-        }
+        }*/
 
 
       }//else (cell is filled)
@@ -984,13 +982,12 @@ public class MainContainerController implements Initializable, MapComponentIniti
 
   private void showEllipseContainer(TreeItemContainer ellipseContainer) {
     CovarianceEllipse covEllipse = (CovarianceEllipse) ellipseContainer.getContainedItem();
-    if (ellipseContainer.getContainedGraphicItem() == null) {
       VizualEllipse ellipse = cov2vis.get(covEllipse);
-      showEllipse(ellipse);  ////change
+      ellipse.setVisible(true);
+      showEllipse(ellipse);
       ellipseSetOnClick(ellipse);
       //ellipseSetClicked(ellipse, covEllipse);
       ellipseContainer.setContainedGraphicItem(ellipse);
-    }
   }
 
 
@@ -1013,7 +1010,9 @@ public class MainContainerController implements Initializable, MapComponentIniti
   private void hideEllipseContainer(TreeItemContainer ellipseContainer) {
     CovarianceEllipse covEllipse = (CovarianceEllipse) ellipseContainer.getContainedItem();
     VizualEllipse ellipse = cov2vis.get(covEllipse);
+    ellipse.setVisible(false);
     clickedEllipses.remove(ellipse);
+    map.removeMapShape(ellipse.getPolylineObject());
   }
 
 
@@ -1028,7 +1027,6 @@ public class MainContainerController implements Initializable, MapComponentIniti
       if (covEllipse.getIsFusionEllipse())
         ellipseSetClicked(ellipse);
       else
-        if (showHideRawButton.isSelected())
           ellipseSetClicked(ellipse);
     }
 
@@ -1057,6 +1055,45 @@ public class MainContainerController implements Initializable, MapComponentIniti
     }
 
     clickedEllipses.clear();
+  }
+
+
+  private void initialTreeSelect(CheckBoxTreeItem<HierarchyData> root, ObservableList oldItems) {
+    root.setSelected(true);
+    root.getChildren().forEach(e -> {
+      CheckBoxTreeItem checkBoxE= (CheckBoxTreeItem)e;
+      checkBoxE.setSelected(true);
+      checkBoxE.setExpanded(true);
+    });
+
+    recursiveInitialTreeSetChecboxListeners(root);
+
+    // change according to previous:
+    //CheckBoxTreeItem checkBoxE= (CheckBoxTreeItem)item.getChildren().get(0);
+    //checkBoxE.setSelected(false);
+    if (oldItems != null && oldItems.size()>0)
+      recursiveInitialTreeSetChecboxStates(root, oldItems);
+  }
+
+  private void recursiveInitialTreeSetChecboxListeners(CheckBoxTreeItem<HierarchyData> item) {
+    item.getChildren().forEach(e -> {
+      CheckBoxTreeItem<TreeItemContainer> checkBoxE= (CheckBoxTreeItem)e;
+      checkBoxE.selectedProperty().addListener((obs, oldVal, newVal) -> {
+        TreeItemContainer celValue= checkBoxE.getValue();
+        if (newVal)
+          recursiveShowItemContainer(celValue);
+        else
+          recursiveHideItemContainer(celValue);
+      });
+      recursiveInitialTreeSetChecboxListeners((CheckBoxTreeItem)e);
+    });
+  }
+
+  private void recursiveInitialTreeSetChecboxStates(CheckBoxTreeItem<HierarchyData> item, ObservableList oldItems) {
+    item.getChildren().forEach(e -> {
+      CheckBoxTreeItem<TreeItemContainer> checkBoxE= (CheckBoxTreeItem)e;
+      recursiveInitialTreeSetChecboxListeners((CheckBoxTreeItem)e);
+    });
   }
 
   /*

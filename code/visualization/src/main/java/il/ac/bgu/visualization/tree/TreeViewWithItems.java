@@ -1,6 +1,10 @@
 
 package il.ac.bgu.visualization.tree;
 
+import il.ac.bgu.fusion.objects.CovarianceEllipse;
+import il.ac.bgu.fusion.objects.PointInTime;
+import il.ac.bgu.fusion.objects.State;
+import il.ac.bgu.fusion.objects.Track;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 import javafx.beans.property.ObjectProperty;
@@ -11,8 +15,11 @@ import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.WeakListChangeListener;
+import javafx.scene.Node;
+import javafx.scene.control.CheckBoxTreeItem;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
+import javafx.scene.image.ImageView;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -193,8 +200,22 @@ public class TreeViewWithItems<T extends HierarchyData<T>> extends TreeView<T> {
      * @return The tree item.
      */
     private TreeItem<T> addRecursively(T value) {
+        Node node= null;
+        TreeItemContainer itemTmp = (TreeItemContainer) value;
+        Object containedItem = itemTmp.getContainedItem();
+        if (containedItem instanceof CovarianceEllipse) {
+          CovarianceEllipse ell = (CovarianceEllipse) containedItem;
+          if (ell.getIsFusionEllipse())
+              node= new ImageView("fusell.png");
+          else
+              node= new ImageView("rawell.png");
+        }
+        else if (containedItem instanceof State)
+                node= new ImageView("state.png");
+                else if (containedItem instanceof Track)
+                    node= new ImageView("track.png");
 
-        TreeItem<T> treeItem = new TreeItem<T>();
+        TreeItem<T> treeItem = new CheckBoxTreeItem<T>(null, node);
         treeItem.setValue(value);
        // treeItem.setExpanded(true);
  
