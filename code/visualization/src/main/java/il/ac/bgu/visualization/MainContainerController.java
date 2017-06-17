@@ -337,7 +337,7 @@ public class MainContainerController implements Initializable, MapComponentIniti
     //CovarianceEllipse covarianceEllipse=EllipseRepresentationTranslation.fromVizualToCovariance(ellipse);
     InfoWindowOptions infoWindowOptions = new InfoWindowOptions();
 
-    infoWindowOptions.content( "<b>Current Location: </b>"+ellipse.getLatLong() +"<br>"
+    infoWindowOptions.content( "<b>lat: </b>"+ellipse.getLatLong().getLatitude()+"<br>"+"<b>long: </b>"+ellipse.getLatLong().getLongitude()  +"<br>"
                               + "<b>Ellipse ID: </b>"+ellipse.getId()+"<br>"
                               + "<b>Time Stamp: </b>"+ellipse.getTimeStamp() +"<br>");
 
