@@ -14,9 +14,8 @@ import static il.ac.bgu.fusion.util.LinearAlgebraUtils.*;
  * Created by Mali and Stas on 5/9/2017.
  */
 public class InitialClustering {
-  private static final double THRESHOLD= 9.21;
-  private static final double INFINITY= Double.POSITIVE_INFINITY;
-
+  private static final double THRESHOLD = 9.21;
+  private static final double INFINITY = Double.POSITIVE_INFINITY;
 
   /*
    * Main method of the initial clustering algorithm implementation.
@@ -50,10 +49,8 @@ public class InitialClustering {
         clusters.add(newState);
       }
     }
-
     return clusters;
   }
-
 
   /*
    * Merge raw ellipse into existing cluster (state)
@@ -86,19 +83,14 @@ public class InitialClustering {
                                                 RealMatrix covMat1Inverse, RealMatrix covMat2Inverse,
                                                 RealMatrix mergedCovMat){
 
-    RealMatrix w1= covMat1Inverse.multiply(mergedCovMat);  // dim=(2,2)x(2,2)=(2,2)
-    RealMatrix w2= covMat2Inverse.multiply(mergedCovMat);  // dim=(2,2)x(2,2)=(2,2)
+    RealMatrix w1 = covMat1Inverse.multiply(mergedCovMat);  // dim=(2,2)x(2,2)=(2,2)
+    RealMatrix w2 = covMat2Inverse.multiply(mergedCovMat);  // dim=(2,2)x(2,2)=(2,2)
 
-    RealMatrix r1= ellipseToPositionVector(ellipse1);      // dim=(1,2)
-    RealMatrix r2= ellipseToPositionVector(ellipse2);      // dim=(1,2)
+    RealMatrix r1 = ellipseToPositionVector(ellipse1);      // dim=(1,2)
+    RealMatrix r2 = ellipseToPositionVector(ellipse2);      // dim=(1,2)
 
-    RealMatrix w1MulR1= r1.multiply(w1);                   // dim=(1,2)x(2,2)=(1,2)
-    RealMatrix w2MulR2= r2.multiply(w2);                   // dim=(1,2)x(2,2)=(1,2)
-    return  w1MulR1.add(w2MulR2);                          // dim=(1,2)+(1,2)=(2,1)
+    RealMatrix w1MulR1 = r1.multiply(w1);                   // dim=(1,2)x(2,2)=(1,2)
+    RealMatrix w2MulR2 = r2.multiply(w2);                   // dim=(1,2)x(2,2)=(1,2)
+    return  w1MulR1.add(w2MulR2);                           // dim=(1,2)+(1,2)=(2,1)
   }
-
-
-
-
-
 }

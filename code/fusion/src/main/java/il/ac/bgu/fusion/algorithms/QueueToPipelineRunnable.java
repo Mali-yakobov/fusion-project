@@ -1,9 +1,17 @@
 package il.ac.bgu.fusion.algorithms;
 
+import il.ac.bgu.fusion.Main;
 import il.ac.bgu.fusion.objects.CovarianceEllipse;
+import il.ac.bgu.fusion.objects.State;
+
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
+
+import static il.ac.bgu.fusion.Main.existingTracks;
+import static il.ac.bgu.fusion.algorithms.DistanceMatrix.createNewTracks;
+import static java.lang.Thread.currentThread;
 import static java.lang.Thread.sleep;
 
 /**
@@ -19,8 +27,22 @@ public class QueueToPipelineRunnable implements Runnable {
   }
 
   private void runPipeline(List<CovarianceEllipse> ellipseList) {
-    System.out.println("Ellipse List size is: " + ellipseList.size());
-    //System.out.println(ellipseList);
+    List<State> initialClusteringList = InitialClustering.initialClustering(ellipseList);
+    System.out.println("after initial");
+    if(existingTracks.size() != 0) {
+      System.out.println(existingTracks);
+      DistanceMatrix.distanceMatrix(existingTracks, initialClusteringList);
+      System.out.println("after dm!!!!");
+      DistanceMatrix.M2M(existingTracks, initialClusteringList);
+      System.out.println("after M2M");
+      DistanceMatrix.update(existingTracks);
+      System.out.println("after Update");
+    }
+    else {
+      createNewTracks(initialClusteringList, existingTracks);
+      System.out.println("after else!!!!  ");
+    }
+
   }
 
 
@@ -39,7 +61,7 @@ public class QueueToPipelineRunnable implements Runnable {
           //takes all the ellipses from the queue to the ellipseList
           sharedQueue.drainTo(ellipseList);
           //sleeps 2 seconds
-          sleep(2000);
+         Thread.sleep(2000);
         } catch (InterruptedException e) {
           e.printStackTrace();
         }
@@ -47,7 +69,7 @@ public class QueueToPipelineRunnable implements Runnable {
         runPipeline(ellipseList);
         try {
           //sleeps 3 seconds
-          sleep(3000);
+          Thread.sleep(2000);
         } catch (InterruptedException e) {
           e.printStackTrace();
         }

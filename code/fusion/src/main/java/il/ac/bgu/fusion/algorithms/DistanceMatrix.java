@@ -4,17 +4,16 @@ package il.ac.bgu.fusion.algorithms;
  * Created by Maayan on 08/06/2017.
  */
 
-
 import il.ac.bgu.fusion.objects.CovarianceEllipse;
 import il.ac.bgu.fusion.objects.State;
 import il.ac.bgu.fusion.objects.Track;
 import org.apache.commons.math3.linear.Array2DRowRealMatrix;
 import org.apache.commons.math3.linear.RealMatrix;
 import org.apache.commons.math3.util.Pair;
-
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
-
+import static il.ac.bgu.fusion.algorithms.InitialClustering.merge;
 import static il.ac.bgu.fusion.util.LinearAlgebraUtils.calcDistanceBetweenEllipses;
 
 /**
@@ -23,23 +22,17 @@ import static il.ac.bgu.fusion.util.LinearAlgebraUtils.calcDistanceBetweenEllips
  */
 
 public class DistanceMatrix {
-  private static final double THRESHOLD= 9.21;
-  static int states = 10;
-  static int existingTracks = 10;
 
-  static double[][] staticModelDistanceMatrix = new double[existingTracks][states];
-  static double[][] linearModelDistanceMatrix = new double[existingTracks][states];
+  private static final double THRESHOLD = 9.21;
+  static int initialClusteringListSize;
+  static int existingTracksSize;
+  static double[][] staticModelDistanceMatrix;
+  static double[][] linearModelDistanceMatrix;
 
   private static List<State> uncorrelatedClusters;
-  private static List<Correlation> CorrelationList;
-  private static List<State> clusters;
-  private static List<Track> existedTracks;
-
-  private static class distanceMatrix {
-    public distanceMatrix(double[][] staticModelDistanceMatrix,
-                          double[][] linearModelDistanceMatrix) {
-    }
-  }
+  private static List<Correlation> CorrelationList ;
+  //private static List<State> clusters;
+  //private static List<Track> existedTracks;
 
   private static class Correlation{
     private Track track;
@@ -53,64 +46,45 @@ public class DistanceMatrix {
     }
   }
 
-  /////// Update:  //////////////
-  public static void update(List<Correlation> correlations){
-    for(Correlation correlationObject : correlations){
-      if(correlationObject.model=="static"){
-        ArrayList<State> stateArrayList=correlationObject.track.getStateList();
-        stateArrayList.add(correlationObject.state);
-        correlationObject.track.setStateList(stateArrayList);
-      }
-      else{//merge with the extrapolatedEllipse and then shirshur??
-
-
-      }
-
-    }
-  }
-  public static void createNewTracks(List<State> uncorrelatedClusters){
-    for(State state : uncorrelatedClusters){
-      Track track=new Track();
-      ArrayList<State> stateArrayList=new ArrayList<>();
-      stateArrayList.add(state);
-      track.setStateList(stateArrayList);
-      //add the new Track to the existing track list
-    }
-  }
-////////////////// end of Update
-
   ////////////////////// distanceMatrix
-  public static distanceMatrix distanceMatrix(List<Track> trackList,List<State> stateList){
-    int i=0;
-    int j=0;
-    for(Track track : trackList){
+  public static void distanceMatrix(List<Track> existingTracks,List<State> initialClusteringList) {
+    initialClusteringListSize = initialClusteringList.size();
+      existingTracksSize = existingTracks.size();
+      staticModelDistanceMatrix = new double[existingTracksSize][initialClusteringListSize];
+      linearModelDistanceMatrix = new double[existingTracksSize][initialClusteringListSize];
+      CorrelationList = new LinkedList<>();
+      uncorrelatedClusters = new LinkedList<>();
 
-      State lastState=track.getStateList().get(track.getStateList().size() - 1);//get the last state in the track
-      for(State state : stateList){
-        staticModelDistanceMatrix[i][j]= calcDistance(lastState,state.getFusionEllipse());
-        linearModelDistanceMatrix[i][j]=calcDistanceBetweenEllipses(lastState.getFusionEllipse(),state.getFusionEllipse());
-        j++;
+      int i = 0;
+      int j = 0;
+      for (Track track : existingTracks) {
+        State lastState = track.getStateList().get(track.getStateList().size() - 1);//get the last state in the track
+        for (State state : initialClusteringList) {
+          staticModelDistanceMatrix[i][j] =
+              calcDistanceBetweenEllipses(lastState.getFusionEllipse(), state.getFusionEllipse());
+          linearModelDistanceMatrix[i][j] =calcDistanceBetweenEllipses(lastState.getFusionEllipse(), state.getFusionEllipse()); //calcDistance(lastState, state.getFusionEllipse());
+          j++;
+        }
+        i++;
       }
-    i++;
-    }
-
-    return new distanceMatrix(staticModelDistanceMatrix,linearModelDistanceMatrix);
+    System.out.println("**********************");
+    System.out.println(staticModelDistanceMatrix[0].length);
   }
-  static double calcDistance(State state, CovarianceEllipse ellipse) {
-    double dt = ellipse.getTimeStamp() - state.getFusionEllipse().getTimeStamp();
+
+  public static double calcDistance(State state, CovarianceEllipse ellipse) {
+    double dt = ellipse.getTimeStamp() - state.getEndTimeStamp();
     CovarianceEllipse extrapolatedEllipse = extrapolateState(state, ellipse, dt);
     double distance = calcDistanceBetweenEllipses(extrapolatedEllipse, ellipse);
     return distance;
   }
 
-  static CovarianceEllipse extrapolateState(State state, CovarianceEllipse ellipse, double dt) {
+  public static CovarianceEllipse extrapolateState(State state, CovarianceEllipse ellipse, double dt) {
     double state4d[][] ={
-      {
-        state.getFusionEllipse().getCentreY(), state.getFusionEllipse().getVx(),
-        state.getFusionEllipse().getCentreY(), state.getFusionEllipse().getVy()
+        {state.getFusionEllipse().getCentreY()}, {state.getFusionEllipse().getVx()},
+        {state.getFusionEllipse().getCentreY()}, {state.getFusionEllipse().getVy()}
 
-      }
-    } ; //Vector representing the kinematic sata of the state
+    }; //Vector representing the kinematic data of the state
+
     double phi[][] ={
                       { 1, dt, 0, 0 },
                       { 0, 1, 0, 0  },
@@ -120,6 +94,7 @@ public class DistanceMatrix {
       };
 
     Array2DRowRealMatrix state4dMatrix = new Array2DRowRealMatrix(state4d);
+    System.out.println("RowDimension" + state4dMatrix.getRowDimension() + "ColumnDimension" + state4dMatrix.getColumnDimension());
     Array2DRowRealMatrix phiMatrix = new Array2DRowRealMatrix(phi);
 
     RealMatrix extrapolation4d = phiMatrix.multiply(state4dMatrix); //extrapolation4d is now {x, vx, y, vy}
@@ -142,13 +117,14 @@ public class DistanceMatrix {
 ////////////////// end of distanceMatrix
 
 ////////////////    M2M
-  private static void M2M(){
-    boolean haveMin=false;
-    double minValue=0;
-    String model="";
-   Pair<Integer,Integer> index=null;
-    double staticMin=findMinValue(staticModelDistanceMatrix).getFirst();
-    double linearMin=findMinValue(linearModelDistanceMatrix).getFirst();
+  public static void M2M(List<Track> existingTracks,List<State> initialClusteringList){// add parameters
+    System.out.println("after inside M2M");
+    boolean haveMin = false;
+    double minValue = 0;
+    String model = "";
+   Pair<Integer,Integer> index = null; ///<Track,State>
+    double staticMin = findMinValue(staticModelDistanceMatrix).getFirst();
+    double linearMin = findMinValue(linearModelDistanceMatrix).getFirst();
     if(staticMin-linearMin<=0) {
       minValue = staticMin;
       index=findMinValue(staticModelDistanceMatrix).getSecond();
@@ -159,58 +135,66 @@ public class DistanceMatrix {
       index=findMinValue(linearModelDistanceMatrix).getSecond();
       model="linear";
     }
-    if (minValue < THRESHOLD)
+    if (minValue < THRESHOLD)//??
       haveMin=true;
 
     while (haveMin){
       //create new Correlation object
-      State s=clusters.get(index.getFirst());
-      Track t=existedTracks.get(index.getSecond());
-      Correlation newCorrelation=new Correlation(t,s,model);
+
+      Track t = existingTracks.get(index.getFirst());
+      State s = initialClusteringList.get(index.getSecond());
+
+      Correlation newCorrelation = new Correlation(t,s,model);
       CorrelationList.add(newCorrelation);
+
       removeFromArray(index,staticModelDistanceMatrix);
       removeFromArray(index,linearModelDistanceMatrix);
       haveMin=false;
+
+      staticMin=findMinValue(staticModelDistanceMatrix).getFirst();
+      linearMin=findMinValue(linearModelDistanceMatrix).getFirst();
+
       if(staticMin-linearMin<=0) {
         minValue = staticMin;
         index=findMinValue(staticModelDistanceMatrix).getSecond();
+        model="static";
       }
       else {
         minValue = linearMin;
         index=findMinValue(linearModelDistanceMatrix).getSecond();
+        model="linear";
       }
-      if (minValue < THRESHOLD)
+      if (minValue < THRESHOLD && minValue!= -1)//??
         haveMin=true;
     }
-    addToUncorrelated(staticModelDistanceMatrix);
+
+    addToUncorrelated(staticModelDistanceMatrix, initialClusteringList);
 
   }
 
-  private static void addToUncorrelated(double[][] array){
-    for(int i=0; i<array.length; i++){
-      for (int j=0; j< array[i].length; j++){
-        if(array[i][j]!=0){
-          State s=clusters.get(i);
-          if(!uncorrelatedClusters.contains(s))
+  private static void addToUncorrelated(double[][] distanceMatrix , List<State> initialClusteringList){
+    for(int i=0; i<distanceMatrix.length; i++){
+        if(distanceMatrix[0][i] != -1){
+          State s = initialClusteringList.get(i);
+          if(!uncorrelatedClusters.contains(s)) //???
             uncorrelatedClusters.add(s);
         }
-
       }
-    }
   }
 
   private static void removeFromArray(Pair<Integer,Integer> index, double[][] array){
-    int s=index.getFirst();
-    int t=index.getSecond();
-    for(int i=0; i<array.length; i++)
-      array[i][t] = 0;
-    for(int i=0; i<array[0].length; i++)
-      array[s][i] = 0;
+    int t=index.getFirst();
+    int s=index.getSecond();
+    for(int i=0; i<array.length; i++)//remove row (track)
+      array[t][i] = -1;
+    for(int i=0; i<array[0].length; i++) //remove col (state)
+      array[i][s] = -1;
   }
+
   private static Pair<Double, Pair<Integer, Integer>> findMinValue(double[][] array){
     Pair<Integer,Integer> index=new Pair<Integer, Integer>(0,0);
-    double min=array[0][0];
-    for(int i=0; i<array.length; i++){
+    double min = array[0][0];
+    for (int i=0; i<array.length; i++){
       for (int j=0; j< array[i].length; j++){
         if(array[i][j]<min) {
           min = array[i][j];
@@ -218,8 +202,45 @@ public class DistanceMatrix {
         }
       }
     }
-   Pair<Double,Pair<Integer,Integer>> res=new Pair<Double, Pair<Integer, Integer>>(min,index);
+   Pair<Double,Pair<Integer,Integer>> res = new Pair<Double, Pair<Integer, Integer>>(min,index);
     return res;
   }
 ///////////// end of M2M
+
+  /////// Update:  //////////////
+  public static void update(List<Track> existingTracks){
+    for (Correlation correlationObject : CorrelationList){
+      State newState = correlationObject.state;
+      ArrayList<State> stateArrayList = correlationObject.track.getStateList();
+      State lastState = stateArrayList.get(stateArrayList.size()-1);
+      if (correlationObject.model=="static"){
+        merge(lastState, newState.getFusionEllipse());
+        lastState.getEllipseList().addAll(newState.getEllipseList()); // update raw data
+      }
+      else {//correlationObject.model=="linear"
+        // merge with the extrapolatedEllipse and then concatenation
+        double dt = newState.getFusionEllipse().getTimeStamp() - lastState.getEndTimeStamp();
+        CovarianceEllipse extrapolatedEllipse = extrapolateState(lastState, newState.getFusionEllipse(), dt);
+        merge(newState, extrapolatedEllipse);
+        stateArrayList.add(newState);
+      }
+    }
+    createNewTracks(uncorrelatedClusters, existingTracks);
+    uncorrelatedClusters.clear();
+    CorrelationList.clear();
+
+  }
+
+  public static void createNewTracks(List<State> uncorrelatedClusters, List<Track> existingTracks){
+    for(State state : uncorrelatedClusters){
+      ArrayList<State> stateArrayList = new ArrayList<>();
+      stateArrayList.add(state);
+      Track track = new Track(0, state.getStartTimeStamp(), state.getEndTimeStamp(), stateArrayList);
+      track.setId(track.hashCode());
+      existingTracks.add(track);
+    }
+
+  }
+////////////////// end of Update
+
 }
