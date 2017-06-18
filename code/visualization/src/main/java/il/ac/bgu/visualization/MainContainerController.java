@@ -299,12 +299,14 @@ public class MainContainerController implements Initializable, MapComponentIniti
     List<State> clusters= initialClustering(clickedEllipsesCov);
 
     if (clusters.size() < clickedEllipsesCov.size()){ // if some actual clustering happened
-      //for(VizualEllipse clickedEllipse: clickedEllipses)
-      //clickedEllipse.setVisible(false);
+
+      for(VizualEllipse clickedEllipse: clickedEllipses)
+        map.removeMapShape(clickedEllipse.getPolylineObject());
       clickedEllipses.clear();
+
       String color= colorGenerator();
       for(State cluster: clusters)
-        showState(cluster, color);///change
+        showState(cluster, color);
     }
   }
 
@@ -326,6 +328,7 @@ public class MainContainerController implements Initializable, MapComponentIniti
       ellipse.setClicked(!ellipse.isClicked());
     });
 
+
     // hover:
     //CovarianceEllipse covarianceEllipse=EllipseRepresentationTranslation.fromVizualToCovariance(ellipse);
     InfoWindowOptions infoWindowOptions = new InfoWindowOptions();
@@ -343,26 +346,24 @@ public class MainContainerController implements Initializable, MapComponentIniti
       polylineInfoWindow.close();
     });
 
-    //right click:
+
+    // right click:
     map.addUIEventHandler(polyline, UIEventType.rightclick, jsObject -> {
-      if(fusEllipseList.contains(ellipse)) {
-        int index=fusEllipseList.indexOf(ellipse);
-        VizualEllipse fusEllipse=fusEllipseList.get(index);
-            if (!fusEllipse.isVisibleRaw()) {
-              fusEllipse.setVisibleRaw(true);
-              for (VizualEllipse rawEllipse : fusEllipse.getRawList()) {
-                showEllipse(rawEllipse);
+      if(ellipse.isFusionEllipse()) {
+            if (!ellipse.isVisibleRaw()) {
+              ellipse.setVisibleRaw(true);
+              for (VizualEllipse rawEllipse : ellipse.getRawList()) {
+                showRawEllipse(rawEllipse);
                 ellipseSetOnClick(rawEllipse);
               }
             }
             else {
-              fusEllipse.setVisibleRaw(false);
-              for (VizualEllipse rawEllipse : fusEllipse.getRawList()) {
+              ellipse.setVisibleRaw(false);
+              for (VizualEllipse rawEllipse : ellipse.getRawList()) {
                 map.removeMapShape(rawEllipse.getPolylineObject());
                 polylineArray.remove(rawEllipse.getPolylineObject());
               }
             }
-        fusEllipseList.set(index,fusEllipse);
       }
     });
 
@@ -425,7 +426,7 @@ public class MainContainerController implements Initializable, MapComponentIniti
 
     ellipse.ellipseToDraw(ellipse.getColor(), newStrokeWidth);
     showEllipse(ellipse);
-    ellipseSetOnClick(ellipse);///check
+    ellipseSetOnClick(ellipse); //check
 
     clickedEllipses.remove(ellipse);
   }
@@ -481,8 +482,17 @@ public class MainContainerController implements Initializable, MapComponentIniti
 
   public void showEllipse(VizualEllipse ellipse) {
     Polyline polyline= ellipse.getPolylineObject();
-    if(ellipse.isVisible()) {
+    if (ellipse.isVisible()) {
       if (ellipse.isFusionEllipse() || showHideRawButton.isSelected())
+        map.addMapShape(polyline);
+        polylineArray.add(polyline);
+    }
+    //clickedEllipses.add(ellipse); // TEMPORARY
+  }
+
+  public void showRawEllipse(VizualEllipse ellipse) { // temporary, only for raw ellipses
+    Polyline polyline= ellipse.getPolylineObject();
+    if(ellipse.isVisible()) {
         map.addMapShape(polyline);
         polylineArray.add(polyline);
     }
@@ -1021,13 +1031,8 @@ public class MainContainerController implements Initializable, MapComponentIniti
     ObservableList<HierarchyData> childrenList = itemContainer.getChildren();
 
     if (item instanceof CovarianceEllipse) {
-      CovarianceEllipse covEllipse = (CovarianceEllipse) item;
       VizualEllipse ellipse = cov2vis.get(item);
-
-      if (covEllipse.getIsFusionEllipse())
-        ellipseSetClicked(ellipse);
-      else
-          ellipseSetClicked(ellipse);
+      ellipseSetClicked(ellipse);
     }
 
     if (childrenList.size() > 0) {
@@ -1066,17 +1071,17 @@ public class MainContainerController implements Initializable, MapComponentIniti
       checkBoxE.setExpanded(true);
     });
 
-    recursiveInitialTreeSetChecboxListeners(root);
+    recursiveInitialTreeSetCheckboxListeners(root);
 
     // change according to previous:
     //CheckBoxTreeItem checkBoxE= (CheckBoxTreeItem)item.getChildren().get(0);
     //checkBoxE.setSelected(false);
     if (oldItems != null && oldItems.size()>0)
-      recursiveInitialTreeSetChecboxStates(root, oldItems);
+      recursiveInitialTreeSetCheckboxStates(root, oldItems);
   }
 
-  private void recursiveInitialTreeSetChecboxListeners(CheckBoxTreeItem<HierarchyData> item) {
-    item.getChildren().forEach(e -> {
+  private void recursiveInitialTreeSetCheckboxListeners(CheckBoxTreeItem<HierarchyData> root) {
+    root.getChildren().forEach(e -> {
       CheckBoxTreeItem<TreeItemContainer> checkBoxE= (CheckBoxTreeItem)e;
       checkBoxE.selectedProperty().addListener((obs, oldVal, newVal) -> {
         TreeItemContainer celValue= checkBoxE.getValue();
@@ -1085,14 +1090,14 @@ public class MainContainerController implements Initializable, MapComponentIniti
         else
           recursiveHideItemContainer(celValue);
       });
-      recursiveInitialTreeSetChecboxListeners((CheckBoxTreeItem)e);
+      recursiveInitialTreeSetCheckboxListeners((CheckBoxTreeItem)e);
     });
   }
 
-  private void recursiveInitialTreeSetChecboxStates(CheckBoxTreeItem<HierarchyData> item, ObservableList oldItems) {
-    item.getChildren().forEach(e -> {
+  private void recursiveInitialTreeSetCheckboxStates(CheckBoxTreeItem<HierarchyData> root, ObservableList oldItems) {
+    root.getChildren().forEach(e -> {
       CheckBoxTreeItem<TreeItemContainer> checkBoxE= (CheckBoxTreeItem)e;
-      recursiveInitialTreeSetChecboxListeners((CheckBoxTreeItem)e);
+      recursiveInitialTreeSetCheckboxListeners((CheckBoxTreeItem)e);
     });
   }
 
