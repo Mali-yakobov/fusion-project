@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.stream.JsonReader;
 import il.ac.bgu.fusion.algorithms.InitialClustering;
 import il.ac.bgu.fusion.objects.*;
+import il.ac.bgu.fusion.util.JsonReaderWriter;
 import org.apache.commons.math3.linear.Array2DRowRealMatrix;
 import org.apache.commons.math3.linear.RealMatrix;
 
@@ -26,6 +27,10 @@ public class Simulator {
     SimulationResult result = simulator.simulate(simulatorConfig);
     Gson gson = new GsonBuilder().setPrettyPrinting().create();
     System.out.println(gson.toJson(result));
+
+    JsonReaderWriter.objectToJson(result.getPointInTimes(), "simulatorScenarioPoints1");
+    JsonReaderWriter.sensorToJson(new ArrayList<>(result.getSensors()), "simulatorScenarioSensors1");
+
   }
 
   public static SimulatorConfig getSimulatorConfig(String resourceName) throws FileNotFoundException {

@@ -13,6 +13,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Stas on 29/11/2016.
@@ -28,7 +29,7 @@ public class JsonReaderWriter {
      }
  }
 
-  public static void sensorToJson(ArrayList<Sensor> sensorsObj, String filename){
+  public static void sensorToJson(List<Sensor> sensorsObj, String filename){
     Gson gson = new Gson();
     try (FileWriter writer = new FileWriter(filename + ".json")) {
       gson.toJson(sensorsObj, writer);
@@ -71,7 +72,7 @@ public class JsonReaderWriter {
  }
 
 
-    public static void objectToJson(ArrayList<PointInTime> PointInTimeObjects, String filename){
+    public static void objectToJson(List<PointInTime> PointInTimeObjects, String filename){
         Gson gson = new Gson();
         try (FileWriter writer = new FileWriter(filename + ".json")) {
             gson.toJson(PointInTimeObjects, writer);

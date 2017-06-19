@@ -4,6 +4,7 @@ import il.ac.bgu.fusion.objects.*;
 import il.ac.bgu.fusion.util.JsonReaderWriter;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Stas on 12/05/2017.
@@ -40,7 +41,7 @@ public class JsonCreator {
   static CovarianceEllipse c52= new CovarianceEllipse(3, 24, 341140.218343724, 3847600.425207034, 3920.944533000791, 2879.0554669992093, 2954.4232590366246,sensor1);
   static CovarianceEllipse c53= new CovarianceEllipse(3, 25, 341140.218343724, 3847600.425207034, 6354.423259036625, 445.5767409633759, 520.9445330007915,sensor1);
 
-  public static ArrayList<Sensor> createSensorsFile(){
+  public static List<Sensor> createSensorsFile(){
     ArrayList<Sensor> sensors=new ArrayList<>();
     sensors.add(sensor1);
     sensors.add(sensor2);

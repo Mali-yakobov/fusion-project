@@ -30,8 +30,8 @@ public class VizualEllipse {
   private ArrayList<VizualEllipse> rawList = null;
   private com.lynden.gmapsfx.shapes.Polyline polylineObject;
 
-  private static final char hemisphere='N';
   private static final int zone=36;
+  private static final char hemisphere='N';
   private boolean visible;
   private boolean visibleRaw;
   private LatLong latLong;
