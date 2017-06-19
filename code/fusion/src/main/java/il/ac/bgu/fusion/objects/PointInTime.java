@@ -1,6 +1,7 @@
 package il.ac.bgu.fusion.objects;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Mali on 4/1/2017.
@@ -8,11 +9,11 @@ import java.util.ArrayList;
 public class PointInTime {
 
     private long timeStamp;
-    private ArrayList<Track> trackList;
+    private List<Track> trackList;
 
     public PointInTime(){} //empty constructor
 
-    public PointInTime(long timeStamp, ArrayList<Track> trackList) {
+    public PointInTime(long timeStamp, List<Track> trackList) {
         this.timeStamp = timeStamp;
         this.trackList = trackList;
     }
@@ -25,11 +26,11 @@ public class PointInTime {
         this.timeStamp = timeStamp;
     }
 
-    public ArrayList<Track> getTrackList() {
+    public List<Track> getTrackList() {
         return trackList;
     }
 
-    public void setTrackList(ArrayList<Track> trackList) {
+    public void setTrackList(List<Track> trackList) {
         this.trackList = trackList;
     }
 

@@ -1,0 +1,19 @@
+{
+  "seed": 0,
+  "maxWidth": 10000,
+  "maxLength": 10000,
+  "detectionBoundingBoxSize": 100,
+  "radialCovariance": 40000,
+  "radialCovarianceDelta": 50,
+  "azimuthalCovariance": 0.00761543549,
+  "azimuthalCovarianceDelta": 2,
+  "numberOfSensors": 2,
+  "staticProbability": 0.3,
+  "initialNumberOfEntities": 20,
+  "entityHalfLifeTimeSeconds": 10,
+  "simulationTimeSeconds": 2,
+  "maxNewEntitiesPerSecond": 0.2,
+  "velocity": 20,
+  "velocityDelta": 15,
+  "directionDelta": 0.0872664626
+}

@@ -211,7 +211,7 @@ public class DistanceMatrix {
   public static void update(List<Track> existingTracks){
     for (Correlation correlationObject : CorrelationList){
       State newState = correlationObject.state;
-      ArrayList<State> stateArrayList = correlationObject.track.getStateList();
+      List<State> stateArrayList = correlationObject.track.getStateList();
       State lastState = stateArrayList.get(stateArrayList.size()-1);
       if (correlationObject.model=="static"){
         merge(lastState, newState.getFusionEllipse());
