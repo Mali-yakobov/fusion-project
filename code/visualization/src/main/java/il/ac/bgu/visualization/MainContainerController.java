@@ -60,12 +60,13 @@ public class MainContainerController implements Initializable, MapComponentIniti
   private ArrayList<VizualEllipse> clickedEllipses = new ArrayList<VizualEllipse>();
   private HashMap<Long, String> colorByTrackIdTable = new HashMap<Long, String>();
   private ArrayList<VizualEllipse> fusEllipseList = new ArrayList<VizualEllipse>();
-  private ArrayList<com.lynden.gmapsfx.shapes.Polyline> polylineArray = new ArrayList<com.lynden.gmapsfx.shapes.Polyline>();
+  private ArrayList<Polyline> ellipsePolylineArray = new ArrayList<>();
+  private ArrayList<Polyline> sensorPolylineArray = new ArrayList<>();
 
   final private double fusEllStrokeWidthUnClicked = 6;
-  final private double fusEllStrokeWidthClicked = 8.5;
+  final private double fusEllStrokeWidthClicked = 8;
 
-  final private double rawEllStrokeWidthUnClicked = 3;
+  final private double rawEllStrokeWidthUnClicked = 3.5;
   final private double rawEllStrokeWidthClicked = 5.5;
 
   private boolean dbClick=false;
@@ -102,6 +103,7 @@ public class MainContainerController implements Initializable, MapComponentIniti
   final String nameColKey = "A";
   final String valueColKey = "B";
   /* Table related declarations end  */
+
 
   /* Tree related declarations start  */
   @FXML
@@ -218,11 +220,9 @@ public class MainContainerController implements Initializable, MapComponentIniti
     }
     if (filePath != null) {
       try {
-
         sensors = JsonReaderWriter.sensorToFile(filePath);
         if(sensors != null)
           showSensors(sensors);
-
       } catch (JsonSyntaxException e) {
         AlertWindow.display("Json Error", e.getMessage());
       }
@@ -248,6 +248,10 @@ public class MainContainerController implements Initializable, MapComponentIniti
 
   public void clearAction() {
     clearScreen();
+    for (Polyline polyline : sensorPolylineArray)
+      map.removeMapShape(polyline);
+    sensorPolylineArray.clear();
+
     pointInTimeArrayIndex = -1;
     pointInTimeArray = null;
     forwardButton.setDisable(true);
@@ -280,7 +284,7 @@ public class MainContainerController implements Initializable, MapComponentIniti
         fusEllipse.setVisibleRaw(false);
         for (VizualEllipse rawEllipse : fusEllipse.getRawList()) {
           map.removeMapShape(rawEllipse.getPolylineObject());
-          polylineArray.remove(rawEllipse.getPolylineObject());
+          ellipsePolylineArray.remove(rawEllipse.getPolylineObject());
         }
       } else if (!fusEllipse.isVisibleRaw() && showHideRawButton.isSelected()) {//show raw ellipse
         fusEllipse.setVisibleRaw(true);
@@ -311,6 +315,7 @@ public class MainContainerController implements Initializable, MapComponentIniti
   }
 
 
+
   /*
     Misc functions
    */
@@ -320,6 +325,7 @@ public class MainContainerController implements Initializable, MapComponentIniti
 
     // single left click:
     map.addUIEventHandler(polyline, UIEventType.click, jsObject -> {
+      System.out.println(clickedEllipses.size());
       generateDataForTable(EllipseRepresentationTranslation.fromVizualToCovariance(ellipse));
       if(!ellipse.isClicked())
         ellipseSetClicked(ellipse);
@@ -361,46 +367,11 @@ public class MainContainerController implements Initializable, MapComponentIniti
               ellipse.setVisibleRaw(false);
               for (VizualEllipse rawEllipse : ellipse.getRawList()) {
                 map.removeMapShape(rawEllipse.getPolylineObject());
-                polylineArray.remove(rawEllipse.getPolylineObject());
+                ellipsePolylineArray.remove(rawEllipse.getPolylineObject());
               }
             }
       }
     });
-
-
-    /*ellipse.setOnMousePressed(event -> {
-      switch (event.getClickCount()) {
-        case 1:
-          if (event.getButton().equals(MouseButton.PRIMARY)) {
-            if (ellipse.getStrokeWidth() < ellStrokeWidthClicked - 0.1) {                  //was not clicked/chosen
-              generateDataForTable(EllipseRepresentationTranslation.fromVizualToCovariance(ellipse));
-              ellipseSetClicked(ellipse);
-            }
-            else{                                          //was clicked/chosen
-              dataTable.setVisible(false);
-              ellipseSetUnclicked(ellipse);
-            }
-          }
-          break;
-        case 2:
-          System.out.println("Two clicks");
-          if (ellipse.getIsFusionEllipse()) {
-            Iterator<Ellipse> itr = ellipse.getRaw().iterator();
-            while (itr.hasNext()) {
-              Ellipse temp = itr.next();
-              if (temp.isVisible()) {
-                temp.setVisible(false);
-              } else {
-                temp.setVisible(true);
-              }
-            }
-          }
-          break;
-      }
-    });*/
-
-
-//
   }//ellipseSetOnClick
 
   public void ellipseSetClicked(VizualEllipse ellipse) {
@@ -485,7 +456,7 @@ public class MainContainerController implements Initializable, MapComponentIniti
     if (ellipse.isVisible()) {
       if (ellipse.isFusionEllipse() || showHideRawButton.isSelected())
         map.addMapShape(polyline);
-        polylineArray.add(polyline);
+      ellipsePolylineArray.add(polyline);
     }
     //clickedEllipses.add(ellipse); // TEMPORARY
   }
@@ -494,7 +465,7 @@ public class MainContainerController implements Initializable, MapComponentIniti
     Polyline polyline= ellipse.getPolylineObject();
     if(ellipse.isVisible()) {
         map.addMapShape(polyline);
-        polylineArray.add(polyline);
+      ellipsePolylineArray.add(polyline);
     }
     //clickedEllipses.add(ellipse); // TEMPORARY
   }
@@ -507,9 +478,10 @@ public class MainContainerController implements Initializable, MapComponentIniti
       LatLong centerP= new LatLong(centerPTemp.getCoordinates()[1], centerPTemp.getCoordinates()[0]);
       MVCArray polylineArray = EllipseBuilder.buildEllipsePoints(centerP, 30, 30, 0,3);
 
-      PolylineOptions polylineOptions=new PolylineOptions().path(polylineArray).strokeColor("#BA55D3").clickable(true).strokeWeight(3);
+      PolylineOptions polylineOptions= new PolylineOptions().path(polylineArray).strokeColor("#BA55D3").clickable(true).strokeWeight(3);
       com.lynden.gmapsfx.shapes.Polyline polyline = new com.lynden.gmapsfx.shapes.Polyline(polylineOptions);
 
+      sensorPolylineArray.add(polyline);
       map.addMapShape(polyline);
     }
   }
@@ -533,9 +505,8 @@ public class MainContainerController implements Initializable, MapComponentIniti
 
 
   public void clearScreen() { /* TODO Add lists to clear*/
-    for (com.lynden.gmapsfx.shapes.Polyline polyline : polylineArray){
+    for (Polyline polyline : ellipsePolylineArray)
       map.removeMapShape(polyline);
-    }
     fusEllipseList.clear();
     clickedEllipses.clear();
     dataTable.setVisible(false);
@@ -706,7 +677,7 @@ public class MainContainerController implements Initializable, MapComponentIniti
 
 
   /*
-    Table related code start
+    Table related code:
   */
   private void tableInit(){
     dataRoot = new TreeItem<>("Data:");

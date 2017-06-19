@@ -2,6 +2,7 @@
 
 <?import com.lynden.gmapsfx.GoogleMapView?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
@@ -20,6 +21,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
 <VBox prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.ac.bgu.visualization.MainContainerController">
@@ -28,17 +30,6 @@
       <menus>
         <Menu mnemonicParsing="false" text="File">
           <items>
-            <MenuItem disable="true" mnemonicParsing="false" text="New" />
-            <MenuItem disable="true" mnemonicParsing="false" text="Open…" />
-            <Menu disable="true" mnemonicParsing="false" text="Open Recent" />
-            <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem disable="true" mnemonicParsing="false" text="Close" />
-            <MenuItem disable="true" mnemonicParsing="false" text="Save" />
-            <MenuItem disable="true" mnemonicParsing="false" text="Save As…" />
-            <MenuItem disable="true" mnemonicParsing="false" text="Revert" />
-            <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem disable="true" mnemonicParsing="false" text="Preferences…" />
-            <SeparatorMenuItem mnemonicParsing="false" />
                   <Menu mnemonicParsing="false" text="Load">
                     <items>
                         <MenuItem mnemonicParsing="false" onAction="#loadFileAction" text="Load Points" />
@@ -48,20 +39,6 @@
                   </Menu>
                   <SeparatorMenuItem mnemonicParsing="false" />
             <MenuItem mnemonicParsing="false" onAction="#closeAction" text="Quit" />
-          </items>
-        </Menu>
-        <Menu mnemonicParsing="false" text="Edit">
-          <items>
-            <MenuItem disable="true" mnemonicParsing="false" text="Undo" />
-            <MenuItem disable="true" mnemonicParsing="false" text="Redo" />
-            <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem disable="true" mnemonicParsing="false" text="Cut" />
-            <MenuItem disable="true" mnemonicParsing="false" text="Copy" />
-            <MenuItem disable="true" mnemonicParsing="false" text="Paste" />
-            <MenuItem disable="true" mnemonicParsing="false" text="Delete" />
-            <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem disable="true" mnemonicParsing="false" text="Select All" />
-            <MenuItem disable="true" mnemonicParsing="false" text="Unselect All" />
           </items>
         </Menu>
             <Menu mnemonicParsing="false" text="Selection">
@@ -75,17 +52,23 @@
                   </Menu>
               </items>
             </Menu>
-        <Menu mnemonicParsing="false" text="Help">
-          <items>
-            <MenuItem disable="true" mnemonicParsing="false" text="About Fusion Project" />
-          </items>
-        </Menu>
+            <Menu mnemonicParsing="false" text="Help">
+              <items>
+                <MenuItem mnemonicParsing="false" text="About" />
+              </items>
+            </Menu>
       </menus>
     </MenuBar>
     <ToolBar fx:id="toolBar" prefHeight="20.0" prefWidth="900.0">
       <items>
-        <Button fx:id="addEllipseButton" mnemonicParsing="false" onAction="#addEllipseAction" text="Add Ellipse" />
-        <Button fx:id="clearButton" mnemonicParsing="false" onAction="#clearAction" text="Clear" />
+        <Button fx:id="addEllipseButton" mnemonicParsing="false" onAction="#addEllipseAction" text="Add Ellipse" textFill="#046cb1">
+               <font>
+                  <Font name="System Bold Italic" size="12.0" />
+               </font></Button>
+        <Button fx:id="clearButton" mnemonicParsing="false" onAction="#clearAction" text="Clear" textFill="#046cb1">
+               <font>
+                  <Font name="System Bold Italic" size="12.0" />
+               </font></Button>
         <Separator orientation="VERTICAL" />
         <Button fx:id="resetButton" disable="true" mnemonicParsing="false" onAction="#resetAction">
                <tooltip>
@@ -134,8 +117,17 @@
                         <Slider fx:id="slider" blockIncrement="1.0" layoutX="259.0" layoutY="11.0" majorTickUnit="1.0" max="0.0" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="0.0" minorTickCount="1" prefHeight="30.0" prefWidth="641.0" />
                         <TextField fx:id="textFieldTimeCount" alignment="CENTER" layoutX="50.0" layoutY="19.0" prefHeight="25.0" prefWidth="74.0" />
                         <TextField fx:id="textFieldTimeStamp" alignment="CENTER" layoutX="136.0" layoutY="19.0" prefHeight="25.0" prefWidth="74.0" />
-                        <Text layoutX="50.0" layoutY="15.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Point Number" />
-                        <Text layoutX="141.0" layoutY="15.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Time Stamp" />
+                        <Text fill="#046cb1" layoutX="50.0" layoutY="14.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Point Number">
+                           <font>
+                              <Font name="System Bold Italic" size="12.0" />
+                           </font></Text>
+                        <Text fill="#046cb1" layoutX="141.0" layoutY="15.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Time Stamp">
+                           <cursor>
+                              <Cursor fx:constant="DEFAULT" />
+                           </cursor>
+                           <font>
+                              <Font name="System Bold Italic" size="12.0" />
+                           </font></Text>
                      </children>
                   </AnchorPane>
                </items>
