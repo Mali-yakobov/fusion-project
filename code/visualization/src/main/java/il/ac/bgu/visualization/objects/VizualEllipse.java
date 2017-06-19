@@ -70,7 +70,7 @@ public class VizualEllipse {
     LatLong centerP= new LatLong(centerPTemp.getCoordinates()[1], centerPTemp.getCoordinates()[0]);
     MVCArray polylineArray = EllipseBuilder.buildEllipsePoints(centerP, radiusX, radiusY, angle);
 
-    double opacity= 0.7;
+    double opacity= 0.6;
     if (this.isFusionEllipse())
       opacity= 1;
 
