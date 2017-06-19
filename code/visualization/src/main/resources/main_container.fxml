@@ -28,17 +28,6 @@
       <menus>
         <Menu mnemonicParsing="false" text="File">
           <items>
-            <MenuItem disable="true" mnemonicParsing="false" text="New" />
-            <MenuItem disable="true" mnemonicParsing="false" text="Open…" />
-            <Menu disable="true" mnemonicParsing="false" text="Open Recent" />
-            <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem disable="true" mnemonicParsing="false" text="Close" />
-            <MenuItem disable="true" mnemonicParsing="false" text="Save" />
-            <MenuItem disable="true" mnemonicParsing="false" text="Save As…" />
-            <MenuItem disable="true" mnemonicParsing="false" text="Revert" />
-            <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem disable="true" mnemonicParsing="false" text="Preferences…" />
-            <SeparatorMenuItem mnemonicParsing="false" />
                   <Menu mnemonicParsing="false" text="Load">
                     <items>
                         <MenuItem mnemonicParsing="false" onAction="#loadFileAction" text="Load Points" />
@@ -48,20 +37,6 @@
                   </Menu>
                   <SeparatorMenuItem mnemonicParsing="false" />
             <MenuItem mnemonicParsing="false" onAction="#closeAction" text="Quit" />
-          </items>
-        </Menu>
-        <Menu mnemonicParsing="false" text="Edit">
-          <items>
-            <MenuItem disable="true" mnemonicParsing="false" text="Undo" />
-            <MenuItem disable="true" mnemonicParsing="false" text="Redo" />
-            <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem disable="true" mnemonicParsing="false" text="Cut" />
-            <MenuItem disable="true" mnemonicParsing="false" text="Copy" />
-            <MenuItem disable="true" mnemonicParsing="false" text="Paste" />
-            <MenuItem disable="true" mnemonicParsing="false" text="Delete" />
-            <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem disable="true" mnemonicParsing="false" text="Select All" />
-            <MenuItem disable="true" mnemonicParsing="false" text="Unselect All" />
           </items>
         </Menu>
             <Menu mnemonicParsing="false" text="Selection">
@@ -75,11 +50,11 @@
                   </Menu>
               </items>
             </Menu>
-        <Menu mnemonicParsing="false" text="Help">
-          <items>
-            <MenuItem disable="true" mnemonicParsing="false" text="About Fusion Project" />
-          </items>
-        </Menu>
+            <Menu mnemonicParsing="false" text="Help">
+              <items>
+                <MenuItem mnemonicParsing="false" text="About" />
+              </items>
+            </Menu>
       </menus>
     </MenuBar>
     <ToolBar fx:id="toolBar" prefHeight="20.0" prefWidth="900.0">
