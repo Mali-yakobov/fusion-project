@@ -63,6 +63,9 @@ public class MainContainerController implements Initializable, MapComponentIniti
   private ArrayList<Polyline> ellipsePolylineArray = new ArrayList<>();
   private ArrayList<Polyline> sensorPolylineArray = new ArrayList<>();
 
+  private static final int zone=36;
+  private static final char hemisphere='N';
+
   final private double fusEllStrokeWidthUnClicked = 6;
   final private double fusEllStrokeWidthClicked = 8;
 
@@ -205,6 +208,11 @@ public class MainContainerController implements Initializable, MapComponentIniti
       } catch (JsonSyntaxException e) {
         AlertWindow.display("Json Error", e.getMessage());
       }
+
+      CovarianceEllipse firstEllipse = pointInTimeArray.get(0).getTrackList().get(0).getStateList().get(0).getEllipseList().get(0);
+      org.jscience.geography.coordinates.UTM c= org.jscience.geography.coordinates.UTM.valueOf(zone, hemisphere, firstEllipse.getCentreX(), firstEllipse.getCentreY(), SI.METRE);
+      org.jscience.geography.coordinates.LatLong centerPTemp= utmToLatLong(c, WGS84);
+      map.setCenter(new LatLong(centerPTemp.getCoordinates()[1], centerPTemp.getCoordinates()[0]));
     }
   }
 
@@ -1039,7 +1047,7 @@ public class MainContainerController implements Initializable, MapComponentIniti
     root.getChildren().forEach(e -> {
       CheckBoxTreeItem checkBoxE= (CheckBoxTreeItem)e;
       checkBoxE.setSelected(true);
-      checkBoxE.setExpanded(true);
+      //checkBoxE.setExpanded(true);
     });
 
     recursiveInitialTreeSetCheckboxListeners(root);
