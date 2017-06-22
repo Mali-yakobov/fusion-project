@@ -51,10 +51,10 @@ public class Simulator {
     Random random = new Random(simulatorConfig.getSeed());
     Set<Sensor> sensors = getSensors(simulatorConfig, random);
     Set<Track> tracks = new HashSet<>();
-    createInitialTracks(simulatorConfig, tracks, sensors, random);
+    createInitialTracks(simulatorConfig, tracks, sensors, random, 0);
     pointInTimes.add(dumpTracks(tracks, 0));
     for(int iteration = 1; iteration < simulatorConfig.getSimulationTimeSeconds(); iteration++){
-      simulateNextStep(simulatorConfig, sensors, tracks, random, iteration);
+      simulateNextStep(simulatorConfig, sensors, tracks, random, iteration * 1000);
       pointInTimes.add(dumpTracks(tracks, iteration));
     }
     return new SimulationResult(sensors, pointInTimes);
@@ -104,9 +104,10 @@ public class Simulator {
   private void createInitialTracks(SimulatorConfig simulatorConfig,
                                    Set<Track> tracks,
                                    Set<Sensor> sensors,
-                                   Random random) {
+                                   Random random,
+                                   long currentTime) {
     for(int trackIndex = 0; trackIndex < simulatorConfig.getInitialNumberOfEntities(); trackIndex++){
-      tracks.add(createNewTrack(simulatorConfig, sensors, random, 0));
+      tracks.add(createNewTrack(simulatorConfig, sensors, random, currentTime));
     }
   }
 
