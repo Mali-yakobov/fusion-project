@@ -202,7 +202,20 @@ public class JsonCreator {
   public static void createJsonForThreadTesting1(){
     ArrayList<CovarianceEllipse> rawEllsForAlg =new ArrayList<CovarianceEllipse>();
     for (int i=0; i<=100000; i++)
-      rawEllsForAlg.add( new CovarianceEllipse(0, 0, 150, 130, 3920.944533000791, 2879.0554669992093, -2954.4232590366246, sensor1));
+      rawEllsForAlg.add(new CovarianceEllipse( 0,
+                                               0,
+                                               sensor1,
+                                               150,
+                                               130,
+                                               3920.944533000791,
+                                               2879.0554669992093,
+                                               -2954.4232590366246,
+                                               150,
+                                               130,
+                                               -2954.4232590366246,
+                                               3920.944533000791,
+                                               2879.0554669992093
+                                               ));
     JsonReaderWriter.elipseToFile(rawEllsForAlg, "jsonForThreadTesting1");
   }
 

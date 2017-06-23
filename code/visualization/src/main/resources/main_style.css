@@ -1,3 +1,6 @@
+.body{
+    -fx-background-color: black;
+}
 .slider .thumb{
     -fx-fill-width: inherit;
     -fx-fill:aqua;

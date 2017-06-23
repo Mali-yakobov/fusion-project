@@ -11,7 +11,7 @@
   "staticProbability": 0.3,
   "initialNumberOfEntities": 20,
   "entityHalfLifeTimeSeconds": 10,
-  "simulationTimeSeconds": 4,
+  "simulationTimeSeconds": 8,
   "maxNewEntitiesPerSecond": 0.2,
   "velocity": 20,
   "velocityDelta": 15,

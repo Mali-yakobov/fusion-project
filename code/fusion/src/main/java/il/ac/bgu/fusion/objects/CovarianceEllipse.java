@@ -49,6 +49,7 @@ public class CovarianceEllipse {
     this.sx2 = sx2;
     this.sy2 = sy2;
     this.sxy = sxy;
+
     this.vx = vx;
     this.vy = vy;
     this.svxy = svxy;

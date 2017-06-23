@@ -32,6 +32,18 @@ public class LinearAlgebraUtils {
   /**
    *
    * @param ell
+   * @return Velocity covariance matrix of shape (2,2)
+   */
+  public static RealMatrix ellipseToVelocityCovarianceMatrix(CovarianceEllipse ell){
+    double[][] arr = {{ell.getSvx2(), ell.getSvxy()},
+                      {ell.getSvxy(), ell.getSvy2()}};
+    return new Array2DRowRealMatrix(arr);
+  }
+
+
+  /**
+   *
+   * @param ell
    * @return  Position vector (x,y), represented by matrix of shape (1,2)
    */
   public static RealMatrix ellipseToPositionVector(CovarianceEllipse ell){
@@ -41,17 +53,35 @@ public class LinearAlgebraUtils {
 
   /**
    *
+   * @param ell
+   * @return  Velocity position vector (x,y), represented by matrix of shape (1,2)
+   */
+  public static RealMatrix ellipseToVelocityPositionVector(CovarianceEllipse ell){
+    double[][] arrR1={{ell.getVx(), ell.getVy()}};
+    return new Array2DRowRealMatrix(arrR1);
+  }
+
+  /**
+   *
    * @param cNew Covariance matrix for new ellipse
    * @param rNew Position vector for new ellipse, represented by matrix of shape (1,2)
    * @return Covariance ellipse object, constructed from the parameter matrices
    */
-  public static CovarianceEllipse matricesToEllipse(RealMatrix cNew, RealMatrix rNew) {
+  public static CovarianceEllipse matricesToEllipse(RealMatrix cNew, RealMatrix rNew
+                                                    /*,RealMatrix velocityCovNew, RealMatrix velocityPosNew*/) {
     CovarianceEllipse newEllipse= new CovarianceEllipse();
     newEllipse.setCentreX(rNew.getEntry(0,0));
     newEllipse.setCentreY(rNew.getEntry(0,1));
     newEllipse.setSx2(cNew.getEntry(0,0));
     newEllipse.setSy2(cNew.getEntry(1,1));
     newEllipse.setSxy(cNew.getEntry(0,1));
+
+    /*newEllipse.setVx(velocityPosNew.getEntry(0,0));
+    newEllipse.setVy(velocityPosNew.getEntry(0,1));
+    newEllipse.setSvx2(velocityCovNew.getEntry(0,0));
+    newEllipse.setSvy2(velocityCovNew.getEntry(1,1));
+    newEllipse.setSvxy(velocityCovNew.getEntry(0,1));*/
+
     newEllipse.setIsFusionEllipse(true);
     return newEllipse;
   }

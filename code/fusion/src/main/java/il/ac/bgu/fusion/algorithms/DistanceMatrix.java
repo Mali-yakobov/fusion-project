@@ -13,6 +13,8 @@ import org.apache.commons.math3.util.Pair;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
+
 import static il.ac.bgu.fusion.algorithms.InitialClustering.merge;
 import static il.ac.bgu.fusion.util.LinearAlgebraUtils.calcDistanceBetweenEllipses;
 
@@ -28,6 +30,7 @@ public class DistanceMatrix {
   static int existingTracksSize;
   static double[][] staticModelDistanceMatrix;
   static double[][] linearModelDistanceMatrix;
+  private static Random rand = new Random();
 
   private static List<State> uncorrelatedClusters;
   private static List<Correlation> CorrelationList ;
@@ -62,7 +65,7 @@ public class DistanceMatrix {
         for (State state : initialClusteringList) {
           staticModelDistanceMatrix[i][j] =
               calcDistanceBetweenEllipses(lastState.getFusionEllipse(), state.getFusionEllipse());
-          linearModelDistanceMatrix[i][j] =calcDistanceBetweenEllipses(lastState.getFusionEllipse(), state.getFusionEllipse()); //calcDistance(lastState, state.getFusionEllipse());
+          linearModelDistanceMatrix[i][j] =calcDistance(lastState, state.getFusionEllipse()); //calcDistance(lastState, state.getFusionEllipse());
           j++;
         }
         i++;
@@ -98,13 +101,18 @@ public class DistanceMatrix {
     Array2DRowRealMatrix phiMatrix = new Array2DRowRealMatrix(phi);
 
     RealMatrix extrapolation4d = phiMatrix.multiply(state4dMatrix); //extrapolation4d is now {x, vx, y, vy}
+    CovarianceEllipse fusEllipse=state.getFusionEllipse();
+    double stateCovarianceArray [][] ={
+        { fusEllipse.getSx2(), 0, fusEllipse.getSxy(), 0 },
+        { 0, fusEllipse.getSvx2(), 0, fusEllipse.getSvxy() },
+        { fusEllipse.getSxy(), 0, fusEllipse.getSy2(), 0 },
+        { 0, fusEllipse.getSvxy() , 0, fusEllipse.getSvy2() }
+    };
 
-    RealMatrix newCovarianceMatrix = phiMatrix.multiply(extrapolation4d).multiply(phiMatrix.transpose());
+    Array2DRowRealMatrix stateCovariance = new Array2DRowRealMatrix(stateCovarianceArray);
+    RealMatrix newCovarianceMatrix = phiMatrix.multiply(stateCovariance).multiply(phiMatrix.transpose());
 
-        /*
-        ask about timeStamp , Id and Sensor of the new Ellipse
-        */
-    CovarianceEllipse returnedEllipse = new CovarianceEllipse(ellipse.getTimeStamp(),ellipse.getId(),ellipse.getSensor(),
+    CovarianceEllipse returnedEllipse = new CovarianceEllipse(ellipse.getTimeStamp(), ellipse.getId() ,ellipse.getSensor(),
                                                               extrapolation4d.getEntry(0,0),extrapolation4d.getEntry(2,0),
                                                               newCovarianceMatrix.getEntry(0,0),newCovarianceMatrix.getEntry(2,2),
                                                               newCovarianceMatrix.getEntry(0,2),extrapolation4d.getEntry(1,0),
@@ -236,7 +244,7 @@ public class DistanceMatrix {
       ArrayList<State> stateArrayList = new ArrayList<>();
       stateArrayList.add(state);
       Track track = new Track(0, state.getStartTimeStamp(), state.getEndTimeStamp(), stateArrayList);
-      track.setId(track.hashCode());
+      track.setId(rand.nextLong());
       existingTracks.add(track);
     }
 

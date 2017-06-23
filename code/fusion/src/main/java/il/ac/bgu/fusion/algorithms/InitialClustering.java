@@ -6,6 +6,7 @@ import org.apache.commons.math3.linear.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import static il.ac.bgu.fusion.util.LinearAlgebraUtils.*;
 
@@ -16,6 +17,7 @@ import static il.ac.bgu.fusion.util.LinearAlgebraUtils.*;
 public class InitialClustering {
   private static final double THRESHOLD = 9.21;
   private static final double INFINITY = Double.POSITIVE_INFINITY;
+  private static Random rand = new Random();
 
   /*
    * Main method of the initial clustering algorithm implementation.
@@ -56,6 +58,7 @@ public class InitialClustering {
    * Merge raw ellipse into existing cluster (state)
    */
   public static void merge(State cluster, CovarianceEllipse rawEllipse) {
+
     CovarianceEllipse currFussEllipse= cluster.getFusionEllipse();
     RealMatrix c1Inv = MatrixUtils.inverse(ellipseToCovarianceMatrix(currFussEllipse));
     RealMatrix c2Inv = MatrixUtils.inverse(ellipseToCovarianceMatrix(rawEllipse));
@@ -64,15 +67,29 @@ public class InitialClustering {
     RealMatrix mergedCovMatrix= MatrixUtils.inverse(c1Inv.add(c2Inv));
     RealMatrix mergedPosVector= calcMergedPosVector(currFussEllipse, rawEllipse, c1Inv, c2Inv, mergedCovMatrix);
 
+
+
+
+    /*RealMatrix velocityCovariance1Inv = MatrixUtils.inverse(ellipseToVelocityCovarianceMatrix(currFussEllipse));
+    RealMatrix velocityCovariance2Inv = MatrixUtils.inverse(ellipseToVelocityCovarianceMatrix(rawEllipse));
+
+    // Calculation of merged velocity covariance ellipse and velocity position vector:
+    RealMatrix mergedVelocityCovMatrix= MatrixUtils.inverse(velocityCovariance1Inv.add(velocityCovariance2Inv));
+    RealMatrix mergedVelocityPosVector= calcMergedVelocityPosVector(currFussEllipse, rawEllipse, velocityCovariance1Inv, velocityCovariance2Inv, mergedVelocityCovMatrix);*/
+
+
+
+
     // Updating the state with newly merged ellipse:
-    CovarianceEllipse mergedEllipse = matricesToEllipse(mergedCovMatrix, mergedPosVector);
-    //mergedEllipse.setTimeStamp();  something logical (and update State start/end time)
-    //mergedEllipse.setId();         random
-    //mergedEllipse.setSensor();     implement methods set/getSensors (list of all sensors from raw data)
-    //mergedEllipse velocity update  same as covariance (velocity is *5* numbers)
+    CovarianceEllipse mergedEllipse = matricesToEllipse(mergedCovMatrix, mergedPosVector
+                                                        /*,mergedVelocityCovMatrix, mergedVelocityPosVector*/);
+    mergedEllipse.setTimeStamp(rawEllipse.getTimeStamp());
+    mergedEllipse.setId(rand.nextLong());
+    mergedEllipse.setSensor(rawEllipse.getSensor());     //implement methods set/getSensors (list of all sensors from raw data)
     cluster.getEllipseList().add(rawEllipse);
     cluster.setFusionEllipse(mergedEllipse);
   }
+
 
 
   /*
@@ -88,6 +105,26 @@ public class InitialClustering {
 
     RealMatrix r1 = ellipseToPositionVector(ellipse1);      // dim=(1,2)
     RealMatrix r2 = ellipseToPositionVector(ellipse2);      // dim=(1,2)
+
+    RealMatrix w1MulR1 = r1.multiply(w1);                   // dim=(1,2)x(2,2)=(1,2)
+    RealMatrix w2MulR2 = r2.multiply(w2);                   // dim=(1,2)x(2,2)=(1,2)
+    return  w1MulR1.add(w2MulR2);                           // dim=(1,2)+(1,2)=(2,1)
+  }
+
+
+  /*
+ * Helper function for 'merge' above
+ * Calculates the merged velocity position vector between two covariance ellipses, given some pre-calculated arguments
+ */
+  private static RealMatrix calcMergedVelocityPosVector(CovarianceEllipse ellipse1, CovarianceEllipse ellipse2,
+                                                        RealMatrix covMat1Inverse, RealMatrix covMat2Inverse,
+                                                        RealMatrix mergedCovMat){
+
+    RealMatrix w1 = covMat1Inverse.multiply(mergedCovMat);  // dim=(2,2)x(2,2)=(2,2)
+    RealMatrix w2 = covMat2Inverse.multiply(mergedCovMat);  // dim=(2,2)x(2,2)=(2,2)
+
+    RealMatrix r1 = ellipseToVelocityPositionVector(ellipse1);      // dim=(1,2)
+    RealMatrix r2 = ellipseToVelocityPositionVector(ellipse2);      // dim=(1,2)
 
     RealMatrix w1MulR1 = r1.multiply(w1);                   // dim=(1,2)x(2,2)=(1,2)
     RealMatrix w2MulR2 = r2.multiply(w2);                   // dim=(1,2)x(2,2)=(1,2)

@@ -19,15 +19,16 @@ public class Main {
   public static List<Track> existingTracks = new LinkedList<>();
 
   public static void main(String ... args)throws IOException{
-    System.out.print(   JsonCreator.createSensorsFile());
+    System.out.print(JsonCreator.createSensorsFile());
 
-    JsonCreator.createDummyScenario();
+    //JsonCreator.createDummyScenario();
     //JsonCreator.createRawOnlyScenario1();
+    //JsonCreator.createJsonForThreadTesting1();
 
-     // Running the threads:
+    // Running the threads:
 
-    Thread jsonToQueue = new Thread( new JsonToQueueRunnable(covEllipseQueue));
-    Thread queueToPipeline = new Thread( new QueueToPipelineRunnable(covEllipseQueue));
+    Thread jsonToQueue = new Thread(new JsonToQueueRunnable(covEllipseQueue));
+    Thread queueToPipeline = new Thread(new QueueToPipelineRunnable(covEllipseQueue));
     try
     {
       System.out.println("Running jsonToQueue");
