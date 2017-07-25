@@ -324,6 +324,7 @@ public class MainContainerController implements Initializable, MapComponentIniti
 
 
 
+
   /*
     Misc functions
    */
@@ -333,7 +334,6 @@ public class MainContainerController implements Initializable, MapComponentIniti
 
     // single left click:
     map.addUIEventHandler(polyline, UIEventType.click, jsObject -> {
-      System.out.println(clickedEllipses.size());
       generateDataForTable(EllipseRepresentationTranslation.fromVizualToCovariance(ellipse));
       if(!ellipse.isClicked())
         ellipseSetClicked(ellipse);
@@ -436,6 +436,7 @@ public class MainContainerController implements Initializable, MapComponentIniti
       fusEllipseList.add(tempFusEllipse);
       tempFusEllipse.ellipseToDraw(color, fusEllStrokeWidthUnClicked);
       cov2vis.put(fusEll, tempFusEllipse);
+      //System.out.println(fusEll.hashCode());
       showEllipse(tempFusEllipse);
       ellipseSetOnClick(tempFusEllipse);
     }
@@ -1008,7 +1009,6 @@ public class MainContainerController implements Initializable, MapComponentIniti
   private void recursiveTreeClick(TreeItemContainer itemContainer) {
     Object item = itemContainer.getContainedItem();
     ObservableList<HierarchyData> childrenList = itemContainer.getChildren();
-
     if (item instanceof CovarianceEllipse) {
       VizualEllipse ellipse = cov2vis.get(item);
       ellipseSetClicked(ellipse);
